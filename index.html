@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Скан — сшивка по меткам</title>
+<title>Скан — сшивка сканов и план</title>
 <meta name="author" content="d1sco"><meta name="copyright" content="© d1sco, 2026">
 <style>
 :root{--bg:#eef1f5;--card:#fff;--ink:#16202c;--mute:#5d6877;--line:#d9dfe7;--acc:#2563eb;--top:#16202c}
@@ -48,30 +48,67 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 #help{position:fixed;right:12px;top:62px;width:min(440px,calc(100% - 24px));max-height:calc(100% - 110px);overflow:auto;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:14px 16px;z-index:30}#help h3{margin:4px 0 8px}#help h4{margin:12px 0 4px;font-size:14px}#help ul{padding-left:18px;margin:4px 0}#help .hs{color:var(--mute);margin:0 0 6px}#help ol{padding-left:20px}#help li{margin-bottom:6px}
 @media (max-width:900px){#side{width:260px}#main{left:260px}}
 @media (max-width:640px){#side{display:none}#main{left:0}}
+
+/* ===== оформление в духе инженерных программ: тёмная лента с группами, панель быстрого доступа, строка состояния ===== */
+:root{--rb0:#1b1f26;--rb1:#262c35;--rb2:#323a45;--rbt:#e6ebf2;--rbm:#8d98a8;--rba:#0b74de;--rbh:#3a4350}
+#top{display:block;padding:0;min-height:0;background:var(--rb1);box-shadow:0 1px 0 #11151a,0 2px 6px rgba(0,0,0,.18)}
+#top .tb{display:flex;align-items:center;gap:4px;height:40px;padding:0 8px;background:var(--rb0)}
+#top .logo{display:flex;align-items:center;gap:7px;margin-right:6px;color:#fff;font-weight:700;font-size:15px;white-space:nowrap}#top .logo b{display:grid;place-items:center;width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#0b74de,#22b8cf);font-size:14px}
+#top button{background:transparent;border:1px solid transparent;color:var(--rbt);border-radius:6px;padding:5px 8px;white-space:nowrap;transition:background .12s,border-color .12s}
+#top button:hover:not(:disabled){background:var(--rbh)}#top button:disabled{opacity:.35}
+#top button.qat{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 8px}#top button.qat svg{width:18px;height:18px}#top button.wide{border-color:#343c48;background:#232933}
+#top .qsep{width:1px;height:20px;background:#3a424e;margin:0 4px}
+#top .steps{display:flex;gap:2px;margin:0 0 0 14px;align-self:flex-end;height:34px}#top .steps button{border-radius:7px 7px 0 0;padding:0 16px;height:34px;color:#b9c3d0;border:0}#top .steps button i{font-style:normal;display:inline-block;width:18px;height:18px;line-height:18px;border-radius:50%;background:#3a424e;color:#fff;font-size:11px;font-weight:700;text-align:center;margin-right:7px}
+#top .steps button.on{background:var(--rb1)!important;color:#fff!important;border:0!important}#top .steps button.on i{background:var(--rba)}#top .steps button:hover:not(.on){background:#262c35}
+#top .rb{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;padding:4px 6px 0;min-height:76px}
+#top .rg{display:flex;align-items:flex-start;gap:1px;padding:2px 8px 18px;position:relative;border-right:1px solid #3a424e}#top .rg::after{content:attr(data-cap);position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:11px;color:var(--rbm);letter-spacing:.02em}
+#top .rg>button{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;min-width:58px;padding:5px 6px;font-size:12px;line-height:1.15}#top .rg>button svg{width:22px;height:22px;flex:0 0 22px}#top .rg>button.big svg{width:30px;height:30px;flex:0 0 30px}#top .rg>button.big{min-width:76px;font-weight:600}
+#top .rg>button span{max-width:86px;white-space:normal;text-align:center}
+#top button.on{background:var(--rba)!important;color:#fff!important;border-color:#3d93ea!important}#top .rg>button.pri{color:#fff;background:linear-gradient(#1c82e8,#0b6bd0);border-color:#0b6bd0}#top .rg>button.pri:hover{background:linear-gradient(#2a8ff0,#1477dc)}
+#top .seg{display:inline-flex;margin-top:12px;border:1px solid #3d4653;border-radius:7px;overflow:hidden}#top .seg button{border-radius:0;border:0;border-right:1px solid #3d4653;padding:6px 10px;font-size:12px}#top .seg button:last-child{border-right:0}
+#top .ctx{border-left:0;padding-left:8px}
+#side{background:#f3f5f8;border-right:1px solid #cfd6df;padding:0}#side #list{padding:8px}#side .lh{position:sticky;top:0;background:#e7ebf0;margin:-8px -8px 8px;padding:7px 10px;border-bottom:1px solid #cfd6df;z-index:2}
+#foot{background:var(--rb0);color:#c7d0dc;border-top:1px solid #11151a;font-size:12.5px}#foot #saved,#foot #ver{color:var(--rbm)}
+#rotbar{background:rgba(27,31,38,.94);border:1px solid #3a424e;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.25)}#rotbar button{background:transparent;border:1px solid transparent;color:#e6ebf2;border-radius:6px}#rotbar button:hover{background:var(--rbh)}
+#pcard{border-radius:10px;border:1px solid #d5dbe3;box-shadow:0 6px 20px rgba(15,23,36,.14)}
+#tip{position:fixed;z-index:99;max-width:320px;background:#1b1f26;color:#e6ebf2;border:1px solid #3a424e;border-radius:8px;padding:8px 10px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s}#tip.on{opacity:1}#tip b{display:block;color:#fff;font-size:13px;margin-bottom:2px}#tip kbd{display:inline-block;margin-top:5px;padding:0 6px;border:1px solid #4a5462;border-bottom-width:2px;border-radius:4px;font:11px/1.6 ui-monospace,monospace;color:#cfd8e3}
+@media (max-width:900px){#top .rg>button{min-width:50px;font-size:11px}#top .rg{padding:2px 5px 18px}}
 </style></head><body>
-<div id="top"><b class="lg">Скан</b>
-  <button id="bProj" title="Проект: все проекты, новый, сканы, файл, облако">📁 <span id="pjName">Проекты</span> ▾</button>
-  <div class="grp steps"><button data-view="grid" title="Шаг 1: все сканы рамками — метки и чистка"><i>1</i>Сканы</button><button data-view="asm" title="Шаг 2: сканы вместе — сшивка"><i>2</i>Сборка</button><button data-view="plan" title="Шаг 3: стены и проёмы, DXF"><i>3</i>План</button></div>
-  <div class="grp ctx" data-for="grid"><button id="bAdd" class="pri">＋ Сканы</button></div>
-  <div class="grp ctx" data-for="grid"><button data-tool="line" title="Метка-линия вдоль стены, края проёма">／ Линия</button><button data-tool="point" title="Метка-точка: угол, колонна">• Точка</button><button data-tool="erase" title="Удалить метку касанием">⌫ Метка</button></div>
-  <div class="grp ctx" data-for="asm"><button id="bAuto" class="pri" title="Сшить с нуля: программа сама найдёт общие места">🤖 Автосшивка</button><button id="bRefine" title="Точно подогнать от нынешнего положения — после автосшивки и ручной правки">🎯 Уточнить</button><button id="bStitch" title="Сшить по вашим меткам (буквам)">🧩 По меткам</button></div>
-  <div class="grp ctx" data-for="asm"><button data-tool="gfit" title="Линия для плана: коснитесь стены — прямая впишется по точкам. План по сканам пройдёт точно по ней (стены за мебелью, косые стены)">⌇ Линия стены</button><button data-tool="gline" title="Нарисовать линию для плана: тянуть от точки до точки">／ Линия</button><button data-tool="gpt" title="Угол для плана: коснитесь угла — план пройдёт через эту точку">⌖ Угол плана</button><button data-tool="gdel" title="Удалить линию или угол плана касанием">⌫</button></div>
-  <div class="grp ctx" data-for="asm"><button id="bSph" title="Найти шары на сканах: они держат длинные однотипные объекты (тоннель, коллектор)">⚪ Шары</button><button data-tool="corner" title="Общий угол, видный на нескольких сканах">⌖ Общий угол</button></div>
-  <div class="grp ctx" data-for="grid asm"><button data-tool="brush" title="Стереть мебель, людей, двери">🧹 Стереть</button><button data-tool="keep" title="Отметить нужное: стены, колонны">✏ Нужное</button></div>
-  <div class="grp ctx" data-for="plan"><button data-tool="wfit" title="Коснитесь стены в срезе — программа впишет прямую по точкам и сама замкнёт угол с соседней">⌇ Стена по точкам</button><button data-tool="line" title="Нарисовать стену вручную">／ Стена</button><button data-tool="erase" title="Удалить стену или проём касанием">⌫ Удалить</button></div>
-  <span id="colsBox" class="grp ctx" data-for="grid"><button data-cols="1">1</button><button data-cols="2">2</button><button data-cols="3">3</button><button data-cols="4">4</button><button id="bTW" title="Повернуть рамки как в сборке">↻</button></span>
-  <span class="fill"></span><button id="bFit" title="Показать всё">⤢</button><button id="bHelp" title="Справка">?</button>
+<div id="top">
+ <div class="tb">
+  <div class="logo" title="Скан — сшивка сканов FARO и план по сканам. © d1sco"><b>С</b><span>Скан</span></div>
+  <button id="bProj" class="qat wide" data-ic="folder" title="Проект: все проекты, новый проект, добавить сканы, облако точек, файл меток и положений">📁 <span id="pjName">Проекты</span> ▾</button>
+  <span class="qsep"></span>
+  <button id="fUndo" class="qat" data-ic="undo" title="Отменить шаг|Возвращает план, сшивку, метки и чистку на шаг назад|Ctrl+Z" disabled></button><button id="fRedo" class="qat" data-ic="redo" title="Вернуть|Повторяет отменённый шаг|Ctrl+Y" disabled></button>
+  <div class="grp steps"><button data-view="grid" title="Шаг 1 · Сканы|Загрузка E57, каждый скан в своей рамке: метки, чистка, полосы высот"><i>1</i>Сканы</button><button data-view="asm" title="Шаг 2 · Сборка|Все сканы вместе: автосшивка, уточнение, линии и углы для плана"><i>2</i>Сборка</button><button data-view="plan" title="Шаг 3 · План|План по сканам: помещения, двери, окна; правка стен; выгрузка DXF и для Рулетки"><i>3</i>План</button></div>
+  <span class="fill"></span>
+  <button id="bFit" class="qat" data-ic="fit" title="Показать всё|Вписать все сканы или весь план в окно"></button><button id="bHelp" class="qat" data-ic="help" title="Справка|Как работать: по шагам, все кнопки и приёмы"></button>
+ </div>
+ <div class="rb">
+  <div class="grp ctx rg" data-for="grid" data-cap="Файлы"><button id="bAdd" class="big pri" data-ic="addscan" title="Добавить сканы|Файлы E57 (можно сразу несколько или перетащить в окно). Сканы FARO .fls пересохраняются в E57 файлом fls_to_e57.bat"><span>Сканы</span></button></div>
+  <div class="grp ctx rg" data-for="grid" data-cap="Метки"><button data-tool="line" data-ic="mline" title="Метка-линия|Проведите вдоль стены или края проёма — линия впишется по точкам. Одна и та же стена на соседних сканах — одной буквой"><span>Линия</span></button><button data-tool="point" data-ic="mpoint" title="Метка-точка|Угол, колонна, приметная точка — одной буквой на соседних сканах"><span>Точка</span></button><button data-tool="erase" data-ic="erase" title="Удалить метку|Коснитесь метки"><span>Удалить</span></button></div>
+  <div class="grp ctx rg" data-for="asm" data-cap="Сшивка"><button id="bAuto" class="big pri" data-ic="auto" title="Автосшивка|Программа сама найдёт общие места соседних сканов, сошьёт и сразу точно подгонит. Около 15 с на скан"><span>Автосшивка</span></button><button id="bRefine" data-ic="refine" title="Уточнить|Точная подгонка от нынешнего положения — после ручной правки или по меткам"><span>Уточнить</span></button><button id="bStitch" data-ic="stitch" title="По меткам|Сшить по вашим меткам (одинаковые буквы на соседних сканах)"><span>По меткам</span></button></div>
+  <div class="grp ctx rg" data-for="asm" data-cap="Линии плана"><button data-tool="gfit" data-ic="gfit" title="Линия стены|Коснитесь стены на сканах — прямая впишется по точкам среза. «План по сканам» проведёт сторону помещения точно по ней"><span>По точкам</span></button><button data-tool="gline" data-ic="gline" title="Линия|Тяните от точки до точки — линия для плана там, где стену не видно (за шкафом, шторой)"><span>Нарисовать</span></button><button data-tool="gpt" data-ic="gpt" title="Угол плана|Коснитесь угла — угол помещения пройдёт через эту точку. Липнет к пересечению линий"><span>Угол</span></button><button data-tool="gdel" data-ic="x" title="Удалить линию или угол плана|Коснитесь линии или угла"><span>Удалить</span></button></div>
+  <div class="grp ctx rg" data-for="asm" data-cap="Опорные"><button id="bSph" data-ic="sphere" title="Шары|Найти шары на сканах — держат длинные однотипные объекты (тоннель, коллектор)"><span>Шары</span></button><button data-tool="corner" data-ic="corner" title="Общий угол|Угол, видный на нескольких сканах — сшивка держится за него"><span>Общий угол</span></button></div>
+  <div class="grp ctx rg" data-for="grid asm" data-cap="Чистка"><button data-tool="brush" data-ic="brush" title="Стереть|Закрасьте мебель, людей, двери — эти точки не участвуют ни в сшивке, ни в плане"><span>Стереть</span></button><button data-tool="keep" data-ic="keep" title="Нужное|Отметьте нужное (стены, колонны) — можно оставить только его"><span>Нужное</span></button></div>
+  <div class="grp ctx rg" data-for="plan" data-cap="Построение"><button id="rbRooms" class="big pri" data-ic="plan" title="План по сканам|Стены во всю высоту, помещения по потолку, двери, окна и подоконники; косые стены и ваши линии из «Сборки»"><span>План по сканам</span></button><button id="rbWalls" data-ic="walls" title="Только стены|Найти линии стен по срезу, без помещений"><span>Только стены</span></button></div>
+  <div class="grp ctx rg" data-for="plan" data-cap="Стены"><button data-tool="wfit" data-ic="gfit" title="Стена по точкам|Коснитесь стены в срезе — прямая впишется по точкам и сама замкнёт угол с соседней"><span>По точкам</span></button><button data-tool="line" data-ic="gline" title="Стена|Нарисовать стену вручную: тянуть от точки до точки"><span>Нарисовать</span></button><button data-tool="erase" data-ic="erase" title="Удалить стену или проём|Коснитесь стены или проёма"><span>Удалить</span></button></div>
+  <div class="grp ctx rg" data-for="plan" data-cap="Правка"><button id="rbClose" data-ic="close" title="Замкнуть углы|Довести концы стен до пересечения с соседними"><span>Углы</span></button><button id="rbSq" data-ic="square" title="К осям|Выровнять стены к двум главным осям (если отклонение меньше 4°)"><span>К осям</span></button></div>
+  <div class="grp ctx rg" data-for="plan" data-cap="Фон"><div class="seg"><button data-pbg="slice" title="Срез|Тонкий срез всех сканов на одной высоте — по нему видно, сошлись ли стены">Срез</button><button data-pbg="scans" title="Сканы|Сканы целиком под планом">Сканы</button><button data-pbg="off" title="Без фона|Только план">Нет</button></div></div>
+  <div class="grp ctx rg" data-for="plan" data-cap="Выгрузка"><button id="rbDxf" data-ic="dxf" title="DXF|Чертёж для AutoCAD: слои STENY, PROEMY, RAZMERY, SKANY; единицы — мм"><span>DXF</span></button><button id="rbRul" data-ic="tape" title="Для Рулетки|Файл проекта для Рулетки: помещения, проёмы, подоконники — домерить на месте"><span>Рулетка</span></button></div>
+  <div class="grp ctx rg" data-for="grid" data-cap="Вид"><span id="colsBox" class="seg"><button data-cols="1" title="1 рамка в ряд">1</button><button data-cols="2" title="2 рамки в ряд">2</button><button data-cols="3" title="3 рамки в ряд">3</button><button data-cols="4" title="4 рамки в ряд">4</button><button id="bTW" title="Повернуть рамки как в сборке|Одна и та же стена на соседних сканах смотрит в одну сторону">↻</button></span></div>
+  <div class="grp ctx rg" data-for="grid asm plan" data-cap="Выбранное"><button id="fDel" data-ic="trash" title="Удалить выбранное|Скан, метку, стену или проём — что выбрано|Delete"><span>Удалить</span></button></div>
+ </div>
 </div>
 <div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">☁ Облако точек — AutoCAD / ReCap</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="ubar"><button id="fUndo" disabled>↶ Отменить шаг</button><button id="fRedo" disabled>↷ Вернуть</button><button id="fDel">🗑 Удалить выбранное</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.3 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.4 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
-<p class="hs">Работа идёт по трём шагам — кнопки <b>1 Сканы · 2 Сборка · 3 План</b> вверху. На каждом шаге видны только его инструменты. Нажать инструмент ещё раз (или Esc) — выключить.</p>
+<p class="hs">Работа идёт по трём шагам — вкладки <b>1 Сканы · 2 Сборка · 3 План</b> вверху. На ленте под ними — инструменты этого шага, по группам. Наведите мышь на кнопку — подсказка. Нажать инструмент ещё раз (или Esc) — выключить.</p>
 <h4>📁 Проект ▾</h4>
 <ul><li>Все проекты (открыть, переименовать, удалить), новый проект, добавить сканы E57, облако точек, файл меток и положений.</li><li>Всё хранится на этом устройстве, обновление страницы ничего не стирает.</li></ul>
 <h4>1 Сканы — каждый скан в своей рамке</h4>
@@ -87,7 +124,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <li><b>Несколько сканов:</b> мышью — как в AutoCAD: щелчок добавляет, Shift + щелчок убирает, рамка слева направо — целиком внутри, справа налево — всё задетое. На планшете — «⬚ Несколько» внизу справа. Esc — снять выбор.</li>
 <li><b>⚓</b> в списке — опорный скан, стоит на месте.</li></ul>
 <h4>3 План — стены и проёмы</h4>
-<ul><li><b>🏠 План по сканам</b> (справа) — готовый план сразу: стены — плоскости во всю высоту, помещения — по потолку (двери отделяют помещения перемычкой), двери и окна — дыры в стенах (окно — с низом выше пола и перемычкой), подоконник — горизонтальная полка у низа окна. Косые стены программа находит сама: стороны идут по направлениям стен, не только под 90°. Номера и площади помещений — на плане и в DXF. Шторы при съёмке откройте, иначе окна за ними не видны.</li><li><b>Линии и углы для плана</b> — на шаге «2 Сборка»: <b>⌇ Линия стены</b> (касание стены — прямая по точкам), <b>／ Линия</b> (нарисовать, где стену не видно — за шкафом, за шторой), <b>⌖ Угол плана</b>, <b>⌫</b> — удалить. «🏠 План по сканам» проводит стороны помещений точно по этим линиям и через эти углы; линия ещё и разделяет помещения.</li><li><b>⬇ Для Рулетки</b> — файл проекта: помещения со сторонами, двери, окна, подоконники. В Рулетке «Открыть файл» — и домерьте на месте окна и подоконники.</li><li><b>Фон — тонкий срез</b> точек всех сканов на одной высоте (по умолчанию 1,2 м от пола, 6 см) — высота и толщина в карточке справа. В срезе сразу видно, сошлись ли стены разных сканов в одну линию.</li><li><b>⌇ Стена по точкам</b> — коснитесь стены в срезе: программа впишет прямую по точкам (сколько точек и разброс в мм — внизу), продлит вдоль стены и замкнёт угол с соседней. Так план собирается стена за стеной: решаете вы, точность — от точек.</li><li>Справа «🔎 Найти стены», правка стены касанием, «⌐ Замкнуть углы», «⊾ К осям», «⬇ DXF». Вверху <b>／ Стена</b> — нарисовать, <b>⌫ Удалить</b>.</li></ul>
+<ul><li><b>🏠 План по сканам</b> (справа) — готовый план сразу: стены — плоскости во всю высоту, помещения — по потолку (двери отделяют помещения перемычкой), двери и окна — дыры в стенах (окно — с низом выше пола и перемычкой), подоконник — горизонтальная полка у низа окна. Косые стены программа находит сама: стороны идут по направлениям стен, не только под 90°. Номера и площади помещений — на плане и в DXF. Шторы при съёмке откройте, иначе окна за ними не видны.</li><li><b>Линии и углы для плана</b> — на шаге «2 Сборка»: <b>⌇ Линия стены</b> (касание стены — прямая по точкам), <b>／ Линия</b> (нарисовать, где стену не видно — за шкафом, за шторой), <b>⌖ Угол плана</b>, <b>⌫</b> — удалить. «🏠 План по сканам» проводит стороны помещений точно по этим линиям и через эти углы; линия ещё и разделяет помещения.</li><li><b>⬇ Для Рулетки</b> — файл проекта: помещения со сторонами, двери, окна, подоконники. В Рулетке «Открыть файл» — и домерьте на месте окна и подоконники.</li><li><b>Фон — тонкий срез</b> точек всех сканов на одной высоте (по умолчанию 1,2 м от пола, 6 см) — высота и толщина в карточке справа. В срезе сразу видно, сошлись ли стены разных сканов в одну линию.</li><li><b>⌇ Стена по точкам</b> — коснитесь стены в срезе: программа впишет прямую по точкам (сколько точек и разброс в мм — внизу), продлит вдоль стены и замкнёт угол с соседней. Так план собирается стена за стеной: решаете вы, точность — от точек.</li><li>На ленте: «Построение» (план по сканам, только стены), «Стены» (по точкам, нарисовать, удалить), «Правка» (углы, к осям), «Фон», «Выгрузка» (DXF, Рулетка). Касание стены — выбрать и править.</li></ul>
 <h4>Всегда</h4>
 <ul><li>Внизу «↶ Отменить шаг / ↷ Вернуть». Колесо — масштаб, зажатое колесо — сдвиг вида, ⤢ — показать всё.</li></ul>
 </div>
@@ -1438,7 +1475,7 @@ function scanBBoxW(sc) { const [x0, y0, x1, y1] = sc.core; return [[x0, y0], [x1
 function bandCenter(sc) { return L2W(sc, [0, 0]); }
 function knob(sc) { const G = grpScans(), c = G.length > 1 && inGrp(sc.id) ? grpCenter(G) : bandCenter(sc), R = Math.max(1.5, 60 / S.asmV.s); return { c, p: [c[0], c[1] + R] }; }
 function renderAll() { renderList(); renderMain(); renderBar(); }
-function renderBar() { $('#rotbar').hidden = S.view !== 'asm'; { const bm = $('#bMulti'); if (bm) bm.classList.toggle('on', !!S.multi); }
+function renderBar() { $$('[data-pbg]').forEach(b => b.classList.toggle('on', b.dataset.pbg === (S.planBg === false ? 'off' : S.planBg === 'scans' ? 'scans' : 'slice'))); $('#rotbar').hidden = S.view !== 'asm'; { const bm = $('#bMulti'); if (bm) bm.classList.toggle('on', !!S.multi); }
   $$('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === S.view)); $$('[data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === S.tool));
   $$('#top .ctx').forEach(g => { g.hidden = !g.dataset.for.split(' ').includes(S.view); });
   try { layoutTop(); } catch (e) { } $('#fUndo').disabled = !S.undo.length; $('#fRedo').disabled = !S.redo.length; $$('[data-cols]').forEach(b => b.classList.toggle('on', +b.dataset.cols === S.cols)); const tw = $('#bTW'); if (tw) tw.classList.toggle('on', !!S.tileWorld); 
@@ -1446,10 +1483,10 @@ function renderBar() { $('#rotbar').hidden = S.view !== 'asm'; { const bm = $('#
 function renderMain() {
   const main = $('#main');
   if (!S.scans.length) { main.innerHTML = `<div class="empty"><h2>Скан: от сканов FARO до плана</h2>
-<ol class="steps3"><li><b>1 Сканы</b> — загрузите E57 (кнопка «＋ Сканы» или перетащите файлы сюда). Сканы FARO .fls пересохраняются в E57 файлом <a href="fls_to_e57.bat" download>fls_to_e57.bat</a> (нужен бесплатный CloudCompare).</li>
-<li><b>2 Сборка</b> — «🤖 Автосшивка»: программа сама найдёт общие места соседних сканов и сошьёт их; «🎯 Уточнить» — точная подгонка. Где не сошлось — поправить вручную или метками.</li>
-<li><b>3 План</b> — «🏠 План по сканам»: стены, помещения с площадями, двери, окна и подоконники. Выгрузка — DXF и файл для Рулетки (домерить на месте).</li></ol>
-<p class="h">Совет при съёмке: шторы открыть, двери в помещения открыть — так программа видит окна и проёмы.</p><button class="pri big" onclick="$('#fileIn').click()">＋ Загрузить сканы E57</button></div>`; return; }
+<ol class="steps3"><li><b>1 Сканы</b> — загрузите E57 (кнопка «Сканы» на ленте или перетащите файлы сюда). Сканы FARO .fls пересохраняются в E57 файлом <a href="fls_to_e57.bat" download>fls_to_e57.bat</a> (нужен бесплатный CloudCompare).</li>
+<li><b>2 Сборка</b> — «Автосшивка»: программа сама найдёт общие места соседних сканов, сошьёт и точно подгонит. Где стену не видно — проведите «Линии плана».</li>
+<li><b>3 План</b> — «План по сканам»: стены, помещения с площадями, двери, окна и подоконники. Выгрузка — DXF и файл для Рулетки (домерить на месте).</li></ol>
+<p class="h">Наведите мышь на любую кнопку — появится подсказка. Совет при съёмке: шторы открыть, двери в помещения открыть — так программа видит окна и проёмы.</p><button class="pri big" onclick="$('#fileIn').click()">＋ Загрузить сканы E57</button></div>`; return; }
   if (S.view === 'grid') {
     const vis = S.scans.filter(s => s.vis);
     main.innerHTML = `<div id="grid" style="grid-template-columns:repeat(${S.cols},minmax(0,1fr))">${vis.map(s => `<div class="tile ${S.sel === s.id ? 'sel' : ''}" id="tile-${s.id}"><div class="th"><i style="background:${s.color}"></i><b>${escH(s.name)}</b><span>${S.marks.filter(m => m.sid === s.id).map(m => `<em style="background:${labColor(m.lab)}">${escH(m.lab)}</em>`).join('')}</span><button data-solo="${s.id}" title="Сравнить: только этот и выбранный">⇄</button></div><canvas></canvas></div>`).join('')}</div>`;
@@ -1668,9 +1705,51 @@ function setTool(t) { const cl = x => x === 'brush' || x === 'keep', was = S.too
 window.addEventListener('resize', () => { if (S.view === 'grid') { sizeTiles(); redraw(); } else { const cv = $('#asm') || $('#plan'); if (cv) { sizeCanvas(cv); redraw(); } } });
 document.addEventListener('keydown', e => { if (e.target.closest('input')) return; if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
   else if (S.view === 'asm' && S.sel && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'q', 'e', 'й', 'у'].includes(e.key)) { const G = grpScans(), st = e.shiftKey ? 0.1 : 0.01, c = G.length > 1 ? grpCenter(G) : bandCenter(G[0]); pushUndo(); for (const s of G) { if (e.key === 'ArrowLeft') s.pose.x -= st; if (e.key === 'ArrowRight') s.pose.x += st; if (e.key === 'ArrowUp') s.pose.y += st; if (e.key === 'ArrowDown') s.pose.y -= st; if (e.key === 'q' || e.key === 'й') setRot(s, { ...s.pose }, c, (e.shiftKey ? 1 : 0.1) * Math.PI / 180); if (e.key === 'e' || e.key === 'у') setRot(s, { ...s.pose }, c, -(e.shiftKey ? 1 : 0.1) * Math.PI / 180); } e.preventDefault(); drawAsm(); saveSoon(); } else if (e.key === 'Escape' && S.tool !== 'hand') { setTool('hand'); } else if (e.key === 'Escape' && S.view === 'asm') { grpClear(); S.sel = null; S.selRect = null; S.multi = false; stat('Выбор снят.'); renderBar(); renderList(); drawAsm(); } });
+
+// ===== значки (линейные, как в инженерных программах) и всплывающие подсказки =====
+const ICONS = {
+  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>', redo: '<path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/>',
+  fit: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
+  addscan: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/><path d="M18 2v5M15.5 4.5h5"/>',
+  mline: '<path d="M4 18 20 6"/><circle cx="4" cy="18" r="2"/><circle cx="20" cy="6" r="2"/>', mpoint: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/>',
+  erase: '<path d="m7 21-4-4 10-10 7 7-7 7z"/><path d="M14 21h7M10 10l7 7"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  auto: '<path d="m4 20 11-11"/><path d="m14 4 1.2 2.8L18 8l-2.8 1.2L14 12l-1.2-2.8L10 8l2.8-1.2zM19 13l.7 1.6 1.6.7-1.6.7L19 18l-.7-1.6-1.6-.7 1.6-.7z"/>',
+  refine: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>',
+  stitch: '<path d="M10 14a4 4 0 0 1 0-5.6l2.4-2.4a4 4 0 0 1 5.6 5.6L16.6 13"/><path d="M14 10a4 4 0 0 1 0 5.6l-2.4 2.4a4 4 0 0 1-5.6-5.6L7.4 11"/>',
+  sphere: '<circle cx="12" cy="12" r="8"/><path d="M4 12c2.5 2 13.5 2 16 0M12 4c-2.5 2.5-2.5 13.5 0 16"/>', corner: '<path d="M5 19V5h14"/><path d="M5 5l6 6"/><circle cx="5" cy="5" r="1.6" fill="currentColor"/>',
+  gfit: '<path d="M3 17 21 7"/><circle cx="6" cy="14.5" r="1" fill="currentColor"/><circle cx="10" cy="13" r="1" fill="currentColor"/><circle cx="14" cy="10" r="1" fill="currentColor"/><circle cx="18" cy="9.5" r="1" fill="currentColor"/>',
+  gline: '<path d="M4 20 18 6"/><path d="m15 3 6 6-3 3-6-6z"/>', gpt: '<path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="4"/>',
+  brush: '<path d="M14 4 20 10 11 19H5v-6z"/><path d="M5 19l4-4"/>', keep: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/>',
+  plan: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>', walls: '<path d="M3 5h18v14H3z"/><path d="M3 12h9M12 5v14"/>',
+  close: '<path d="M6 20V8a2 2 0 0 1 2-2h12"/><circle cx="6" cy="6" r="2"/>', square: '<path d="M5 19V5M5 19h14"/><path d="M5 13h6v6"/>',
+  dxf: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>', tape: '<rect x="3" y="7" width="13" height="10" rx="2"/><circle cx="9.5" cy="12" r="2.5"/><path d="M16 15h5"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'
+};
+function svgIc(k) { return ICONS[k] ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>` : ''; }
+function applyIcons(root = document) { root.querySelectorAll('[data-ic]').forEach(b => { if (b.dataset.icDone) return; b.dataset.icDone = 1; if (b.id === 'bProj') { b.innerHTML = svgIc('folder') + b.innerHTML.replace(/^📁\s*/, ''); return; } b.insertAdjacentHTML('afterbegin', svgIc(b.dataset.ic)); }); }
+// подсказка: «Заголовок|описание|клавиша» в title; показываем при наведении мышью (на касание — нет)
+(() => { let tip = null, tmr = 0, cur = null;
+  const hide = () => { clearTimeout(tmr); tmr = 0; cur = null; if (tip) tip.classList.remove('on'); };
+  const show = el => { if (!tip) { tip = document.createElement('div'); tip.id = 'tip'; document.body.appendChild(tip); }
+    const t = el.dataset.tip || ''; const [h, d, k] = t.split('|'); const lbl = (el.textContent || '').trim();
+    tip.innerHTML = (d != null ? `<b>${escH(h)}</b>${escH(d)}` : (lbl && lbl.length < 30 && lbl !== h ? `<b>${escH(lbl)}</b>${escH(h)}` : escH(h))) + (k ? `<br><kbd>${escH(k)}</kbd>` : '');
+    const r = el.getBoundingClientRect(); tip.style.left = '0px'; tip.style.top = '0px'; tip.classList.add('on'); const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = Math.min(innerWidth - tw - 8, Math.max(8, r.left + r.width / 2 - tw / 2)), y = r.bottom + 8; if (y + th > innerHeight - 8) y = r.top - th - 8; tip.style.left = x + 'px'; tip.style.top = y + 'px'; };
+  document.addEventListener('pointerover', e => { if (e.pointerType !== 'mouse') return; const el = e.target.closest && e.target.closest('[title],[data-tip]'); if (!el) return;
+    if (el.hasAttribute('title')) { const t = el.getAttribute('title'); if (t) el.dataset.tip = t; el.removeAttribute('title'); }
+    if (el === cur || !el.dataset.tip) return; hide(); cur = el; tmr = setTimeout(() => { if (cur === el && document.body.contains(el)) show(el); }, 450); });
+  document.addEventListener('pointerout', e => { if (cur && !(e.relatedTarget && cur.contains(e.relatedTarget))) hide(); });
+  document.addEventListener('pointerdown', hide, true); document.addEventListener('wheel', hide, { passive: true }); document.addEventListener('keydown', hide, true);
+  // заголовки «А|Б|В» — и для обычной подсказки браузера на сенсорных экранах не показываем как есть
+})();
 function layoutTop() { const h = $('#top').offsetHeight; for (const id of ['side', 'main']) $('#' + id).style.top = h + 'px'; $('#help').style.top = (h + 8) + 'px'; }
 window.addEventListener('resize', layoutTop);
-document.addEventListener('DOMContentLoaded', async () => { layoutTop();
+document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layoutTop();
+  $('#rbRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); };
+  $('#rbWalls').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
+  $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
+  $$('[data-pbg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.pbg === 'off' ? false : b.dataset.pbg; renderBar(); drawPlan(); });
   $('#bAdd').onclick = () => $('#fileIn').click(); $('#fileIn').onchange = e => { const f = e.target.files; if (f && f.length) loadFiles(f); e.target.value = ''; };
   $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); $$('[data-tool]').forEach(b => b.onclick = () => setTool(S.tool === b.dataset.tool ? 'hand' : b.dataset.tool));
   $$('[data-cols]').forEach(b => b.onclick = () => { S.cols = +b.dataset.cols; S.scans.forEach(s => s.tile = null); renderAll(); saveSoon(); });
@@ -1976,11 +2055,8 @@ function wallByPoints(w0) {
 // --- карточка выбранного: длина числом, проёмы, действия ---
 function renderPlanCard() {
   let el = $('#pcard'); const sel = S.planSel; if (!el) { el = document.createElement('div'); el.id = 'pcard'; $('#main').appendChild(el); }
-  if (!sel) { el.innerHTML = `<div class="pc-h">План: стен ${PL().walls.length}, проёмов ${PL().ops.length}</div><div class="pc-r"><button id="pcRooms" class="pri" title="Стены во всю высоту, помещения по потолку, двери, окна и подоконники — сразу готовый план">🏠 План по сканам</button><button id="pcBuild" title="Только линии стен по срезу">${PL().walls.length ? '⟳ Стены заново' : '🔎 Только стены'}</button></div>${(PL().rooms || []).length ? `<div class="pc-s">${roomPolys().map(r => `<b>${r.num}</b>&nbsp;${nf(r.area, 2)}&nbsp;м²`).join(' · ')}</div>` : ''}<div class="pc-r"><button id="pcClose">⌐ Замкнуть углы</button><button id="pcSq">⊾ К осям</button></div><div class="pc-r"><label>Фон:</label><button data-bg="slice" class="${S.planBg !== false && S.planBg !== 'scans' ? 'on' : ''}">Срез</button><button data-bg="scans" class="${S.planBg === 'scans' ? 'on' : ''}">Сканы</button><button data-bg="off" class="${S.planBg === false ? 'on' : ''}">Нет</button></div><div class="pc-r"><label>Срез на высоте</label><input id="slH" inputmode="decimal" value="${nf(S.slice.h, 2)}"><label>м, толщина</label><input id="slT" inputmode="decimal" style="width:60px" value="${Math.round(S.slice.t * 100)}"><label>см</label></div><div class="pc-r"><button id="pcDxf">⬇ DXF</button><button id="pcRul" title="Файл проекта для Рулетки: помещения, проёмы, подоконники — домерить на месте">⬇ Для Рулетки</button></div><div class="pc-s">⌇ Стена по точкам (вверху) — коснитесь стены в срезе: прямая впишется по точкам, угол с соседней замкнётся. Касание стены — выбрать. Оранжевые точки — незамкнутые углы.</div>`;
-    $('#pcBuild').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
-    $('#pcClose').onclick = () => closeCorners(false); $('#pcSq').onclick = squareAll; el.querySelectorAll('[data-bg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.bg === 'off' ? false : b.dataset.bg; drawPlan(); });
-    const slc = () => { const h = parseFloat($('#slH').value.replace(',', '.')), t = parseFloat($('#slT').value.replace(',', '.')) / 100; if (h > 0 && h < 6) S.slice.h = h; if (t >= 0.01 && t <= 0.5) S.slice.t = t; S._slice = null; drawPlan(); }; $('#slH').onchange = slc; $('#slT').onchange = slc; $('#pcDxf').onclick = exportDXF; $('#pcRul').onclick = exportRuletka;
-    $('#pcRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); }; return; }
+  if (!sel) { el.innerHTML = `<div class="pc-h">План: стен ${PL().walls.length}, проёмов ${PL().ops.length}</div>${(PL().rooms || []).length ? `<div class="pc-s rooms">${roomPolys().map(r => `<b>${r.num}</b>&nbsp;${nf(r.area, 2)}&nbsp;м²`).join(' · ')}</div>` : `<div class="pc-s">Начните с «🏠 План по сканам» на ленте вверху.</div>`}<div class="pc-r"><label title="Срез для фона и «Стены по точкам»|Высота от пола и толщина слоя точек">Срез на высоте</label><input id="slH" inputmode="decimal" value="${nf(S.slice.h, 2)}"><label>м, толщина</label><input id="slT" inputmode="decimal" style="width:60px" value="${Math.round(S.slice.t * 100)}"><label>см</label></div><div class="pc-s">Касание стены — выбрать: тянуть — двигать, концы — длина. Оранжевые точки — незамкнутые углы.</div>`;
+    const slc = () => { const h = parseFloat($('#slH').value.replace(',', '.')), t = parseFloat($('#slT').value.replace(',', '.')) / 100; if (h > 0 && h < 6) S.slice.h = h; if (t >= 0.01 && t <= 0.5) S.slice.t = t; S._slice = null; drawPlan(); }; $('#slH').onchange = slc; $('#slT').onchange = slc; return; }
   const w = wById(sel.w); if (!w) { S.planSel = null; return renderPlanCard(); }
   if (sel.o) { const o = PL().ops.find(q => q.id === sel.o); if (!o) { S.planSel = { w: w.id }; return renderPlanCard(); }
     el.innerHTML = `<div class="pc-h">Проём на стене ${nf(wLen(w), 3)} м</div>
