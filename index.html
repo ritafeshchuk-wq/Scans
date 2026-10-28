@@ -2975,7 +2975,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const t = txAt(px, py); if (t) return { k: 'tx', t, p0: t.p.slice() };
     const v = vertAt(px, py); if (v) return { k: 'vert', q0: v.q.slice(), group: linked(v.q), L: v.L };
     if (oh) return { k: 'opSel', o: oh.o };
-    const s = segAt(px, py); if (s) { const z = lvl(), w0 = onPlane(px, py, z); if (!w0) return null; return { k: 'seg', L: s.L, z, w0, ga: linked(a).map(x => ({ ...x, q0: x.L.p[x.i].slice() })), gb: linked(b).map(x => ({ ...x, q0: x.L.p[x.i].slice() })) }; }
+    const s = segAt(px, py); if (s) { const [a, b] = segEnds(s.L, s.i), z = lvl(), w0 = onPlane(px, py, z); if (!w0) return null; return { k: 'seg', L: s.L, z, w0, ga: linked(a).map(x => ({ ...x, q0: x.L.p[x.i].slice() })), gb: linked(b).map(x => ({ ...x, q0: x.L.p[x.i].slice() })) }; }
     return null; }
   function grabMove(G, px, py) {
     if (G.k === 'vert') { const v = vertAt(px, py, (L, i) => G.group.some(x => x.L === L && x.i === i)); const p = v ? v.q : onPlane(px, py, lvl()); if (!p) return; for (const x of G.group) x.L.p[x.i] = [p[0], p[1], lvl()]; return; }
