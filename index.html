@@ -118,7 +118,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.0 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.1 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -135,7 +135,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <li>Поправить руками: тянуть скан — сдвиг, кружок ↻ / два пальца / правая кнопка — поворот, кнопки внизу справа — 0,1° / 1° / 90°, стрелки — 1 см (Shift — 10 см).</li>
 <li><b>🎯 Уточнить</b> — после ручной правки: точно подгоняет стыки от того, как сканы стоят сейчас (до ~30 см). Можно жать сколько угодно.</li>
 <li><b>Красная стрелка «скользит»</b> на стыке — у пары только параллельные стены (тоннель, коридор): поперёк стык точный, а вдоль ему не за что зацепиться. Нужен шар или поперечная плоскость (торец, ниша, колонна — линией-меткой на обоих сканах).</li><li><b>⚪ Шары</b> — программа находит шары заданного диаметра (FARO 139/145 мм), вписывает сферу (видно, по скольким точкам и с какой точностью) и даёт один и тот же шар на разных сканах одной буквой Ш1, Ш2… Потом «🎯 Уточнить»: стены держат поперёк, шары — вдоль. Шаров на стык нужно хотя бы 1–2, лучше 3 не на одной линии.</li><li><b>🧩 По меткам</b> — сшить по вашим буквам, невязка каждой в мм (больше 10 мм — красным). <b>⌖ Общий угол</b> — коснуться угла, видного на нескольких сканах.</li>
-<li><b>Несколько сканов:</b> мышью — как в AutoCAD: щелчок добавляет, Shift + щелчок убирает, рамка слева направо — целиком внутри, справа налево — всё задетое. На планшете — «⬚ Несколько» внизу справа. Esc — снять выбор.</li>
+<li><b>Несколько сканов:</b> мышью: щелчок — выбрать один скан, Shift или Ctrl + щелчок — добавить или убрать, рамка слева направо — целиком внутри, справа налево — всё задетое. На планшете — «⬚ Несколько» внизу справа. Esc — снять выбор.</li>
 <li><b>⚓</b> в списке — опорный скан, стоит на месте.</li></ul>
 <h4>3 3D — точная сшивка, проверка, выгрузка</h4>
 <ul><li><b>🎯 Точно 3D</b> — финальная подгонка всех сканов сразу по всем шести степеням: сдвиги X, Y, Z, поворот и наклоны. Делается после автосшивки. Слева — точность каждого стыка (у 90% точек): зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше; щелчок по стыку — показать только эту пару.</li>
@@ -1722,7 +1722,17 @@ function bindCanvas(cv, ctxInfo) {
   const P = new Map(); let g = null;
   const V = () => ctxInfo.kind === 'asm' ? S.asmV : scanById(ctxInfo.sid).tile;
   const toW = e => { const r = cv.getBoundingClientRect(); return s2w(V(), cv.width, cv.height, e.clientX - r.left, e.clientY - r.top); };
-  const scanAt = w => { const list = S.scans.filter(s => s.vis).slice().reverse(); if (S.sel) { const s = scanById(S.sel); if (s && s.vis) list.unshift(s); } for (const s of list) { const l = W2L(s, w), r = s.rast, u = Math.floor((l[0] - r.x0) / r.res), v = Math.floor((r.y1 - l[1]) / r.res); if (u < 0 || v < 0 || u >= r.w || v >= r.h) continue; let hit = 0; for (let dv = -4; dv <= 4; dv++) for (let du = -4; du <= 4; du++) { const uu = u + du, vv = v + dv; if (uu >= 0 && vv >= 0 && uu < r.w && vv < r.h && r.cnt[vv * r.w + uu]) hit++; } if (hit > 3) return s; } return null; };
+  // какой скан под курсором: выбранный — в приоритете (за него можно взять и в пустой комнате внутри его границ); иначе — тот, у кого рядом больше точек
+  const scanAt = w => { const vis = S.scans.filter(s => s.vis && s.rast); if (!vis.length) return null; const rad = Math.max(0.05, 10 / (V().s || 40));
+    const score = s => { const l = W2L(s, w), r = s.rast, u = Math.floor((l[0] - r.x0) / r.res), v = Math.floor((r.y1 - l[1]) / r.res), k = Math.min(12, Math.max(3, Math.ceil(rad / r.res))), st = 1; let hit = 0;
+      if (u < -k || v < -k || u >= r.w + k || v >= r.h + k) return 0;
+      for (let dv = -k; dv <= k; dv += st) for (let du = -k; du <= k; du += st) { const uu = u + du, vv = v + dv; if (uu >= 0 && vv >= 0 && uu < r.w && vv < r.h && r.cnt[vv * r.w + uu]) hit++; } return hit; };
+    const inside = s => { const l = W2L(s, w), c = s.core; return c && l[0] > c[0] && l[0] < c[2] && l[1] > c[1] && l[1] < c[3]; };
+    const sel = grpScans().filter(s => s.vis && s.rast); sel.sort((a, b) => (b.id === S.sel) - (a.id === S.sel));
+    for (const s of sel) if (score(s) > 1) return s;
+    let best = null, bs = 2; for (const s of vis) { if (sel.includes(s)) continue; const sc = score(s); if (sc > bs) { bs = sc; best = s; } } if (best) return best;
+    for (const s of sel) if (inside(s)) return s;
+    return null; };
   const local = (sc, w) => ctxInfo.kind === 'asm' ? W2L(sc, w) : rot(w, -tileRot(sc));
   cv.oncontextmenu = e => e.preventDefault();
   cv.onwheel = e => { e.preventDefault(); const v = V(), w = toW(e), k = Math.exp(-e.deltaY * 0.0015); v.s *= k; const w2 = toW(e); v.cx += w[0] - w2[0]; v.cy += w[1] - w2[1]; redrawOne(); };
@@ -1763,7 +1773,7 @@ function bindCanvas(cv, ctxInfo) {
       if (sel) { const k = knob(sel), K = w2s(S.asmV, cv.width, cv.height, k.p), r = cv.getBoundingClientRect(), sx = (e.clientX - r.left) * dpr(), sy = (e.clientY - r.top) * dpr(); if (Math.hypot(sx - K[0], sy - K[1]) < 22 * dpr()) { pushUndo(); g = { kind: 'knob', sc: sel, c: k.c, a0: Math.atan2(w[1] - k.c[1], w[0] - k.c[0]), pose0: { ...sel.pose }, grp: grpScans().map(q => ({ sc: q, pose0: { ...q.pose } })) }; return; } }
       const hit = scanAt(w), addKey = e.ctrlKey || e.metaKey || e.shiftKey;
       if (e.pointerType === 'mouse' && !right) { // мышь как в AutoCAD: щелчок — добавить к выбору (Shift — убрать), рамка по пустому месту, тянуть выбранный — перенос
-        if (hit) { g = { kind: 'mtap', hit, w0: w, x: e.clientX, y: e.clientY, shift: e.shiftKey }; return; }
+        if (hit) { g = { kind: 'mtap', hit, w0: w, x: e.clientX, y: e.clientY, shift: e.shiftKey, ctrl: e.ctrlKey || e.metaKey }; return; }
         g = { kind: 'rect', w0: w, x: e.clientX, y: e.clientY, mouse: true, shift: e.shiftKey }; S.selRect = [w, w]; S.selCross = false; return; }
       if (hit && (S.multi || addKey) && !right) { g = { kind: 'gtap', hit, w0: w, x: e.clientX, y: e.clientY }; return; } // касание — добавить/убрать; повёл — двигать группу
       if (!hit && (S.multi || e.shiftKey) && !right) { g = { kind: 'rect', w0: w, x: e.clientX, y: e.clientY }; S.selRect = [w, w]; return; }
@@ -1812,7 +1822,7 @@ function bindCanvas(cv, ctxInfo) {
     if (was.kind === 'draw') { const D = S.drawing; S.drawing = null; finishMark(was.sid, D.a, S.tool === 'point' ? null : D.b, e.clientX, e.clientY); return; }
     if (was.kind === 'mEnd' || was.kind === 'mMove') { if (was.kind === 'mMove' && !was.moved) { S.undo.pop(); renderMarkCard(); return; } const m = was.m; if (m.kind === 'line' && m.snap !== false) { const f = fitLine(was.sc, m.a, m.b); if (f) { m.a = f.a; m.b = f.b; m.fit = { n: f.n, rms: f.rms }; } else m.fit = null; } S.lastSolve = null; redraw(); renderList(); renderMarkCard(); saveSoon(); return; }
     if (was.kind === 'gtap') { grpToggle(was.hit.id); renderList(); drawAsm(); return; }
-    if (was.kind === 'mtap') { const id = was.hit.id; if (was.shift || S.multi) grpToggle(id); else if (!inGrp(id)) grpToggle(id); grpStat(); renderList(); drawAsm(); return; }
+    if (was.kind === 'mtap') { const id = was.hit.id; if (was.shift || was.ctrl || S.multi) grpToggle(id); else { S.sel = id; grpClear(); } grpStat(); renderList(); drawAsm(); return; }
     if (was.kind === 'rect' && was.mouse) { const r = S.selRect, cross = S.selCross; S.selRect = null; S.selCross = false;
       if (r && Math.hypot(e.clientX - was.x, e.clientY - was.y) > 6) { const x0 = Math.min(r[0][0], r[1][0]), x1 = Math.max(r[0][0], r[1][0]), y0 = Math.min(r[0][1], r[1][1]), y1 = Math.max(r[0][1], r[1][1]); let n = 0;
         for (const q of S.scans) { if (!q.vis) continue; const B = scanBBoxW(q), xs = B.map(p => p[0]), ys = B.map(p => p[1]);
