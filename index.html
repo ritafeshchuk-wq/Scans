@@ -95,8 +95,8 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
  <div class="rb">
   <div class="grp ctx rg" data-for="grid" data-cap="Файлы"><button id="bAdd" class="big pri" data-ic="addscan" title="Добавить сканы|Файлы E57 (можно сразу несколько или перетащить в окно). Сканы FARO .fls пересохраняются в E57 файлом fls_to_e57.bat"><span>Сканы</span></button></div>
   <div class="grp ctx rg" data-for="grid" data-cap="Метки"><button data-tool="line" data-ic="mline" title="Метка-линия|Проведите вдоль стены или края проёма — линия впишется по точкам. Одна и та же стена на соседних сканах — одной буквой"><span>Линия</span></button><button data-tool="point" data-ic="mpoint" title="Метка-точка|Угол, колонна, приметная точка — одной буквой на соседних сканах"><span>Точка</span></button><button data-tool="erase" data-ic="erase" title="Удалить метку|Коснитесь метки"><span>Удалить</span></button></div>
-  <div class="grp ctx rg" data-for="asm" data-cap="Сшивка"><button id="bAuto" class="big pri" data-ic="auto" title="Автосшивка|Программа сама найдёт общие места соседних сканов, сошьёт и сразу точно подгонит. Около 15 с на скан"><span>Автосшивка</span></button><button id="bRefine" data-ic="refine" title="Уточнить|Точная подгонка от нынешнего положения — после ручной правки или по меткам"><span>Уточнить</span></button><button id="bStitch" data-ic="stitch" title="По меткам|Сшить по вашим меткам (одинаковые буквы на соседних сканах)"><span>По меткам</span></button><button id="bFine" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны — до миллиметров. После автосшивки"><span>Точно 3D</span></button></div>
-  <div class="grp ctx rg" data-for="v3d" data-cap="Сшивка"><button id="bFine3" class="big pri" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны. Слева появится точность каждого стыка"><span>Точно 3D</span></button></div>
+  <div class="grp ctx rg" data-for="asm" data-cap="Сшивка"><button id="bAuto" class="big pri" data-ic="auto" title="Автосшивка|Программа сама найдёт общие места соседних сканов, сошьёт и сразу точно подгонит. Около 15 с на скан"><span>Автосшивка</span></button><button id="bRefine" data-ic="refine" title="Уточнить|Точная подгонка от нынешнего положения — после ручной правки или по меткам"><span>Уточнить</span></button><button id="bStitch" data-ic="stitch" title="По меткам|Сшить по вашим меткам (одинаковые буквы на соседних сканах)"><span>По меткам</span></button><button id="bSelFit" data-ic="selfit" title="Досшить выбранные|Выделите сканы (Shift/Ctrl + щелчок или рамка), поставьте примерно на место — программа точно подгонит их друг к другу и к соседям; соседи стоят на месте"><span>Досшить выбранные</span></button><button id="bFine" data-ic="fine" title="Точно 3D (все)|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны — до миллиметров. После автосшивки"><span>Точно 3D</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Сшивка"><button id="bFine3" class="big pri" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны. Слева появится точность каждого стыка"><span>Точно 3D</span></button><button id="bSelFit3" data-ic="selfit" title="Досшить выбранные|Сканы, выделенные в «Сборке», точно подгоняются друг к другу и к соседям; соседи стоят на месте"><span>Досшить выбранные</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Вид"><button data-v3v="top" data-ic="vtop" title="Сверху|Смотреть сверху, как план"><span>Сверху</span></button><button data-v3v="front" data-ic="vfront" title="Спереди|Вид вдоль оси Y"><span>Спереди</span></button><button data-v3v="side" data-ic="vside" title="Сбоку|Вид вдоль оси X"><span>Сбоку</span></button><button data-v3v="iso" data-ic="cube3d" title="3D|Наклонный вид"><span>3D</span></button><button id="bOrtho" data-ic="persp" title="Плоско|Без перспективы: размеры не искажаются с расстоянием — удобно сверху и сбоку"><span>Плоско</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Цвет"><div class="seg"><button data-v3col="scan" title="По сканам|Каждый скан своим цветом — видно, где сканы расходятся">Сканы</button><button data-v3col="h" title="По высоте|Цвет от пола к потолку">Высота</button><button data-v3col="rgb" title="Цвет сканера|Фото-цвет сканера или яркость отражения (для сканов, загруженных в версии 4.0 и новее)">Цвет</button></div></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Срез"><button id="bNoCeil" data-ic="noceil" title="Без потолка|Убрать потолок, чтобы заглянуть в помещения сверху. Точнее — ползунками слева"><span>Без потолка</span></button></div>
@@ -118,7 +118,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.1 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.2 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -136,6 +136,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <li><b>🎯 Уточнить</b> — после ручной правки: точно подгоняет стыки от того, как сканы стоят сейчас (до ~30 см). Можно жать сколько угодно.</li>
 <li><b>Красная стрелка «скользит»</b> на стыке — у пары только параллельные стены (тоннель, коридор): поперёк стык точный, а вдоль ему не за что зацепиться. Нужен шар или поперечная плоскость (торец, ниша, колонна — линией-меткой на обоих сканах).</li><li><b>⚪ Шары</b> — программа находит шары заданного диаметра (FARO 139/145 мм), вписывает сферу (видно, по скольким точкам и с какой точностью) и даёт один и тот же шар на разных сканах одной буквой Ш1, Ш2… Потом «🎯 Уточнить»: стены держат поперёк, шары — вдоль. Шаров на стык нужно хотя бы 1–2, лучше 3 не на одной линии.</li><li><b>🧩 По меткам</b> — сшить по вашим буквам, невязка каждой в мм (больше 10 мм — красным). <b>⌖ Общий угол</b> — коснуться угла, видного на нескольких сканах.</li>
 <li><b>Несколько сканов:</b> мышью: щелчок — выбрать один скан, Shift или Ctrl + щелчок — добавить или убрать, рамка слева направо — целиком внутри, справа налево — всё задетое. На планшете — «⬚ Несколько» внизу справа. Esc — снять выбор.</li>
+<li><b>Досшить выбранные</b> — выделите несколько сканов (или один), поставьте примерно на место и нажмите: программа сама подгонит их точно — сначала стыки, потом 3D по всем шести степеням. Невыделенные соседи стоят на месте, выбранные подгоняются к ним. В строке состояния — точность стыков и насколько сдвинулись сканы от вашей расстановки.</li>
 <li><b>⚓</b> в списке — опорный скан, стоит на месте.</li></ul>
 <h4>3 3D — точная сшивка, проверка, выгрузка</h4>
 <ul><li><b>🎯 Точно 3D</b> — финальная подгонка всех сканов сразу по всем шести степеням: сдвиги X, Y, Z, поворот и наклоны. Делается после автосшивки. Слева — точность каждого стыка (у 90% точек): зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше; щелчок по стыку — показать только эту пару.</li>
@@ -1007,7 +1008,7 @@ self.onmessage = e => {
   if (e.data.cmd === 'auto') return autoJob(e.data);
   if (e.data.cmd === 'scanplan') { const job = e.data.job; try { const r = scanPlan(e.data.scans, { userWalls: e.data.guides || [], userPts: e.data.gpts || [], log: t => self.postMessage({ job, prog: 0.5, stage: t }) }); self.postMessage({ job, done: true, res: r }); } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); } return; }
   if (e.data.cmd === 'refine') return refineJob(e.data);
-  if (e.data.cmd === 'fine6') { const d = e.data, job = d.job; try { const r = FINE6.run(d.scans, d.pairs, d.fixed, { log: (p, t) => self.postMessage({ job, prog: p, stage: t }) }); self.postMessage({ job, done: true, res: r }); } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); } return; }
+  if (e.data.cmd === 'fine6') { const d = e.data, job = d.job; try { const r = FINE6.run(d.scans, d.pairs, d.fixed, { fixedSet: d.fixedSet || null, sched: d.sched || null, log: (p, t) => self.postMessage({ job, prog: p, stage: t }) }); self.postMessage({ job, done: true, res: r }); } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); } return; }
   if (e.data.cmd === 'full') return fullJob(e.data);
   if (e.data.cmd === 'spheres') return sphereJob(e.data);
   const { job, name, buf, voxel } = e.data;
@@ -1034,7 +1035,7 @@ self.onmessage = e => {
 // поэтому стык взвешивается по своей матрице (что держит, а что нет), а шары (общие точки) держат то, что не держат стены.
 function chol4(A) { const L = new Float64Array(16); for (let i = 0; i < 4; i++) for (let j = 0; j <= i; j++) { let sm = A[i * 4 + j]; for (let k = 0; k < j; k++) sm -= L[i * 4 + k] * L[j * 4 + k]; if (i === j) { if (sm <= 0) return null; L[i * 4 + i] = Math.sqrt(sm); } else L[i * 4 + j] = sm / L[j * 4 + j]; } return L; }
 function eig2(a, b, c) { const t = (a + c) / 2, d = Math.sqrt(((a - c) / 2) ** 2 + b * b), l1 = t + d, l2 = t - d; const v = Math.abs(b) > 1e-12 ? [l2 - c, b] : (a <= c ? [1, 0] : [0, 1]); const n = Math.hypot(v[0], v[1]) || 1; return { lmax: l1, lmin: l2, vmin: [v[0] / n, v[1] / n] }; }
-function refineJob({ job, scans, poses, pairs, fixed, spheres }) {
+function refineJob({ job, scans, poses, pairs, fixed, fixedSet, spheres }) {
   try {
     const D = []; scans.forEach((s, k) => { self.postMessage({ job, prog: 0.3 * k / scans.length, stage: 'Готовлю ' + s.name }); D.push(REG3D.prep(s.pts, s.floor, s.ceil)); });
     const E = [], bad = []; let k = 0;
@@ -1058,9 +1059,9 @@ function refineJob({ job, scans, poses, pairs, fixed, spheres }) {
     const SPH = []; for (const g of (spheres || [])) { if (g.obs.length < 2) continue; SPH.push(g); for (let t = 1; t < g.obs.length; t++) uni(g.obs[0].k, g.obs[t].k); }
     const out = poses.map(q => ({ ...q })), comps = new Map(); for (let i = 0; i < n; i++) { const c = f(i); if (!comps.has(c)) comps.set(c, []); comps.get(c).push(i); }
     const wrap = a => Math.atan2(Math.sin(a), Math.cos(a)), wS = 1 / 0.002;
-    for (const mem of comps.values()) { if (mem.length < 2) continue; const root = mem.includes(fixed) ? fixed : mem[0], free = mem.filter(x => x !== root), ix = new Map(free.map((x, t) => [x, t])), m = free.length * 4;
+    const FX = new Set(fixedSet || [fixed]); for (const mem of comps.values()) { if (mem.length < 2) continue; const root = mem.find(x => FX.has(x)) ?? mem[0], free = mem.filter(x => x !== root && !FX.has(x)); if (!free.length) continue; const ix = new Map(free.map((x, t) => [x, t])), m = free.length * 4;
       const X = new Float64Array(m); for (const x of free) { const pp = poses[x], o = ix.get(x) * 4; X[o] = pp.a; X[o + 1] = pp.tx; X[o + 2] = pp.ty; X[o + 3] = pp.tz; }
-      const get = (Xv, x) => x === root ? poses[root] : { a: Xv[ix.get(x) * 4], tx: Xv[ix.get(x) * 4 + 1], ty: Xv[ix.get(x) * 4 + 2], tz: Xv[ix.get(x) * 4 + 3] };
+      const get = (Xv, x) => !ix.has(x) ? poses[x] : { a: Xv[ix.get(x) * 4], tx: Xv[ix.get(x) * 4 + 1], ty: Xv[ix.get(x) * 4 + 2], tz: Xv[ix.get(x) * 4 + 3] };
       const es = E.filter(e => mem.includes(e.i)), ss = SPH.filter(g => mem.includes(g.obs[0].k));
       const res = Xv => { const r = [];
         for (const e of es) { const q = REG3D.rel(get(Xv, e.i), get(Xv, e.j)), d = [wrap(q[0] - e.a), q[1] - e.tx, q[2] - e.ty, q[3] - e.tz];
@@ -1140,7 +1141,7 @@ const FINE6 = (() => {
     const log = opt.log || (() => {}), maxR = opt.maxR || 15, tiltSig = (opt.tiltSigDeg != null ? opt.tiltSigDeg : 0.3) * Math.PI / 180;
     const D = scans.map((s, k) => { log(k / scans.length * 0.25, 'Готовлю ' + (s.name || k)); return prep(s.pts, maxR); });
     const n = scans.length, R = scans.map(s => s.R.slice()), T = scans.map(s => s.t.slice()), R0 = R.map(r => r.slice());
-    const free = [...Array(n).keys()].filter(i => i !== fixed), ix = new Map(free.map((x, k) => [x, k])), m = free.length * 6;
+    const FX = new Set(opt.fixedSet || [fixed]), free = [...Array(n).keys()].filter(i => !FX.has(i)), ix = new Map(free.map((x, k) => [x, k])), m = free.length * 6;
     const sched = opt.sched || [0.12, 0.08, 0.05, 0.04, 0.03, 0.025, 0.02, 0.02, 0.015, 0.015, 0.012, 0.012, 0.01, 0.01];
     let stats = [];
     const W = (i, k) => { const r = R[i], t = T[i], C = D[i].C; const x = C[3 * k], y = C[3 * k + 1], z = C[3 * k + 2]; return [r[0] * x + r[1] * y + r[2] * z + t[0], r[3] * x + r[4] * y + r[5] * z + t[1], r[6] * x + r[7] * y + r[8] * z + t[2]]; };
@@ -1918,6 +1919,7 @@ const ICONS = {
   close: '<path d="M6 20V8a2 2 0 0 1 2-2h12"/><circle cx="6" cy="6" r="2"/>', square: '<path d="M5 19V5M5 19h14"/><path d="M5 13h6v6"/>',
   dxf: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>', tape: '<rect x="3" y="7" width="13" height="10" rx="2"/><circle cx="9.5" cy="12" r="2.5"/><path d="M16 15h5"/>',
   cloud: '<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>',
+  selfit: '<rect x="3" y="3" width="10" height="10" rx="1" stroke-dasharray="2.5 2"/><rect x="11" y="11" width="10" height="10" rx="1"/><path d="m14 7 3-3m0 0v2.5M17 4h-2.5"/>',
   fine: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><path d="m5 5 2.5 2.5M16.5 16.5 19 19"/>',
   cube3d: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/>', vtop: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h9v10M13 4v6"/>',
   vfront: '<path d="M3 20h18"/><rect x="6" y="6" width="12" height="14"/><path d="M10 20v-6h4v6"/>', vside: '<path d="M3 20h18"/><path d="M6 20V9l6-4 6 4v11"/>',
@@ -1947,7 +1949,7 @@ window.addEventListener('resize', layoutTop);
 document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layoutTop();
   $('#rbRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); };
   $('#rbWalls').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
-  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
+  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bSelFit').onclick = stitchSelected; $('#bSelFit3').onclick = stitchSelected; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
   $$('[data-pbg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.pbg === 'off' ? false : b.dataset.pbg; renderBar(); drawPlan(); });
   $('#bAdd').onclick = () => $('#fileIn').click(); $('#fileIn').onchange = e => { const f = e.target.files; if (f && f.length) loadFiles(f); e.target.value = ''; };
   $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); $$('[data-tool]').forEach(b => b.onclick = () => setTool(S.tool === b.dataset.tool ? 'hand' : b.dataset.tool));
@@ -2580,6 +2582,48 @@ async function fineStitch() {
   stat(`Точная сшивка 3D: ${list.length} сканов, ${ed.length} стыков. Расхождение поверхностей на стыках: обычно ${mm(S.fineRep.med)} мм, у 90% точек — до ${mm(S.fineRep.p90)} мм.${bad.length ? ` ⚠ Стыков хуже 6 мм: ${bad.length} — красные в списке слева (вкладка «3D»).` : ' Все стыки в норме.'}${mxT > 0.1 ? ` Скан «${mxN}» сдвинулся на ${mm(mxT)} мм — проверьте его в 3D.` : ''}`);
 }
 
+// ===== досшить выбранные: выделенные сканы точно подгоняются друг к другу и к соседям, соседи стоят на месте =====
+async function stitchSelected() {
+  const G = grpScans().filter(s => s.vis);
+  if (!G.length) { uiAlert('Выделите сканы, которые нужно досшить: щелчок по скану, Shift или Ctrl + щелчок — добавить ещё, или рамкой. Потом снова «Досшить выбранные».'); return; }
+  const box = s => { const B = scanBBoxW(s), xs = B.map(p => p[0]), ys = B.map(p => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
+  const over = (a, b) => { const A = box(a), B = box(b), ox = Math.min(A[2], B[2]) - Math.max(A[0], B[0]), oy = Math.min(A[3], B[3]) - Math.max(A[1], B[1]); return ox > 0.5 && oy > 0.5 && Math.hypot(a.pose.x - b.pose.x, a.pose.y - b.pose.y) < 15; };
+  const gid = new Set(G.map(s => s.id)), N = S.scans.filter(s => s.vis && !gid.has(s.id) && G.some(g => over(g, s)));
+  const list = [...G, ...N].sort(scanOrder); if (list.length < 2) { uiAlert('Рядом с выбранным сканом нет других, с кем он перекрывается. Поставьте его примерно на место или выберите несколько сканов.'); return; }
+  // кто стоит на месте: соседи; если соседей нет — опорный (или первый) из выбранных
+  const fixedIds = new Set(N.map(s => s.id)); if (!fixedIds.size) fixedIds.add((G.find(s => s.anchor) || G.slice().sort(scanOrder)[0]).id);
+  const fx = list.map((s, i) => fixedIds.has(s.id) ? i : -1).filter(i => i >= 0), pairs = [];
+  for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) if ((!fixedIds.has(list[i].id) || !fixedIds.has(list[j].id)) && over(list[i], list[j])) pairs.push([i, j]);
+  if (!pairs.length) { uiAlert('Выбранные сканы ни с кем не перекрываются — подгонять не к чему.'); return; }
+  const nFree = list.length - fx.length;
+  if (!(await uiDialog({ title: 'Досшить выбранные', text: `Подгоню ${nFree} ${nFree === 1 ? 'скан' : 'сканов'} — ${N.length ? `к соседям (${N.length}, они стоят на месте)` : 'друг к другу'}. Сначала стыки (сдвиг до ~30 см от того, как вы поставили), затем точно 3D по всем шести степеням. Около ${Math.max(10, Math.round(list.length * 5))} с.`, ok: 'Досшить', cancel: 'Отмена' }))) return;
+  const before = new Map(list.map(s => [s.id, { ...s.pose, floor: s.floor }])); pushUndo();
+  // 1) стыки (как «Уточнить»), только для выбранных
+  let R1; try { R1 = await runRefine(list, list.map(s => ({ a: s.pose.a, tx: s.pose.x, ty: s.pose.y, tz: -s.floor })), pairs, fx[0], fx); } catch (e) { busy(''); uiAlert('Досшивка не удалась: ' + e.message); return; }
+  R1.poses.forEach((p, i) => { const s = list[i]; if (!fixedIds.has(s.id)) s.pose = { x: p.tx, y: p.ty, a: normA(p.a) }; });
+  // 2) точно 3D
+  const tr = [], scans = list.map(s => { const P = keptPts(s), q = worldRT(s); tr.push(P.buffer); return { name: s.name, pts: P, R: q.R, t: q.t }; });
+  let r; try { r = await runWorker({ cmd: 'fine6', scans, pairs, fixed: fx[0], fixedSet: fx }, tr, 'Точная подгонка'); } catch (e) { busy(''); uiAlert('Точная подгонка не удалась: ' + e.message); renderAll(); return; }
+  busy('');
+  const mm = v => (v * 1000).toFixed(1).replace('.', ','), moved = [];
+  list.forEach((s, i) => { if (fixedIds.has(s.id)) return; const R = r.R[i], T = r.T[i], yaw = Math.atan2(R[3] - R[1], R[0] + R[4]), c = Math.cos(yaw), sn = Math.sin(yaw);
+    s.lev = m3([c, sn, 0, -sn, c, 0, 0, 0, 1], R); const fl = -T[2]; s.ceil += fl - s.floor; s.floor = fl; s.pose = { x: T[0], y: T[1], a: normA(yaw) }; s.fine = { t: Date.now() }; prepScan(s);
+    const b = before.get(s.id); moved.push({ s, d: Math.hypot(s.pose.x - b.x, s.pose.y - b.y), da: Math.abs(normA(s.pose.a - b.a)) * 180 / Math.PI }); });
+  // отчёт: стыки с участием выбранных — заменяют прежние в общем списке точности
+  const ed = r.edges.filter(e => e.cnt >= 200).map(e => ({ a: list[e.i].id, b: list[e.j].id, cnt: e.cnt, rms: e.rms, med: e.med, p90: e.p90 }));
+  const key = e => [e.a, e.b].sort((x, y) => x - y).join('-'), keep = (S.fineRep && S.fineRep.edges || []).filter(e => !ed.some(q => key(q) === key(e)));
+  const all = [...keep, ...ed].sort((p, q) => q.p90 - p.p90), p90s = all.map(e => e.p90).sort((a, b) => a - b);
+  S.fineRep = { t: Date.now(), edges: all, n: S.scans.length, med: all.length ? all.map(e => e.med).sort((a, b) => a - b)[all.length >> 1] : 0, p90: p90s.length ? p90s[Math.floor(p90s.length * 0.9)] : 0 };
+  analyze(); renderAll(); saveSoon(); if (S.view === 'v3d') V3.dirty(true);
+  const bad = ed.filter(e => fineGrade(e) === 'bad'), lost = list.filter(s => !fixedIds.has(s.id) && !ed.some(e => e.a === s.id || e.b === s.id));
+  const big = moved.filter(m => m.d > 0.05 || m.da > 0.5).sort((a, b) => b.d - a.d);
+  const nm = id => scanById(id).name;
+  stat(`Досшито сканов: ${moved.length}${N.length ? ` (к соседям: ${N.map(s => s.name).join(', ')})` : ''}. Стыки: ${ed.length ? ed.slice().sort((p, q) => q.p90 - p.p90).slice(0, 4).map(e => `${nm(e.a)}–${nm(e.b)} ${mm(e.p90)} мм`).join(', ') + (ed.length > 4 ? '…' : '') : 'нет'}.`
+    + (big.length ? ` Сдвинулись от вашей расстановки: ${big.slice(0, 3).map(m => `${m.s.name} на ${mm(m.d)} мм${m.da > 0.05 ? ` и ${m.da.toFixed(2).replace('.', ',')}°` : ''}`).join(', ')}.` : ' Ваша расстановка была уже почти точной.')
+    + (bad.length ? ` ⚠ Хуже 6 мм: ${bad.map(e => `${nm(e.a)}–${nm(e.b)}`).join(', ')} — проверьте во вкладке «3D».` : '')
+    + (lost.length ? ` ⚠ Не нашли общих поверхностей: ${lost.map(s => s.name).join(', ')} — поставьте ближе к месту и повторите.` : ''));
+}
+
 // ===================== 3D: облако сшитых сканов (WebGL2, подсветка рельефа EDL как в CloudCompare / Potree) =====================
 const V3 = (() => {
   let wrap = null, cv = null, ov = null, gl = null, P1 = null, P2 = null, fbo = null, tC = null, tD = null, quad = null, fw = 0, fh = 0, raf = 0, lost = false;
@@ -2852,8 +2896,8 @@ async function spheresDialog() {
   stat(found.length ? `Найдено шаров: ${found.length} на ${res.filter(a => a.length).length} сканах; общих для нескольких сканов: ${shared}. Буквы Ш1, Ш2… Лишний — удалите «⌫ Метка». Дальше «🎯 Уточнить».` : `Шаров диаметра ${D} мм не найдено. Проверьте диаметр или что шары попали в скан не дальше ~20 м.`);
 }
 // --- уточнить: от того, как сканы стоят сейчас (после автосшивки и ручной подгонки) ---
-function runRefine(list, poses, pairs, fixed) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || 'Уточняю'}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on);
-  w.postMessage({ cmd: 'refine', job, scans: list.map(s => ({ name: s.name, floor: s.floor, ceil: s.ceil, pts: s.pts.slice() })), poses, pairs, fixed, spheres: sphereGroups(list) }); }); }
+function runRefine(list, poses, pairs, fixed, fixedSet) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || 'Уточняю'}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on);
+  w.postMessage({ cmd: 'refine', job, scans: list.map(s => ({ name: s.name, floor: s.floor, ceil: s.ceil, pts: s.pts.slice() })), poses, pairs, fixed, fixedSet: fixedSet || null, spheres: sphereGroups(list) }); }); }
 function sphereGroups(list) { const by = {}; for (const m of S.marks) { if (!m.sphere) continue; const k = list.findIndex(s => s.id === m.sid); if (k < 0) continue; (by[m.lab] = by[m.lab] || []).push({ k, x: m.a[0], y: m.a[1], z: m.z }); } return Object.entries(by).map(([lab, obs]) => ({ lab, obs })); }
 async function refineStitch() {
   const list = S.scans.filter(s => s.vis).sort(scanOrder); if (list.length < 2) { uiAlert('Для уточнения нужно хотя бы два видимых скана.'); return; }
