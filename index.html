@@ -72,6 +72,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 #rotbar{background:rgba(27,31,38,.94);border:1px solid #3a424e;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.25)}#rotbar button{background:transparent;border:1px solid transparent;color:#e6ebf2;border-radius:6px}#rotbar button:hover{background:var(--rbh)}
 #pcard{border-radius:10px;border:1px solid #d5dbe3;box-shadow:0 6px 20px rgba(15,23,36,.14)}
 #gucard{position:fixed;right:14px;top:150px;z-index:8;width:260px;background:#fff;border:1px solid #d5dbe3;border-radius:10px;box-shadow:0 6px 20px rgba(15,23,36,.16);padding:10px;display:flex;flex-direction:column;gap:6px;font-size:13px}#gucard label{display:flex;align-items:center;gap:6px;color:#5d6877}#gucard input{width:90px;font:inherit;font-size:15px;padding:5px 7px;border:1px solid var(--line);border-radius:7px}#gucard .gb{display:flex;flex-wrap:wrap;gap:4px}#gucard .gb button{padding:4px 7px;font-size:12px}#gucard small{color:#8a95a3}
+.cl-list{max-height:34vh;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px;margin:4px 0 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:2px}.cl-i{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;cursor:pointer}.cl-i:hover{background:#f2f5f9}.cl-i i{width:12px;height:12px;border-radius:3px}.cl-i small{margin-left:auto;color:#8a95a3}
 #tip{position:fixed;z-index:99;max-width:320px;background:#1b1f26;color:#e6ebf2;border:1px solid #3a424e;border-radius:8px;padding:8px 10px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s}#tip.on{opacity:1}#tip b{display:block;color:#fff;font-size:13px;margin-bottom:2px}#tip kbd{display:inline-block;margin-top:5px;padding:0 6px;border:1px solid #4a5462;border-bottom-width:2px;border-radius:4px;font:11px/1.6 ui-monospace,monospace;color:#cfd8e3}
 @media (max-width:900px){#top .rg>button{min-width:50px;font-size:11px}#top .rg{padding:2px 5px 18px}}
 </style></head><body>
@@ -98,14 +99,15 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
   <div class="grp ctx rg" data-for="plan" data-cap="Фон"><div class="seg"><button data-pbg="slice" title="Срез|Тонкий срез всех сканов на одной высоте — по нему видно, сошлись ли стены">Срез</button><button data-pbg="scans" title="Сканы|Сканы целиком под планом">Сканы</button><button data-pbg="off" title="Без фона|Только план">Нет</button></div></div>
   <div class="grp ctx rg" data-for="plan" data-cap="Выгрузка"><button id="rbDxf" data-ic="dxf" title="DXF|Чертёж для AutoCAD: слои STENY, PROEMY, RAZMERY, SKANY; единицы — мм"><span>DXF</span></button><button id="rbRul" data-ic="tape" title="Для Рулетки|Файл проекта для Рулетки: помещения, проёмы, подоконники — домерить на месте"><span>Рулетка</span></button></div>
   <div class="grp ctx rg" data-for="grid" data-cap="Вид"><span id="colsBox" class="seg"><button data-cols="1" title="1 рамка в ряд">1</button><button data-cols="2" title="2 рамки в ряд">2</button><button data-cols="3" title="3 рамки в ряд">3</button><button data-cols="4" title="4 рамки в ряд">4</button><button id="bTW" title="Повернуть рамки как в сборке|Одна и та же стена на соседних сканах смотрит в одну сторону">↻</button></span></div>
+  <div class="grp ctx rg" data-for="asm" data-cap="Экспорт"><button id="rbE57" data-ic="cloud" title="Скачать сшитые сканы|E57 (каждый скан отдельно или одним облаком), XYZ или DXF — все сканы или выбранные"><span>E57</span></button></div>
   <div class="grp ctx rg" data-for="grid asm plan" data-cap="Выбранное"><button id="fDel" data-ic="trash" title="Удалить выбранное|Скан, метку, стену или проём — что выбрано|Delete"><span>Удалить</span></button></div>
  </div>
 </div>
-<div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">☁ Облако точек — AutoCAD / ReCap</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
+<div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">⬇ Скачать сшитые сканы — E57, XYZ, DXF</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.5 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.6 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -1736,6 +1738,7 @@ const ICONS = {
   plan: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>', walls: '<path d="M3 5h18v14H3z"/><path d="M3 12h9M12 5v14"/>',
   close: '<path d="M6 20V8a2 2 0 0 1 2-2h12"/><circle cx="6" cy="6" r="2"/>', square: '<path d="M5 19V5M5 19h14"/><path d="M5 13h6v6"/>',
   dxf: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>', tape: '<rect x="3" y="7" width="13" height="10" rx="2"/><circle cx="9.5" cy="12" r="2.5"/><path d="M16 15h5"/>',
+  cloud: '<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>',
   trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'
 };
 function svgIc(k) { return ICONS[k] ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>` : ''; }
@@ -1760,7 +1763,7 @@ window.addEventListener('resize', layoutTop);
 document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layoutTop();
   $('#rbRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); };
   $('#rbWalls').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
-  $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
+  $('#rbE57').onclick = cloudDialog; $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
   $$('[data-pbg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.pbg === 'off' ? false : b.dataset.pbg; renderBar(); drawPlan(); });
   $('#bAdd').onclick = () => $('#fileIn').click(); $('#fileIn').onchange = e => { const f = e.target.files; if (f && f.length) loadFiles(f); e.target.value = ''; };
   $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); $$('[data-tool]').forEach(b => b.onclick = () => setTool(S.tool === b.dataset.tool ? 'hand' : b.dataset.tool));
@@ -2205,23 +2208,116 @@ function exportDXF() {
 }
 
 // --- облако точек: все видимые сканы в общих координатах, высота — от пола ---
+// ===== запись E57 (ASTM E2807): страницы 1024 байт с CRC32C, XML, сжатые векторы точек (float32 x,y,z) =====
+const E57W = (() => {
+  const T = new Uint32Array(256); for (let i = 0; i < 256; i++) { let c = i; for (let k = 0; k < 8; k++) c = c & 1 ? (c >>> 1) ^ 0x82F63B78 : c >>> 1; T[i] = c >>> 0; }
+  const crc32c = (u8, a, b) => { let c = 0xFFFFFFFF; for (let i = a; i < b; i++) c = T[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  const phys = L => Math.floor(L / 1020) * 1024 + (L % 1020);
+  const guid = () => '{' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }) + '}';
+  const esc = s => String(s).replace(/]]>/g, ']]]]><![CDATA[>');
+  const f = v => Number.isFinite(v) ? String(v) : '0';
+  // clouds: [{ name, P: Float32Array xyz, pose: { rz (рад), tx, ty, tz } }]
+  function write(clouds, meta = {}) {
+    const parts = []; let L = 48; // логическая длина; 48 — заголовок файла
+    const put = u8 => { parts.push(u8); L += u8.length; };
+    const pad4 = () => { const r = (4 - (L % 4)) % 4; if (r) put(new Uint8Array(r)); };
+    const recs = [];
+    for (const cl of clouds) {
+      pad4(); const secStart = L, n = cl.P.length / 3; put(new Uint8Array(32)); // заголовок раздела — заполним ниже
+      const dataStart = L, PER = 5000;
+      for (let r0 = 0; r0 < n; r0 += PER) { const m = Math.min(PER, n - r0), hdr = 6 + 6, body = m * 12, len = Math.ceil((hdr + body) / 4) * 4, pk = new Uint8Array(len), dv = new DataView(pk.buffer);
+        pk[0] = 1; pk[1] = 0; dv.setUint16(2, len - 1, true); dv.setUint16(4, 3, true); dv.setUint16(6, m * 4, true); dv.setUint16(8, m * 4, true); dv.setUint16(10, m * 4, true);
+        for (let k = 0; k < 3; k++) { let o = hdr + k * m * 4; for (let i = 0; i < m; i++, o += 4) dv.setFloat32(o, cl.P[(r0 + i) * 3 + k], true); }
+        put(pk); }
+      const sh = parts[parts.length - 1 - Math.ceil(n / PER)], sdv = new DataView(sh.buffer); sh[0] = 1;
+      sdv.setBigUint64(8, BigInt(L - secStart), true); sdv.setBigUint64(16, BigInt(phys(dataStart)), true); sdv.setBigUint64(24, 0n, true);
+      let mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity]; for (let i = 0; i < cl.P.length; i += 3) for (let k = 0; k < 3; k++) { const v = cl.P[i + k]; if (v < mn[k]) mn[k] = v; if (v > mx[k]) mx[k] = v; }
+      recs.push({ cl, n, off: phys(secStart), mn, mx }); }
+    pad4(); const xmlStart = L;
+    const q = cl => { const h = (cl.pose.rz || 0) / 2; return [Math.cos(h), 0, 0, Math.sin(h)]; };
+    const fl = (nm, v) => `<${nm} type="Float">${f(v)}</${nm}>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<e57Root type="Structure" xmlns="http://www.astm.org/COMMIT/E57/2010-e57-v1.0">
+<formatName type="String"><![CDATA[ASTM E57 3D Imaging Data File]]></formatName>
+<guid type="String"><![CDATA[${guid()}]]></guid>
+<versionMajor type="Integer">1</versionMajor>
+<versionMinor type="Integer">0</versionMinor>
+<e57LibraryVersion type="String"><![CDATA[${esc(meta.lib || 'Skan (d1sco) E57 writer')}]]></e57LibraryVersion>
+<coordinateMetadata type="String"><![CDATA[]]></coordinateMetadata>
+<creationDateTime type="Structure">${fl('dateTimeValue', Date.now() / 1000 - 315964800 + 18)}<isAtomicClockReferenced type="Integer">0</isAtomicClockReferenced></creationDateTime>
+<data3D type="Vector" allowHeterogeneousChildren="1">
+${recs.map(r => { const [w, x, y, z] = q(r.cl), p = r.cl.pose; return `<vectorChild type="Structure">
+<guid type="String"><![CDATA[${guid()}]]></guid>
+<name type="String"><![CDATA[${esc(r.cl.name)}]]></name>
+<description type="String"><![CDATA[${esc(meta.desc || '')}]]></description>
+<pose type="Structure"><rotation type="Structure">${fl('w', w)}${fl('x', x)}${fl('y', y)}${fl('z', z)}</rotation><translation type="Structure">${fl('x', p.tx || 0)}${fl('y', p.ty || 0)}${fl('z', p.tz || 0)}</translation></pose>
+<cartesianBounds type="Structure">${fl('xMinimum', r.mn[0])}${fl('xMaximum', r.mx[0])}${fl('yMinimum', r.mn[1])}${fl('yMaximum', r.mx[1])}${fl('zMinimum', r.mn[2])}${fl('zMaximum', r.mx[2])}</cartesianBounds>
+<points type="CompressedVector" fileOffset="${r.off}" recordCount="${r.n}">
+<prototype type="Structure"><cartesianX type="Float" precision="single"/><cartesianY type="Float" precision="single"/><cartesianZ type="Float" precision="single"/></prototype>
+<codecs type="Vector" allowHeterogeneousChildren="1"></codecs>
+</points>
+</vectorChild>`; }).join('\n')}
+</data3D>
+<images2D type="Vector" allowHeterogeneousChildren="1"></images2D>
+</e57Root>`;
+    const xb = new TextEncoder().encode(xml); put(xb);
+    // логический поток → физический: по 1020 байт + CRC32C (big-endian)
+    const pages = Math.ceil(L / 1020), out = new Uint8Array(pages * 1024); let pos = 0, pi = 0, po = 0;
+    const hdr = new Uint8Array(48), hv = new DataView(hdr.buffer); 'ASTM-E57'.split('').forEach((ch, i) => hdr[i] = ch.charCodeAt(0));
+    hv.setUint32(8, 1, true); hv.setUint32(12, 0, true); hv.setBigUint64(16, BigInt(pages * 1024), true); hv.setBigUint64(24, BigInt(phys(xmlStart)), true); hv.setBigUint64(32, BigInt(xb.length), true); hv.setBigUint64(40, 1024n, true);
+    const all = [hdr, ...parts];
+    for (const u of all) { let i = 0; while (i < u.length) { const k = Math.min(1020 - po, u.length - i); out.set(u.subarray(i, i + k), pi * 1024 + po); po += k; i += k; if (po === 1020) { po = 0; pi++; } } }
+    for (let p = 0; p < pages; p++) new DataView(out.buffer).setUint32(p * 1024 + 1020, crc32c(out, p * 1024, p * 1024 + 1020), false);
+    void pos; return out; }
+  return { write };
+})();
+
 async function cloudDialog() {
-  const vis = S.scans.filter(s => s.vis); if (!vis.length) { uiAlert('Нет видимых сканов.'); return; }
-  const G = grpScans(), L0 = G.length ? G.filter(s => s.vis) : vis;
+  if (!S.scans.length) { uiAlert('Сначала загрузите сканы.'); return; }
+  const chosen = new Set(S.scans.filter(s => s.vis).map(s => s.id)); let dens = 0.02, fmt = 'e57', mode = 'sep';
   const ov = document.createElement('div'); ov.className = 'dlg';
-  ov.innerHTML = `<div class="dlg-b"><div class="lh"><div class="dlg-t">☁ Облако точек</div><button data-x>✕</button></div>
-  <div class="dlg-x">Сканы в сшитом положении, каждый скан — свой слой и цвет. Высота — от пола, единицы — мм (как в DXF плана). Стёртое кистью не попадает.</div>
-  <div class="pc-r"><label>Что:</label><button data-w="all" class="on">Все видимые (${vis.length})</button>${G.length && G.length < vis.length ? `<button data-w="sel">Выбранные (${L0.length})</button>` : ''}</div>
-  <div class="pc-r"><label>Шаг точек:</label><button data-d="0.10">10 см</button><button data-d="0.05" class="on">5 см</button><button data-d="0.02">2 см (все)</button></div>
-  <div class="pc-r"><label>Формат:</label><button data-f="dxf" class="on">DXF — AutoCAD</button><button data-f="xyz">XYZ — ReCap / CloudCompare</button></div>
+  ov.innerHTML = `<div class="dlg-b" style="max-width:560px"><div class="lh"><div class="dlg-t">⬇ Скачать сшитые сканы</div><button data-x>✕</button></div>
+  <div class="dlg-x">Сканы в сшитом положении. Стёртое кистью не попадает. Точки — с той плотностью, с какой сканы загружены в программу (около 2 см).</div>
+  <div class="pc-r"><label>Какие сканы:</label><button data-all>Все</button><button data-none>Ничего</button><button data-vis>Как на экране</button>${(grpScans() || []).length > 1 ? '<button data-grp>Выбранные</button>' : ''}</div>
+  <div class="cl-list">${S.scans.map(s => `<label class="cl-i"><input type="checkbox" data-sid="${s.id}" ${chosen.has(s.id) ? 'checked' : ''}><i style="background:${s.color}"></i>${escH(s.name)}<small>${(s.pts.length / 3 / 1000).toFixed(0)} тыс.</small></label>`).join('')}</div>
+  <div class="pc-r"><label>Формат:</label><button data-f="e57" class="on" title="E57|Международный формат облаков: CloudCompare, ReCap, Revit, FARO SCENE, Leica Cyclone">E57</button><button data-f="xyz" title="XYZ|Текст: x y z и цвет скана — ReCap, CloudCompare">XYZ</button><button data-f="dxf" title="DXF|Точки в AutoCAD — только для небольших облаков">DXF</button></div>
+  <div class="pc-r" id="cMode"><label>E57:</label><button data-m="sep" class="on" title="Каждый скан отдельно|Сканы — отдельными облаками в одном файле, с положением каждого (как из FARO SCENE)">Каждый скан отдельно</button><button data-m="one" title="Одним облаком|Все выбранные сканы слиты в одно облако в общих координатах">Одним облаком</button></div>
+  <div class="pc-r"><label>Шаг точек:</label><button data-d="0.10">10 см</button><button data-d="0.05">5 см</button><button data-d="0.02" class="on">2 см (все)</button></div>
   <div class="dlg-x" id="cInfo"></div><div class="row r"><button class="pri" data-go>Скачать</button></div></div>`;
-  document.body.appendChild(ov); let who = 'all', dens = 0.05, fmt = 'dxf';
-  const info = () => { const L = who === 'sel' ? L0 : vis, n = L.reduce((a, s) => a + s.pts.length / 3, 0), k = Math.min(1, (0.02 / dens) ** 2 * 1.5), est = Math.round(n * k);
-    $('#cInfo').textContent = `Примерно ${est.toLocaleString('ru')} точек, файл ≈ ${Math.max(1, Math.round(est * (fmt === 'dxf' ? 62 : 26) / 1048576))} МБ.` + (fmt === 'dxf' && est > 1500000 ? ' Для AutoCAD это много — возьмите шаг крупнее или XYZ через ReCap.' : ''); };
+  document.body.appendChild(ov);
+  const L = () => S.scans.filter(s => chosen.has(s.id));
+  const info = () => { const n = L().reduce((a, s) => a + s.pts.length / 3, 0), k = Math.min(1, (0.02 / dens) ** 2 * 1.5), est = Math.round(n * k), per = fmt === 'dxf' ? 62 : fmt === 'xyz' ? 26 : 12.3;
+    $('#cInfo').textContent = L().length ? `Сканов: ${L().length}, примерно ${est.toLocaleString('ru')} точек, файл ≈ ${Math.max(1, Math.round(est * per / 1048576))} МБ.` + (fmt === 'dxf' && est > 1500000 ? ' Для AutoCAD это много — возьмите шаг крупнее или E57.' : '') : 'Отметьте хотя бы один скан.';
+    $('#cMode').style.display = fmt === 'e57' ? '' : 'none'; ov.querySelector('[data-go]').disabled = !L().length; };
+  const sync = () => ov.querySelectorAll('[data-sid]').forEach(c => c.checked = chosen.has(+c.dataset.sid));
+  ov.querySelectorAll('[data-sid]').forEach(c => c.onchange = () => { c.checked ? chosen.add(+c.dataset.sid) : chosen.delete(+c.dataset.sid); info(); });
+  ov.querySelector('[data-all]').onclick = () => { S.scans.forEach(s => chosen.add(s.id)); sync(); info(); };
+  ov.querySelector('[data-none]').onclick = () => { chosen.clear(); sync(); info(); };
+  ov.querySelector('[data-vis]').onclick = () => { chosen.clear(); S.scans.filter(s => s.vis).forEach(s => chosen.add(s.id)); sync(); info(); };
+  const bg = ov.querySelector('[data-grp]'); if (bg) bg.onclick = () => { chosen.clear(); grpScans().forEach(s => chosen.add(s.id)); sync(); info(); };
   const seg = (attr, set) => ov.querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { ov.querySelectorAll(`[${attr}]`).forEach(x => x.classList.toggle('on', x === b)); set(b.getAttribute(attr)); info(); });
-  seg('data-w', v => who = v); seg('data-d', v => dens = +v); seg('data-f', v => fmt = v); info();
+  seg('data-d', v => dens = +v); seg('data-f', v => fmt = v); seg('data-m', v => mode = v); info();
   ov.querySelector('[data-x]').onclick = () => ov.remove();
-  ov.querySelector('[data-go]').onclick = async () => { ov.remove(); await exportCloud(who === 'sel' ? L0 : vis, dens, fmt); };
+  ov.querySelector('[data-go]').onclick = async () => { const list = L(); if (!list.length) return; ov.remove(); if (fmt === 'e57') await exportE57(list, dens, mode); else await exportCloud(list, dens, fmt); };
+}
+// E57: «каждый скан отдельно» — точки скана в его системе + положение (поворот вокруг вертикали, сдвиг; пол — на нуле); «одним облаком» — всё в общих координатах
+async function exportE57(L, dens, mode) {
+  busy('Готовлю E57…'); await new Promise(r => setTimeout(r, 30)); const clouds = []; let tot = 0; const seenAll = mode === 'one' && dens > 0.025 ? new Set() : null, mergedParts = [];
+  for (const s of L) { const P = s.pts, c = Math.cos(s.pose.a), sn = Math.sin(s.pose.a), cg = s.cg, er = cg && cg.er, seen = mode === 'one' ? seenAll : (dens > 0.025 ? new Set() : null), out = new Float32Array(P.length); let n = 0;
+    for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1], z = P[i + 2] - s.floor;
+      if (er) { const u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res); if (u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]) continue; }
+      const X = c * x - sn * y + s.pose.x, Y = sn * x + c * y + s.pose.y;
+      if (seen) { const key = Math.floor(X / dens) * 73856093 ^ Math.floor(Y / dens) * 19349663 ^ Math.floor(z / dens) * 83492791; if (seen.has(key)) continue; seen.add(key); }
+      if (mode === 'one') { out[n++] = X; out[n++] = Y; out[n++] = z; } else { out[n++] = x; out[n++] = y; out[n++] = z; } }
+    tot += n / 3; if (mode === 'one') mergedParts.push(out.subarray(0, n)); else clouds.push({ name: s.name, P: out.slice(0, n), pose: { rz: s.pose.a, tx: s.pose.x, ty: s.pose.y, tz: 0 } });
+    busy(`Готовлю E57… ${s.name}`); await new Promise(r => setTimeout(r, 0)); }
+  const pname = ((pjCur() && pjCur().name) || 'Сканы');
+  if (mode === 'one') { const all = new Float32Array(tot * 3); let o = 0; for (const q of mergedParts) { all.set(q, o); o += q.length; } clouds.push({ name: pname, P: all, pose: { rz: 0, tx: 0, ty: 0, tz: 0 } }); }
+  busy('Записываю E57…'); await new Promise(r => setTimeout(r, 0));
+  let u8; try { u8 = E57W.write(clouds, { desc: 'Скан (d1sco): сшитые сканы, высота от пола, метры' }); } catch (e) { busy(''); uiAlert('Не получилось записать E57: ' + e.message); return; }
+  const blob = new Blob([u8], { type: 'application/octet-stream' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = pname.replace(/[\\/:*?"<>|]/g, '_') + (mode === 'one' ? '_облако' : '_сканы') + '.e57'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); busy('');
+  stat(`E57 сохранён: ${mode === 'one' ? 'одно облако' : 'сканов ' + clouds.length + ' (каждый со своим положением)'}, ${Math.round(tot).toLocaleString('ru')} точек, ${(blob.size / 1048576).toFixed(1).replace('.', ',')} МБ. Открывается в CloudCompare, ReCap, Revit, FARO SCENE.`);
 }
 async function exportCloud(L, dens, fmt) {
   busy('Собираю облако…'); await new Promise(r => setTimeout(r, 30));
