@@ -118,7 +118,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.6 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.7 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -183,9 +183,13 @@ const E57 = (() => {
     const maxRange = opt.maxRange || 40;
     const minRange = opt.minRange || 0.3;
     const prog = opt.onProgress || (() => {});
-    const u8 = new Uint8Array(ab);
-    const dv = new DataView(ab);
-    const sig = String.fromCharCode(...u8.subarray(0, 8));
+    // большие файлы (больше 2 ГБ браузер целиком не читает) — кусками по 32 МБ прямо из файла
+    let get;
+    if (typeof Blob !== 'undefined' && ab instanceof Blob) { const FR = new FileReaderSync(), W = 32 << 20, blob = ab; let w0 = -1, wb = null;
+      get = (p, n) => { if (n > W) return new Uint8Array(FR.readAsArrayBuffer(blob.slice(p, p + n))); if (w0 < 0 || p < w0 || p + n > w0 + wb.length) { w0 = p; wb = new Uint8Array(FR.readAsArrayBuffer(blob.slice(p, Math.min(blob.size, p + W)))); } return wb.subarray(p - w0, p - w0 + n); }; }
+    else { const u8a = new Uint8Array(ab); get = (p, n) => u8a.subarray(p, p + n); }
+    const h48 = get(0, 48).slice(), dv = new DataView(h48.buffer);
+    const sig = String.fromCharCode(...h48.subarray(0, 8));
     if (sig !== 'ASTM-E57') throw new Error('Это не E57 файл');
     const xmlOff = Number(dv.getBigUint64(24, true));
     const xmlLen = Number(dv.getBigUint64(32, true));
@@ -199,7 +203,7 @@ const E57 = (() => {
         const inPage = p % ps;
         if (inPage >= pd) { p += ps - inPage; continue; }
         const n = Math.min(pd - inPage, len - o);
-        out.set(u8.subarray(p, p + n), o);
+        out.set(get(p, n), o);
         o += n; p += n;
       }
       return out;
@@ -1023,7 +1027,7 @@ self.onmessage = e => {
       for (let i = 0; i < P.length; i += 3) { const z = P[i + 2]; if (z < lo || z > hi) continue; if (kc) { kc[n] = CO[i]; kc[n + 1] = CO[i + 1]; kc[n + 2] = CO[i + 2]; } keep[n++] = P[i]; keep[n++] = P[i + 1]; keep[n++] = z;
         if (P[i] * P[i] + P[i + 1] * P[i + 1] < 64) { const b = Math.floor((z - fc.floor + 0.15) / 0.05); if (b >= 0 && b < H) hist[b]++; } }
       const pts = keep.slice(0, n);
-      out.push({ name: list.length > 1 ? (sc.name || name + '_' + (k + 1)) : name, idx: sc.idx, floor: fc.floor, ceil: fc.ceil, pts, col: kc ? kc.slice(0, n) : null, rgb: sc.rgb, hist: Array.from(hist), total: sc.total });
+      out.push({ name: list.length > 1 ? (sc.name || name + '_' + (k + 1)) : name, idx: sc.idx, R: sc.R, t: sc.t, floor: fc.floor, ceil: fc.ceil, pts, col: kc ? kc.slice(0, n) : null, rgb: sc.rgb, hist: Array.from(hist), total: sc.total });
     }
     self.postMessage({ job, done: true, scans: out }, out.flatMap(o => o.col ? [o.pts.buffer, o.col.buffer] : [o.pts.buffer]));
   } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); }
@@ -1543,24 +1547,29 @@ async function restore() {
 // ---------- загрузка E57 ----------
 let worker = null;
 function getWorker() { if (worker) return worker; const src = document.getElementById('e57src').textContent + '\n' + document.getElementById('spsrc').textContent + '\n' + document.getElementById('wsrc').textContent; worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' }))); return worker; }
-function readOne(file, voxel) { return new Promise((res, rej) => { file.arrayBuffer().then(buf => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null) { busy(`Читаю ${file.name}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.scans); }; w.addEventListener('message', on); w.postMessage({ job, name: file.name.replace(/\.e57$/i, ''), buf, voxel }, [buf]); }, rej); }); }
+function readOne(file, voxel) { return new Promise((res, rej) => { Promise.resolve(file).then(buf => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null) { busy(`Читаю ${file.name}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.scans); }; w.addEventListener('message', on); w.postMessage({ job, name: file.name.replace(/\.e57$/i, ''), buf, voxel }); }, rej); }); }
 async function loadFiles(files) {
   files = [...files].filter(f => /\.e57$/i.test(f.name)); if (!files.length) { uiAlert('Нужны файлы .e57 (сканы FARO пересохраняются в E57 файлом fls_to_e57.bat).'); return; }
   pushUndo(); let n = 0, err = [];
   for (const f of files) {
     if (S.scans.some(s => s.file === f.name)) { err.push(f.name + ' — уже загружен'); continue; }
     try { S.srcFiles.set(f.name, f); const list = await readOne(f, 0.02);
+      // положения из файла: если хоть у одного скана есть сдвиг — файл сшитый, ставим сканы по нему (высоты — от общего нуля)
+      const posed = list.some(q => q.t && Math.hypot(q.t[0], q.t[1], q.t[2]) > 0.01), dz0 = posed ? list.map(q => -q.t[2] - q.floor).sort((a, b) => a - b)[list.length >> 1] : 0, dz = Math.abs(dz0) < 0.05 ? 0 : dz0; // своя выгрузка — высоты как были; чужая (с отметками) — к общему нулю
       for (const q of list) {
         const id = S.nextScan++, key = 'k' + Date.now() + '_' + id, col = PAL[(id - 1) % PAL.length];
         const s = { id, key, name: q.name, file: f.name, src: { file: f.name, idx: q.idx || 0, size: f.size }, total: q.total, col: q.col || null, rgb: !!q.rgb, floor: q.floor, ceil: q.ceil, hist: q.hist, pts: q.pts, color: col, band: [0.1, Math.max(0.6, +(q.ceil - q.floor - 0.08).toFixed(2))], anchor: S.scans.length === 0, vis: true, pose: { x: 0, y: 0, a: 0 } };
         // раскладываем рядом, чтобы новые сканы не лежали стопкой
         const k = S.scans.length, c = 4; s.pose = { x: (k % c) * 14, y: -Math.floor(k / c) * 14, a: 0 };
+        if (posed && q.R) { const R = q.R, yaw = Math.atan2(R[3] - R[1], R[0] + R[4]), cy = Math.cos(yaw), sy = Math.sin(yaw), L = m3([cy, sy, 0, -sy, cy, 0, 0, 0, 1], R);
+          s.pose = { x: q.t[0], y: q.t[1], a: normA(yaw) }; if (Math.abs(L[2]) + Math.abs(L[5]) + Math.abs(L[6]) + Math.abs(L[7]) > 1e-7) s.lev = L; const fl = -q.t[2] - dz; s.ceil += fl - s.floor; s.floor = fl; s.placed = true; s.fromFile = true; }
         prepScan(s); S.scans.push(s); n++;
         await put('pts:' + key, s.pts.buffer.slice(0)); if (s.col) await put('col:' + key, s.col.buffer.slice(0));
       }
     } catch (e) { err.push(f.name + ': ' + e.message); }
   }
-  busy(''); renderAll(); saveSoon(); fitAsm();
+  busy(''); renderAll(); saveSoon(); fitAsm(); const fromF = S.scans.filter(s => s.fromFile).length; S.scans.forEach(s => delete s.fromFile);
+  if (fromF) { stat(`Загружено сканов: ${n}, из них ${fromF} — сразу на своих местах (положения взяты из файла: сшивка сохранена).${err.length ? ' Не получилось: ' + err.join('; ') : ''} Проверить — вкладка «3D».`); return; }
   stat(`Загружено сканов: ${n}.${err.length ? ' Не получилось: ' + err.join('; ') : ''} Дальше — шаг «2 Сборка» → «🤖 Автосшивка».`);
 }
 
@@ -2497,7 +2506,7 @@ async function cloudDialog() {
   <div class="pc-r"><label>Какие сканы:</label><button data-all>Все</button><button data-none>Ничего</button><button data-vis>Как на экране</button>${(grpScans() || []).length > 1 ? '<button data-grp>Выбранные</button>' : ''}</div>
   <div class="cl-list">${S.scans.map(s => `<label class="cl-i"><input type="checkbox" data-sid="${s.id}" ${chosen.has(s.id) ? 'checked' : ''}><i style="background:${s.color}"></i>${escH(s.name)}<small>${s.total ? (s.total / 1e6).toFixed(1).replace('.', ',') + ' млн' : ''}</small></label>`).join('')}</div>
   <div class="pc-r"><label>Формат:</label><button data-f="e57" class="on" title="E57|Международный формат облаков: CloudCompare, ReCap, Revit, FARO SCENE, Leica Cyclone">E57</button><button data-f="xyz" title="XYZ|Текст: x y z и цвет скана — ReCap, CloudCompare">XYZ</button><button data-f="dxf" title="DXF|Точки в AutoCAD — только для небольших облаков">DXF</button></div>
-  <div class="pc-r" id="cMode"><label>Как сложить:</label><button data-m="sep" class="on" title="Один файл, сканы отдельно|Сканы — отдельными облаками в одном файле, у каждого своё положение (как выгрузка из FARO SCENE). В CloudCompare и ReCap встают на места сами">Один файл, сканы отдельно</button><button data-m="one" title="Одним облаком|Все выбранные сканы слиты в одно облако в общих координатах">Одним облаком</button><button data-m="each" title="Каждый скан — свой файл|Отдельный файл на каждый скан, точки уже в общих координатах">Каждый скан — свой файл</button></div>
+  <div class="pc-r" id="cMode"><label>Как сложить:</label><button data-m="sep" class="on" title="Один файл, сканы отдельно|Сканы — отдельными облаками в одном файле, у каждого своё положение (как выгрузка из FARO SCENE). В CloudCompare и ReCap встают на места сами">Один файл, сканы отдельно</button><button data-m="one" title="Одним облаком|Все выбранные сканы слиты в одно облако в общих координатах">Одним облаком</button><button data-m="each" title="Каждый скан — свой файл|Отдельный файл на каждый скан, у каждого своё положение — CloudCompare, ReCap и Скан ставят его на место сами">Каждый скан — свой файл</button></div>
   <div class="pc-r"><label>Плотность:</label><button data-d="full" class="on" title="Полная|Все точки из исходных файлов E57, с цветом и яркостью — для камеральной обработки">Полная</button><button data-d="0.02" title="2 см|Как загружено в программу — быстро и компактно">2 см</button><button data-d="0.05">5 см</button><button data-d="0.10">10 см</button></div>
   <div class="pc-r"><label class="v3c"><input type="checkbox" id="cErase" checked> Без стёртого кистью (люди, мебель)</label></div>
   <div class="pc-r"><label>Имя файла:</label><input id="cName" class="dlg-in" style="flex:1;min-width:180px;margin:0" value="${escH(pname)}"></div>
@@ -2847,7 +2856,7 @@ async function rereadScans() {
   stat(`Перечитано сканов: ${n} — во всю высоту. Точек ниже пола: ${low.toLocaleString('ru')}. Сшивка не изменилась.${err.length ? ' Не прочитались: ' + err.join('; ') : ''} Во вкладке «3D» — кнопка «Низ».`);
 }
 // ===================== ВЫГРУЗКА E57: полная плотность из исходных файлов или как в программе =====================
-function readFull(file, s) { return file.arrayBuffer().then(buf => runWorker({ cmd: 'full', buf, idx: (s.src && s.src.idx) || 0, name: s.name, cg: s.cg && s.cg.er ? { x0: s.cg.x0, y1: s.cg.y1, w: s.cg.w, h: s.cg.h, res: s.cg.res, er: s.cg.er } : null }, [buf], 'Читаю ' + s.name)); }
+function readFull(file, s) { return Promise.resolve(file).then(buf => runWorker({ cmd: 'full', buf, idx: (s.src && s.src.idx) || 0, name: s.name, cg: s.cg && s.cg.er ? { x0: s.cg.x0, y1: s.cg.y1, w: s.cg.w, h: s.cg.h, res: s.cg.res, er: s.cg.er } : null }, [], 'Читаю ' + s.name)); }
 function askSourceFiles(missing, go = 'Выгрузить', why = 'Для полной плотности программа читает точки из исходных файлов сканов, а их нет в памяти (страницу открывали заново).') { // исходные E57 не в памяти (после перезапуска) — попросить выбрать
   return new Promise(res => { const ov = document.createElement('div'); ov.className = 'dlg';
     ov.innerHTML = `<div class="dlg-b" style="max-width:520px"><div class="dlg-t">Нужны исходные файлы E57</div><div class="dlg-x">${why} Выберите эти файлы — можно все сразу:<br><small>${missing.slice(0, 12).map(escH).join(', ')}${missing.length > 12 ? ' и ещё ' + (missing.length - 12) : ''}</small></div><div class="row r"><button class="c">Отмена</button><button class="pri" data-pick>Выбрать файлы…</button></div></div>`;
@@ -2883,7 +2892,7 @@ async function exportE57(L, opts) {
       const { R, t } = worldRT(s);
       busy(`Выгрузка E57: ${lab} — записываю ${n.toLocaleString('ru')} точек…`); await new Promise(r => setTimeout(r, 0));
       let o = null; if (mode === 'each') { o = await open(base + '_' + String(s.name).replace(/[\\/:*?"<>|]/g, '_') + '.e57'); if (!o) return; outs.push(o); W = E57S.create(o.sink); }
-      if (mode === 'sep') { await W.begin({ name: s.name, desc: 'Скан: положение после сшивки', pose: { q: E57S.quat(R), t }, rgb: !!C, inten: !!I }); await W.add(P, C, I, n); await W.end(); }
+      if (mode === 'sep' || mode === 'each') { await W.begin({ name: s.name, desc: 'Скан: положение после сшивки', pose: { q: E57S.quat(R), t }, rgb: !!C, inten: !!I }); await W.add(P, C, I, n); await W.end(); if (mode === 'each') { const r = await W.finish({ coord: 'Скан: локальная система сборки, метры' }); bytes += r.bytes; save(o); } }
       else { // общие координаты: точки переводятся в систему сборки
         if (mode === 'each' || k === 1) await W.begin({ name: mode === 'one' ? base : s.name, desc: 'Сшитые сканы в общей системе', pose: { q: [1, 0, 0, 0], t: [0, 0, 0] }, rgb: !!C, inten: !!I });
         const CH = 500000, T = new Float32Array(CH * 3);
