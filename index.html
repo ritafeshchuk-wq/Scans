@@ -71,6 +71,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 #foot{background:var(--rb0);color:#c7d0dc;border-top:1px solid #11151a;font-size:12.5px}#foot #saved,#foot #ver{color:var(--rbm)}
 #rotbar{background:rgba(27,31,38,.94);border:1px solid #3a424e;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.25)}#rotbar button{background:transparent;border:1px solid transparent;color:#e6ebf2;border-radius:6px}#rotbar button:hover{background:var(--rbh)}
 #pcard{border-radius:10px;border:1px solid #d5dbe3;box-shadow:0 6px 20px rgba(15,23,36,.14)}
+#gucard{position:fixed;right:14px;top:150px;z-index:8;width:260px;background:#fff;border:1px solid #d5dbe3;border-radius:10px;box-shadow:0 6px 20px rgba(15,23,36,.16);padding:10px;display:flex;flex-direction:column;gap:6px;font-size:13px}#gucard label{display:flex;align-items:center;gap:6px;color:#5d6877}#gucard input{width:90px;font:inherit;font-size:15px;padding:5px 7px;border:1px solid var(--line);border-radius:7px}#gucard .gb{display:flex;flex-wrap:wrap;gap:4px}#gucard .gb button{padding:4px 7px;font-size:12px}#gucard small{color:#8a95a3}
 #tip{position:fixed;z-index:99;max-width:320px;background:#1b1f26;color:#e6ebf2;border:1px solid #3a424e;border-radius:8px;padding:8px 10px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s}#tip.on{opacity:1}#tip b{display:block;color:#fff;font-size:13px;margin-bottom:2px}#tip kbd{display:inline-block;margin-top:5px;padding:0 6px;border:1px solid #4a5462;border-bottom-width:2px;border-radius:4px;font:11px/1.6 ui-monospace,monospace;color:#cfd8e3}
 @media (max-width:900px){#top .rg>button{min-width:50px;font-size:11px}#top .rg{padding:2px 5px 18px}}
 </style></head><body>
@@ -104,7 +105,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.4 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.5 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -1568,6 +1569,8 @@ function bindCanvas(cv, ctxInfo) {
       if (onSel) pushUndo(); return; }
     if (P.size > 2) return;
     const w = toW(e);
+    if (ctxInfo.kind === 'asm' && (S.tool === 'hand' || GU_TOOLS.includes(S.tool)) && S.tool !== 'gdel') { const h = guHit(w, V().s); // взять линию или угол плана: тянуть — двигать, концы — длина и поворот, кружок — поворот
+      if (h) { pushUndo(); S.guSel = h.sel; g = { kind: 'guEdit', h, w0: w, moved: false, a0: h.g ? h.g.a.slice() : null, b0: h.g ? h.g.b.slice() : null, p0: h.q ? h.q.p.slice() : null }; drawAsm(); renderGuCard(); return; } }
     if (ctxInfo.kind === 'asm' && GU_TOOLS.includes(S.tool)) { if (S.tool === 'gline') { g = { kind: 'guDraw', a: w }; S.guDraw = { a: w, b: w }; return; } g = { kind: 'pan', x: e.clientX, y: e.clientY, v0: { ...V() }, tap: true, gu: w }; return; }
     if (ctxInfo.kind === 'tile') { S.sel = ctxInfo.sid; $$('.tile').forEach(t => t.classList.toggle('sel', t.id === 'tile-' + ctxInfo.sid)); $$('.si').forEach(t => t.classList.toggle('sel', +t.dataset.sid === ctxInfo.sid)); }
     const right = e.button === 2;
@@ -1608,6 +1611,13 @@ function bindCanvas(cv, ctxInfo) {
       if (g.grp) { for (const q of g.grp) { const r2 = rot([q.pose0.x - g.wm0[0], q.pose0.y - g.wm0[1]], da); q.sc.pose = { x: wm[0] + r2[0], y: wm[1] + r2[1], a: normA(q.pose0.a + da) }; } drawAsm(); return; } const rel = rot([p0.x - g.wm0[0], p0.y - g.wm0[1]], da); sc.pose = { x: wm[0] + rel[0], y: wm[1] + rel[1], a: normA(p0.a + da) }; drawAsm(); return; }
     if (g.kind === 'pan') { const k = v.s; v.cx = g.v0.cx - (e.clientX - g.x) / k; v.cy = g.v0.cy + (e.clientY - g.y) / k; if (Math.hypot(e.clientX - g.x, e.clientY - g.y) > 6) g.tap = false; redrawOne(); return; }
     const w = toW(e);
+    if (g.kind === 'guEdit') { const h = g.h, d = sub(w, g.w0); if (len(d) * v.s > 3) g.moved = true; if (!g.moved) return;
+      if (h.q) h.q.p = addv(g.p0, d);
+      else if (h.part === 'line') { h.g.a = addv(g.a0, d); h.g.b = addv(g.b0, d); }
+      else if (h.part === 'a' || h.part === 'b') { const o = h.part === 'a' ? g.b0 : g.a0; let p = w; const dd = sub(p, o), L = len(dd), ang = Math.atan2(dd[1], dd[0]), st = Math.round(ang / (Math.PI / 12)) * Math.PI / 12; if (Math.abs(normA(ang - st)) < 0.8 * Math.PI / 180) p = addv(o, [Math.cos(st) * L, Math.sin(st) * L]); h.g[h.part] = p; }
+      else if (h.part === 'rot') { const c = mul(addv(g.a0, g.b0), 0.5), a0 = Math.atan2(g.w0[1] - c[1], g.w0[0] - c[0]), a1 = Math.atan2(w[1] - c[1], w[0] - c[0]); let da = a1 - a0; const base = Math.atan2(g.b0[1] - g.a0[1], g.b0[0] - g.a0[0]), st = Math.round((base + da) / (Math.PI / 12)) * Math.PI / 12; if (Math.abs(normA(base + da - st)) < 0.8 * Math.PI / 180) da = st - base; // липнет к 15°
+        h.g.a = addv(c, rot(sub(g.a0, c), da)); h.g.b = addv(c, rot(sub(g.b0, c), da)); }
+      drawAsm(); renderGuCard(); return; }
     if (g.kind === 'guDraw') { let b = w; const pl = PL(); for (const q of [...(pl.gpts || []).map(x => x.p), ...(pl.guides || []).flatMap(x => [x.a, x.b])]) if (len(sub(q, w)) < 12 / v.s) b = q; S.guDraw.b = b; drawAsm(); return; }
     if (g.kind && g.kind.startsWith('c_')) { cleanMove(CC, g, w, e); redrawOne(); return; }
     if (g.kind === 'draw') { const sc = scanById(g.sid); S.drawing.b = S.tool === 'point' ? S.drawing.a : local(sc, w); redrawOne(); return; }
@@ -1625,7 +1635,8 @@ function bindCanvas(cv, ctxInfo) {
     if ((g.kind === 'pinch' || g.kind === 'twist') && P.size) return;
     const was = g; g = null;
     if (was.kind === 'pan' && was.tap && was.gu) { guideTap(was.gu, cv); return; }
-    if (was.kind === 'guDraw') { const D = S.guDraw; S.guDraw = null; if (D && len(sub(D.b, D.a)) > 0.1) { pushUndo(); const pl = guides(); pl.guides.push({ id: pl.nextG++, a: D.a, b: D.b }); saveSoon(); stat('Линия плана нарисована: ' + nf(len(sub(D.b, D.a)), 2) + ' м.'); } drawAsm(); return; }
+    if (was.kind === 'guEdit') { if (!was.moved) S.undo.pop(); else saveSoon(); drawAsm(); renderGuCard(); return; }
+    if (was.kind === 'guDraw') { const D = S.guDraw; S.guDraw = null; if (D && len(sub(D.b, D.a)) > 0.1) { pushUndo(); const pl = guides(); { const ng = { id: pl.nextG++, a: D.a, b: D.b }; pl.guides.push(ng); S.guSel = { t: 'l', id: ng.id }; } renderGuCard(); saveSoon(); stat('Линия плана нарисована: ' + nf(len(sub(D.b, D.a)), 2) + ' м.'); } drawAsm(); return; }
     if (was.kind && was.kind.startsWith('c_')) { cleanEnd(CC, was, e); return; }
     if (was.kind === 'draw') { const D = S.drawing; S.drawing = null; finishMark(was.sid, D.a, S.tool === 'point' ? null : D.b, e.clientX, e.clientY); return; }
     if (was.kind === 'mEnd' || was.kind === 'mMove') { if (was.kind === 'mMove' && !was.moved) { S.undo.pop(); renderMarkCard(); return; } const m = was.m; if (m.kind === 'line' && m.snap !== false) { const f = fitLine(was.sc, m.a, m.b); if (f) { m.a = f.a; m.b = f.b; m.fit = { n: f.n, rms: f.rms }; } else m.fit = null; } S.lastSolve = null; redraw(); renderList(); renderMarkCard(); saveSoon(); return; }
@@ -1668,6 +1679,7 @@ async function finishMark(sid, a, b, x, y) {
   stat(others.length ? `«${lab}» есть на ${others.map(q => scanById(q.sid).name).join(', ')}. Когда меток хватит, нажмите «🧩 Сшить».` : `Метка «${lab}». Теперь отметьте эту же стену или край на соседнем скане и выберите «${lab}».`);
 }
 function delSelected() {
+  if (S.view === 'asm' && guSelObj()) { const o = guSelObj(), pl = PL(); pushUndo(); if (S.guSel.t === 'l') pl.guides = pl.guides.filter(q => q !== o); else pl.gpts = pl.gpts.filter(q => q !== o); S.guSel = null; drawAsm(); renderGuCard(); saveSoon(); stat('Удалено. «↶» — вернуть.'); return; }
   const m = S.markSel && S.marks.find(q => q.id === S.markSel);
   if (m) { pushUndo(); S.marks = S.marks.filter(q => q !== m); S.markSel = null; S.lastSolve = null; renderList(); redraw(); refreshTileHead(m.sid); renderMarkCard(); saveSoon(); stat(`Метка «${m.lab}» удалена. «↶ Отменить шаг» — вернуть.`); return; }
   if (S.view === 'plan' && S.planSel) { const pl = S.plan; pushUndo(); if (S.planSel.o) pl.ops = pl.ops.filter(o => o.id !== S.planSel.o); else { pl.walls = pl.walls.filter(w => w.id !== S.planSel.w); pl.ops = pl.ops.filter(o => o.w !== S.planSel.w); } S.planSel = null; drawPlan(); saveSoon(); stat('Удалено. «↶ Отменить шаг» — вернуть.'); return; }
@@ -1699,7 +1711,7 @@ async function openProjectFile(f) { let j; try { j = JSON.parse(await f.text());
   renderAll(); saveSoon(); stat(`Из файла применено: сканов ${n} из ${(j.scans || []).length}, меток ${ms.length}.${n < (j.scans || []).length ? ' Остальные сканы загрузите (E57 с теми же именами) и откройте файл ещё раз.' : ''}`); }
 
 // ---------- вид ----------
-function setView(v) { const reset = S.view !== v && S.tool !== 'hand'; if (reset) { S.tool = 'hand'; stat('Обзор: тянуть — сдвиг вида, колесо — масштаб.'); } S.view = v; if (v !== 'plan') S.planSel = null; renderAll(); if ((v === 'asm' || v === 'plan') && !S.asmFitted) { S.asmFitted = true; fitAsm(); if (v === 'plan') drawPlan(); } }
+function setView(v) { setTimeout(() => { try { renderGuCard(); } catch (e) { } }, 0); const reset = S.view !== v && S.tool !== 'hand'; if (reset) { S.tool = 'hand'; stat('Обзор: тянуть — сдвиг вида, колесо — масштаб.'); } S.view = v; if (v !== 'plan') S.planSel = null; renderAll(); if ((v === 'asm' || v === 'plan') && !S.asmFitted) { S.asmFitted = true; fitAsm(); if (v === 'plan') drawPlan(); } }
 function setTool(t) { const cl = x => x === 'brush' || x === 'keep', was = S.tool; S.tool = t; renderBar(); if (cl(t) !== cl(was)) renderList(); stat({ gfit: '⌇ Линия стены: коснитесь стены на сканах — прямая впишется по точкам среза. По этим линиям «🏠 План по сканам» проведёт стороны помещений (стены за мебелью, косые стены).', gline: '／ Линия: тяните от точки до точки — линия для плана там, где стену не видно.', gpt: '⌖ Угол плана: коснитесь угла — ближайший угол помещения пройдёт через эту точку. Рядом с пересечением линий липнет к нему.', gdel: '⌫ Коснитесь линии или угла плана — удалить.', hand: 'Обзор: тянуть — сдвиг вида, два пальца — масштаб. В «Сборке»: тянуть скан — сдвиг, ↻ или два пальца на скане — поворот, правая кнопка мыши — поворот.', line: 'Линия: проведите вдоль стены или края на скане — программа подгонит линию по точкам. Затем выберите букву: на соседнем скане та же стена — та же буква.', point: 'Точка: коснитесь угла, центра колонны, стояка — и выберите букву. Линии точнее точек.', erase: 'Удалить метку: коснитесь её.', corner: 'Общий угол: в «Сборке» коснитесь угла, видного на нескольких сканах, — общая точка встанет на каждом. На рамке — точка в угол этого скана.', wfit: 'Стена по точкам: коснитесь стены в срезе — программа впишет прямую по точкам (видно, по скольким и с каким разбросом), продлит вдоль стены и замкнёт угол с соседней. Высота и толщина среза — в карточке справа.', brush: 'Стереть: проведите кистью по мебели, дверям, людям. Размер кисти — слева в «Чистке».', keep: 'Нужное: набросок по стене (продлится сам) или касание — колонна, угол. «Только нужное» скрывает остальное.' }[t]); }
 
 window.addEventListener('resize', () => { if (S.view === 'grid') { sizeTiles(); redraw(); } else { const cv = $('#asm') || $('#plan'); if (cv) { sizeCanvas(cv); redraw(); } } });
@@ -1929,13 +1941,37 @@ function fitSliceLine(w0) { // прямая по точкам среза у ка
 function guideTap(w, cv) { const pl = guides(), k = S.asmV.s;
   if (S.tool === 'gdel') { let best = null, bd = 16 / k; for (const g of pl.guides) { const d = distSeg(w, g.a, g.b).d; if (d < bd) { bd = d; best = ['l', g]; } } for (const q of pl.gpts) { const d = len(sub(q.p, w)); if (d < bd) { bd = d; best = ['p', q]; } }
     if (!best) { stat('Рядом нет линии или угла плана.'); return; } pushUndo(); if (best[0] === 'l') pl.guides = pl.guides.filter(g => g !== best[1]); else pl.gpts = pl.gpts.filter(q => q !== best[1]); drawAsm(); saveSoon(); stat('Удалено. «↶ Отменить шаг» — вернуть.'); return; }
-  if (S.tool === 'gfit') { const f = fitSliceLine(w); if (typeof f === 'string') { stat(f); return; } pushUndo(); pl.guides.push({ id: pl.nextG++, a: f.a, b: f.b }); drawAsm(); saveSoon(); stat(`Линия плана: ${nf(len(sub(f.b, f.a)), 2)} м по ${f.n} точкам среза, разброс ±${Math.round(f.rms * 1000)} мм. «🏠 План по сканам» (шаг 3) проведёт сторону помещения по ней.`); return; }
+  if (S.tool === 'gfit') { const f = fitSliceLine(w); if (typeof f === 'string') { stat(f); return; } pushUndo(); { const ng = { id: pl.nextG++, a: f.a, b: f.b }; pl.guides.push(ng); S.guSel = { t: 'l', id: ng.id }; } drawAsm(); renderGuCard(); saveSoon(); stat(`Линия плана: ${nf(len(sub(f.b, f.a)), 2)} м по ${f.n} точкам среза, разброс ±${Math.round(f.rms * 1000)} мм. «🏠 План по сканам» (шаг 3) проведёт сторону помещения по ней.`); return; }
   if (S.tool === 'gpt') { let p = w, bd = 14 / k; // липнет к пересечению линий плана
     for (let i = 0; i < pl.guides.length; i++) for (let j = i + 1; j < pl.guides.length; j++) { const X = lineX(pl.guides[i].a, pl.guides[i].b, pl.guides[j].a, pl.guides[j].b); if (X && len(sub(X, w)) < bd) { bd = len(sub(X, w)); p = X; } }
-    pushUndo(); pl.gpts.push({ id: pl.nextG++, p }); drawAsm(); saveSoon(); stat('Угол плана поставлен — ближайший угол помещения пройдёт через него.'); } }
+    pushUndo(); { const nq = { id: pl.nextG++, p }; pl.gpts.push(nq); S.guSel = { t: 'p', id: nq.id }; } drawAsm(); renderGuCard(); saveSoon(); stat('Угол плана поставлен — ближайший угол помещения пройдёт через него.'); } }
+function guSelObj() { const pl = PL(), sl = S.guSel; if (!sl) return null; return sl.t === 'l' ? (pl.guides || []).find(g => g.id === sl.id) : (pl.gpts || []).find(q => q.id === sl.id); }
+function guRotKnob(g, k) { const c = mul(addv(g.a, g.b), 0.5), u = unit(sub(g.b, g.a)); return addv(c, mul([-u[1], u[0]], 34 / k)); }
+function guHit(w, k) { const pl = PL(), r = 14 / k, sel = guSelObj();
+  if (sel && S.guSel.t === 'l') { if (len(sub(guRotKnob(sel, k), w)) < r) return { g: sel, part: 'rot', sel: S.guSel }; for (const e of ['a', 'b']) if (len(sub(sel[e], w)) < r) return { g: sel, part: e, sel: S.guSel }; }
+  for (const q of pl.gpts || []) if (len(sub(q.p, w)) < r) return { q, sel: { t: 'p', id: q.id } };
+  for (const g of pl.guides || []) { if (len(sub(g.a, w)) < r * 0.8) return { g, part: 'a', sel: { t: 'l', id: g.id } }; if (len(sub(g.b, w)) < r * 0.8) return { g, part: 'b', sel: { t: 'l', id: g.id } }; }
+  for (const g of pl.guides || []) if (distSeg(w, g.a, g.b).d < r * 0.7) return { g, part: 'line', sel: { t: 'l', id: g.id } };
+  return null; }
+function renderGuCard() { let el = $('#gucard'); const o = S.view === 'asm' ? guSelObj() : null; if (!o) { if (el) el.remove(); return; }
+  if (!el) { el = document.createElement('div'); el.id = 'gucard'; document.body.appendChild(el); }
+  if (S.guSel.t === 'l') { const L = len(sub(o.b, o.a)), ang = ((Math.atan2(o.b[1] - o.a[1], o.b[0] - o.a[0]) * 180 / Math.PI) + 360) % 180;
+    el.innerHTML = `<b>Линия плана</b><label>Длина <input id="guL" inputmode="decimal" value="${nf(L, 3)}"> м</label><label>Угол <input id="guA" inputmode="decimal" value="${nf(ang, 2)}">°</label><span class="gb"><button data-gr="-90" title="Повернуть на 90° против часовой">⟲90°</button><button data-gr="-1" title="Повернуть на 1°">⟲1°</button><button data-gr="-0.1" title="Повернуть на 0,1°">⟲0,1°</button><button data-gr="0.1" title="Повернуть на 0,1° по часовой">⟳0,1°</button><button data-gr="1" title="Повернуть на 1° по часовой">⟳1°</button><button data-gx title="Удалить линию|Delete" class="dang">🗑</button><button data-gk title="Готово">✓</button></span><small>Тяните линию — сдвиг, концы — длина и поворот, кружок — поворот вокруг середины (липнет к 15°).</small>`;
+    const C = () => mul(addv(o.a, o.b), 0.5), setLA = (Ln, An) => { const c = C(), u = [Math.cos(An), Math.sin(An)]; o.a = addv(c, mul(u, -Ln / 2)); o.b = addv(c, mul(u, Ln / 2)); };
+    $('#guL').onchange = e => { const v = parseFloat(e.target.value.replace(',', '.')); if (v > 0.05) { pushUndo(); setLA(v, Math.atan2(o.b[1] - o.a[1], o.b[0] - o.a[0])); drawAsm(); renderGuCard(); saveSoon(); } };
+    $('#guA').onchange = e => { const v = parseFloat(e.target.value.replace(',', '.')); if (isFinite(v)) { pushUndo(); setLA(len(sub(o.b, o.a)), v * Math.PI / 180); drawAsm(); renderGuCard(); saveSoon(); } };
+    el.querySelectorAll('[data-gr]').forEach(b => b.onclick = () => { pushUndo(); const da = -parseFloat(b.dataset.gr) * Math.PI / 180, c = C(); o.a = addv(c, rot(sub(o.a, c), da)); o.b = addv(c, rot(sub(o.b, c), da)); drawAsm(); renderGuCard(); saveSoon(); }); }
+  else { el.innerHTML = `<b>Угол плана</b><span class="gb"><button data-gx class="dang" title="Удалить угол|Delete">🗑</button><button data-gk title="Готово">✓</button></span><small>Тяните угол пальцем или мышью.</small>`; }
+  const x = el.querySelector('[data-gx]'); x.onclick = () => { pushUndo(); const pl = PL(); if (S.guSel.t === 'l') pl.guides = pl.guides.filter(q => q !== o); else pl.gpts = pl.gpts.filter(q => q !== o); S.guSel = null; drawAsm(); renderGuCard(); saveSoon(); };
+  el.querySelector('[data-gk]').onclick = () => { S.guSel = null; drawAsm(); renderGuCard(); }; }
 function drawGuides(ctx, toS) { const pl = PL(), d = dpr(); if (!(pl.guides || []).length && !(pl.gpts || []).length && !S.guDraw) return; ctx.save(); ctx.strokeStyle = '#d6249f'; ctx.fillStyle = '#d6249f'; ctx.lineWidth = 2.5 * d; ctx.setLineDash([10 * d, 5 * d]);
   for (const g of pl.guides || []) { ctx.beginPath(); ctx.moveTo(...toS(g.a)); ctx.lineTo(...toS(g.b)); ctx.stroke(); }
   if (S.guDraw) { ctx.beginPath(); ctx.moveTo(...toS(S.guDraw.a)); ctx.lineTo(...toS(S.guDraw.b)); ctx.stroke(); }
+  const so = guSelObj(); if (so && S.view === 'asm') { ctx.setLineDash([]); if (S.guSel.t === 'l') { const k = S.asmV.s; ctx.lineWidth = 4 * d; ctx.beginPath(); ctx.moveTo(...toS(so.a)); ctx.lineTo(...toS(so.b)); ctx.stroke(); ctx.lineWidth = 2 * d;
+      const c = toS(mul(addv(so.a, so.b), 0.5)), kn = toS(guRotKnob(so, k)); ctx.beginPath(); ctx.moveTo(...c); ctx.lineTo(...kn); ctx.stroke();
+      for (const P of [toS(so.a), toS(so.b)]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(P[0], P[1], 7 * d, 0, 7); ctx.fill(); ctx.stroke(); }
+      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(kn[0], kn[1], 8 * d, 0, 7); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#d6249f'; ctx.font = `bold ${11 * d}px system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('↻', kn[0], kn[1] + 0.5 * d); ctx.textBaseline = 'alphabetic'; }
+    else { const P = toS(so.p); ctx.fillStyle = 'rgba(214,36,159,.18)'; ctx.beginPath(); ctx.arc(P[0], P[1], 13 * d, 0, 7); ctx.fill(); } ctx.fillStyle = '#d6249f'; }
   ctx.setLineDash([]); for (const q of pl.gpts || []) { const P = toS(q.p); ctx.beginPath(); ctx.moveTo(P[0] - 9 * d, P[1]); ctx.lineTo(P[0] + 9 * d, P[1]); ctx.moveTo(P[0], P[1] - 9 * d); ctx.lineTo(P[0], P[1] + 9 * d); ctx.stroke(); ctx.beginPath(); ctx.arc(P[0], P[1], 5 * d, 0, 7); ctx.stroke(); }
   ctx.restore(); }
 
@@ -1948,6 +1984,7 @@ function moveWallTo(w, na, nb, carry = true) { // поставить стену 
   for (const end of ['a', 'b']) for (const j of J[end]) { const o = j.w, other = j.end === 'a' ? 'b' : 'a'; const X = lineX(o.a, o.b, w.a, w.b); if (X && len(sub(X, o[other])) > 0.05) { o[j.end] = X; w[end] = X; } else { o[j.end] = w[end]; } }
   void oldA; void oldB; fixOps(w);
 }
+function wRotKnob(w) { const c = mul(addv(w.a, w.b), 0.5), u = wDir(w); return addv(c, mul([-u[1], u[0]], 40 / S.asmV.s)); }
 function fixOps(w) { const L = wLen(w); for (const o of PL().ops) if (o.w === w.id) { o.t0 = Math.max(0, Math.min(L - 0.05, o.t0)); o.t1 = Math.max(o.t0 + 0.05, Math.min(L, o.t1)); } }
 function setLength(w, L, anchor) { // anchor: 'a' — начало на месте, 'b' — конец на месте, 'c' — середина
   const u = wDir(w), c = mul(addv(w.a, w.b), 0.5); let na = w.a, nb = w.b;
@@ -1992,6 +2029,7 @@ function drawPlan() {
     for (const o of ops) drawOp(ctx, w, o, toS, sel && sel.o === o.id);
     // длина
     if (len(sub(B, A)) > 40 * d) { const M = mul(addv(A, B), 0.5); let ang = Math.atan2(B[1] - A[1], B[0] - A[0]); if (ang > Math.PI / 2) ang -= Math.PI; if (ang < -Math.PI / 2) ang += Math.PI; ctx.save(); ctx.translate(M[0], M[1]); ctx.rotate(ang); ctx.font = `bold ${12 * d}px system-ui`; ctx.textAlign = 'center'; const txt = nf(L, 3), tw = ctx.measureText(txt).width; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillRect(-tw / 2 - 3 * d, -18 * d, tw + 6 * d, 14 * d); ctx.fillStyle = isSel ? '#2563eb' : '#111'; ctx.fillText(txt, 0, -7 * d); ctx.restore(); }
+    if (isSel && !(sel && sel.o)) { const M2 = toS(mul(addv(w.a, w.b), 0.5)), K = toS(wRotKnob(w)); ctx.save(); ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2 * d; ctx.beginPath(); ctx.moveTo(...M2); ctx.lineTo(...K); ctx.stroke(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(K[0], K[1], 9 * d, 0, 7); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#2563eb'; ctx.font = `bold ${12 * d}px system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('↻', K[0], K[1] + 0.5 * d); ctx.restore(); }
     if (isSel) for (const P of [A, B]) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2.5 * d; ctx.beginPath(); ctx.arc(P[0], P[1], 9 * d, 0, 7); ctx.fill(); ctx.stroke(); } }
   // свободные концы — оранжевые точки (угол не замкнут)
   for (const w of PL().walls) for (const e of ['a', 'b']) if (!joinedAt(w, e).length) { const P = toS(w[e]); ctx.fillStyle = '#ea580c'; ctx.beginPath(); ctx.arc(P[0], P[1], 3 * d, 0, 7); ctx.fill(); }
@@ -2095,7 +2133,7 @@ function bindPlan(cv) {
   const scr = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * d(), (e.clientY - r.top) * d()]; };
   const toS = p => w2s(S.asmV, cv.width, cv.height, p);
   const hit = e => { const s = scr(e); let best = null, bd = 14 * d();
-    const sel = S.planSel && wById(S.planSel.w); if (sel) for (const end of ['a', 'b']) { const q = toS(sel[end]); if (Math.hypot(q[0] - s[0], q[1] - s[1]) < 20 * d()) return { kind: 'end', w: sel, end }; }
+    const sel = S.planSel && wById(S.planSel.w); if (sel && !S.planSel.o) { const kn = toS(wRotKnob(sel)); if (Math.hypot(kn[0] - s[0], kn[1] - s[1]) < 18 * d()) return { kind: 'wrot', w: sel }; } if (sel) for (const end of ['a', 'b']) { const q = toS(sel[end]); if (Math.hypot(q[0] - s[0], q[1] - s[1]) < 20 * d()) return { kind: 'end', w: sel, end }; }
     for (const o of PL().ops) { const w = wById(o.w); if (!w) continue; const u = wDir(w), A = toS(addv(w.a, mul(u, o.t0))), B = toS(addv(w.a, mul(u, o.t1))); for (const [k, Q] of [['t0', A], ['t1', B]]) if (S.planSel && S.planSel.o === o.id && Math.hypot(Q[0] - s[0], Q[1] - s[1]) < 16 * d()) return { kind: 'opEnd', o, w, k }; const r = distSeg(s, A, B); if (r.d < bd && r.t > 0 && r.t < 1) { bd = r.d; best = { kind: 'op', o, w }; } }
     for (const w of PL().walls) { const r = distSeg(s, toS(w.a), toS(w.b)); if (r.d < bd) { bd = r.d; best = { kind: 'wall', w }; } }
     return best; };
@@ -2111,6 +2149,7 @@ function bindPlan(cv) {
     if (S.tool === 'wfit') { g = { kind: 'pan', x: e.clientX, y: e.clientY, v0: { ...S.asmV }, tap: true, wfit: w }; return; }
     const h = hit(e);
     if (S.tool === 'erase' && h) { pushUndo(); if (h.kind === 'op') PL().ops = PL().ops.filter(o => o !== h.o); else if (h.w) { PL().walls = PL().walls.filter(q => q !== h.w); PL().ops = PL().ops.filter(o => o.w !== h.w.id); } S.planSel = null; drawPlan(); saveSoon(); g = null; return; }
+    if (h && h.kind === 'wrot') { pushUndo(); g = { kind: 'wrot', w: h.w, w0: w, a0: h.w.a.slice(), b0: h.w.b.slice() }; return; }
     if (h && h.kind === 'end') { pushUndo(); g = { kind: 'end', w: h.w, end: h.end, u: wDir(h.w), p0: h.w[h.end].slice(), free: e.button === 2 || e.altKey }; return; }
     if (h && h.kind === 'opEnd') { pushUndo(); g = { kind: 'opEnd', o: h.o, w: h.w, k: h.k }; return; }
     if (h && h.kind === 'op') { S.planSel = { w: h.w.id, o: h.o.id }; pushUndo(); g = { kind: 'opMove', o: h.o, w: h.w, w0: w, t0: h.o.t0, t1: h.o.t1 }; drawPlan(); return; }
@@ -2121,6 +2160,8 @@ function bindPlan(cv) {
     if (g.kind === 'pan') { v.cx = g.v0.cx - (e.clientX - g.x) / v.s; v.cy = g.v0.cy + (e.clientY - g.y) / v.s; if (Math.hypot(e.clientX - g.x, e.clientY - g.y) > 6) g.tap = false; drawPlan(); return; }
     const w = toW(e);
     if (g.kind === 'draw') { let b = snapPt(w) || w; const dd = sub(b, g.a), a = Math.atan2(dd[1], dd[0]); const st = Math.round(a / (Math.PI / 2)) * Math.PI / 2; if (!snapPt(w) && Math.abs(normA(a - st)) < 3 * Math.PI / 180) { const L = len(dd); b = addv(g.a, [Math.cos(st) * L, Math.sin(st) * L]); } S.pdraw = { a: g.a, b }; drawPlan(); return; }
+    if (g.kind === 'wrot') { const c = mul(addv(g.a0, g.b0), 0.5), base = Math.atan2(g.b0[1] - g.a0[1], g.b0[0] - g.a0[0]); let da = Math.atan2(w[1] - c[1], w[0] - c[0]) - Math.atan2(g.w0[1] - c[1], g.w0[0] - c[0]); const st = Math.round((base + da) / (Math.PI / 12)) * Math.PI / 12; if (Math.abs(normA(base + da - st)) < 0.8 * Math.PI / 180) da = st - base;
+      moveWallTo(g.w, addv(c, rot(sub(g.a0, c), da)), addv(c, rot(sub(g.b0, c), da))); drawPlan(); return; }
     if (g.kind === 'wall') { const u = wDir(g.w), n = [-u[1], u[0]], k = dot(sub(w, g.w0), n); if (Math.abs(k) * v.s > 3) g.moved = true; if (!g.moved) return; moveWallTo(g.w, addv(g.a0, mul(n, k)), addv(g.b0, mul(n, k))); drawPlan(); return; }
     if (g.kind === 'end') { let p; const sp = snapPt(w, g.w); if (g.free) p = sp || w; else { const t = dot(sub(w, g.p0), g.u); p = addv(g.p0, mul(g.u, t)); // липнет к прямым соседних стен
         let best = null, bd = 14 / v.s; for (const o of PL().walls) { if (o === g.w) continue; const X = lineX(g.w.a, g.w.b, o.a, o.b); if (!X) continue; const dd = len(sub(X, p)); if (dd < bd && distSeg(X, o.a, o.b).d < 0.3) { bd = dd; best = X; } } if (best) p = best; }
