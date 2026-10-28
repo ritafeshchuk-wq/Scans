@@ -99,7 +99,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
   <div class="grp ctx rg" data-for="v3d" data-cap="Сшивка"><button id="bFine3" class="big pri" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны. Слева появится точность каждого стыка"><span>Точно 3D</span></button><button id="bSelFit3" data-ic="selfit" title="Досшить выбранные|Сканы, выделенные в «Сборке», точно подгоняются друг к другу и к соседям; соседи стоят на месте"><span>Досшить выбранные</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Вид"><button id="bV3Home" class="big pri" data-ic="fit" title="По центру|Вернуть все видимые сканы в центр экрана, если модель потерялась при вращении или сдвиге|Home или F"><span>По центру</span></button><button data-v3v="top" data-ic="vtop" title="Сверху|Смотреть сверху, как план"><span>Сверху</span></button><button data-v3v="front" data-ic="vfront" title="Спереди|Вид вдоль оси Y"><span>Спереди</span></button><button data-v3v="side" data-ic="vside" title="Сбоку|Вид вдоль оси X"><span>Сбоку</span></button><button data-v3v="iso" data-ic="cube3d" title="3D|Наклонный вид"><span>3D</span></button><button id="bOrtho" data-ic="persp" title="Плоско|Без перспективы: размеры не искажаются с расстоянием — удобно сверху и сбоку"><span>Плоско</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Цвет"><div class="seg"><button data-v3col="scan" title="По сканам|Каждый скан своим цветом — видно, где сканы расходятся">Сканы</button><button data-v3col="h" title="По высоте|Цвет от пола к потолку">Высота</button><button data-v3col="rgb" title="Цвет сканера|Фото-цвет сканера или яркость отражения (для сканов, загруженных в версии 4.0 и новее)">Цвет</button></div></div>
-  <div class="grp ctx rg" data-for="v3d" data-cap="Срез"><button id="bNoCeil" data-ic="noceil" title="Без потолка|Убрать потолок, чтобы заглянуть в помещения сверху. Точнее — ползунками слева"><span>Без потолка</span></button><button id="bLow" data-ic="low" title="Низ: фундаменты и люки|Всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу — фундаменты, люки, приямки, уступы видны чётко. Повторное нажатие — обычный вид"><span>Низ</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Срез"><button id="bNoCeil" data-ic="noceil" title="Без потолка|Убрать потолок, чтобы заглянуть в помещения сверху. Точнее — ползунками слева"><span>Без потолка</span></button><button id="bLow" data-ic="low" title="Низ: фундаменты и люки|Всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу — фундаменты, люки, приямки, уступы видны чётко. Повторное нажатие — обычный вид"><span>Низ</span></button><button id="bBottom" data-ic="under" title="Снизу|Камера под полом смотрит вверх, пол скрыт: приямки, колодцы, люки и подошвы фундаментов видны без перекрытий. Повторное нажатие — обычный вид"><span>Снизу</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Измерить"><button data-tool="m3d" data-ic="ruler" title="Расстояние|Коснитесь двух точек облака — длина, в плане и по высоте|Esc — убрать"><span>Расстояние</span></button></div>
   <div class="grp ctx rg" data-for="asm" data-plan="1" data-cap="Линии плана"><button data-tool="gfit" data-ic="gfit" title="Линия стены|Коснитесь стены на сканах — прямая впишется по точкам среза. «План по сканам» проведёт сторону помещения точно по ней"><span>По точкам</span></button><button data-tool="gline" data-ic="gline" title="Линия|Тяните от точки до точки — линия для плана там, где стену не видно (за шкафом, шторой)"><span>Нарисовать</span></button><button data-tool="gpt" data-ic="gpt" title="Угол плана|Коснитесь угла — угол помещения пройдёт через эту точку. Липнет к пересечению линий"><span>Угол</span></button><button data-tool="gdel" data-ic="x" title="Удалить линию или угол плана|Коснитесь линии или угла"><span>Удалить</span></button></div>
   <div class="grp ctx rg" data-for="asm" data-cap="Опорные"><button id="bSph" data-ic="sphere" title="Шары|Найти шары на сканах — держат длинные однотипные объекты (тоннель, коллектор)"><span>Шары</span></button><button data-tool="corner" data-ic="corner" title="Общий угол|Угол, видный на нескольких сканах — сшивка держится за него"><span>Общий угол</span></button></div>
@@ -118,7 +118,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.5 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.6 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -141,7 +141,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <h4>3 3D — точная сшивка, проверка, выгрузка</h4>
 <ul><li><b>🎯 Точно 3D</b> — финальная подгонка всех сканов сразу по всем шести степеням: сдвиги X, Y, Z, поворот и наклоны. Делается после автосшивки. Слева — точность каждого стыка (у 90% точек): зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше; щелчок по стыку — показать только эту пару.</li>
 <li>Мышь: левая — вращать, правая или Shift — сдвиг, колесо — ближе/дальше к курсору, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</li>
-<li><b>По центру</b> (или клавиша Home / F) — вернуть модель в центр, если потерялась. Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте. <b>Низ</b> — фундаменты, люки, приямки: всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу (повторно — обычный вид). Сканы, загруженные до версии 4.4, обрезаны ниже пола — «📁 → Перечитать сканы во всю высоту».</li>
+<li><b>По центру</b> (или клавиша Home / F) — вернуть модель в центр, если потерялась. Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте. <b>Низ</b> — фундаменты, люки, приямки: всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу (повторно — обычный вид). <b>Снизу</b> — камера под полом смотрит вверх, пол скрыт: приямки, колодцы, люки и подошвы фундаментов видны без перекрытий (картинка зеркальная, как если смотреть снизу). Флажок «Скрыть пол» слева работает и в обычном виде. Сканы, загруженные до версии 4.4, обрезаны ниже пола — «📁 → Перечитать сканы во всю высоту».</li>
 <li><b>Расстояние</b> — две точки: длина, в плане и по высоте.</li>
 <li><b>E57</b> — выгрузка для камеральной обработки: полная плотность из исходных файлов (с цветом и яркостью) или 2–10 см; один файл со сканами по отдельности (с положением, как из SCENE), одним облаком или каждый скан своим файлом. В Chrome и Edge файл пишется прямо на диск — подходит для больших объёмов.</li></ul>
 <h4>4 План — стены и проёмы</h4>
@@ -1642,7 +1642,7 @@ function renderBar() { $$('[data-pbg]').forEach(b => b.classList.toggle('on', b.
   $$('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === S.view)); $$('[data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === S.tool));
   $$('#top .ctx').forEach(g => { g.hidden = !g.dataset.for.split(' ').includes(S.view) || (S.mode === 'stitch' && !!g.dataset.plan); });
   { const pv = $('[data-view="plan"]'); if (pv) pv.hidden = S.mode === 'stitch'; $$('#modeSeg [data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === S.mode)); }
-  $$('[data-v3col]').forEach(b => b.classList.toggle('on', b.dataset.v3col === V3.opt.color)); { const bo = $('#bOrtho'); if (bo) bo.classList.toggle('on', !!V3.cam.ortho); const bn = $('#bNoCeil'); if (bn) bn.classList.toggle('on', V3.opt.top != null && !V3.isLow()); const bl = $('#bLow'); if (bl) bl.classList.toggle('on', V3.isLow()); }
+  $$('[data-v3col]').forEach(b => b.classList.toggle('on', b.dataset.v3col === V3.opt.color)); { const bo = $('#bOrtho'); if (bo) bo.classList.toggle('on', !!V3.cam.ortho); const bn = $('#bNoCeil'); if (bn) bn.classList.toggle('on', V3.opt.top != null && !V3.isLow()); const bl = $('#bLow'); if (bl) bl.classList.toggle('on', V3.isLow() && !V3.isBottom()); const bb = $('#bBottom'); if (bb) bb.classList.toggle('on', V3.isBottom()); }
   try { layoutTop(); } catch (e) { } $('#fUndo').disabled = !S.undo.length; $('#fRedo').disabled = !S.redo.length; $$('[data-cols]').forEach(b => b.classList.toggle('on', +b.dataset.cols === S.cols)); const tw = $('#bTW'); if (tw) tw.classList.toggle('on', !!S.tileWorld); 
 }
 function setMode(m) { S.mode = m; if (m === 'stitch' && S.view === 'plan') { setView('v3d'); } else renderAll(); saveSoon();
@@ -1920,6 +1920,7 @@ const ICONS = {
   dxf: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>', tape: '<rect x="3" y="7" width="13" height="10" rx="2"/><circle cx="9.5" cy="12" r="2.5"/><path d="M16 15h5"/>',
   cloud: '<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>',
   selfit: '<rect x="3" y="3" width="10" height="10" rx="1" stroke-dasharray="2.5 2"/><rect x="11" y="11" width="10" height="10" rx="1"/><path d="m14 7 3-3m0 0v2.5M17 4h-2.5"/>',
+  under: '<path d="M3 8h18" stroke-dasharray="2 2.5"/><path d="M7 8v5h10V8"/><path d="M12 22v-6m0 0-2.5 2.5M12 16l2.5 2.5"/>',
   low: '<path d="M3 9h18" stroke-dasharray="2 2.5"/><path d="M5 13h4v6h6v-6h4"/><path d="M10 16h4"/>',
   fine: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><path d="m5 5 2.5 2.5M16.5 16.5 19 19"/>',
   cube3d: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/>', vtop: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h9v10M13 4v6"/>',
@@ -1950,7 +1951,7 @@ window.addEventListener('resize', layoutTop);
 document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layoutTop();
   $('#rbRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); };
   $('#rbWalls').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
-  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bV3Home').onclick = () => V3.home(); $('#bSelFit').onclick = stitchSelected; $('#bSelFit3').onclick = stitchSelected; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $('#bLow').onclick = () => V3.lowView(); $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
+  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bV3Home').onclick = () => V3.home(); $('#bSelFit').onclick = stitchSelected; $('#bSelFit3').onclick = stitchSelected; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $('#bLow').onclick = () => V3.lowView(); $('#bBottom').onclick = () => V3.bottomView(); $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
   $$('[data-pbg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.pbg === 'off' ? false : b.dataset.pbg; renderBar(); drawPlan(); });
   $('#bAdd').onclick = () => $('#fileIn').click(); $('#fileIn').onchange = e => { const f = e.target.files; if (f && f.length) loadFiles(f); e.target.value = ''; };
   $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); $$('[data-tool]').forEach(b => b.onclick = () => setTool(S.tool === b.dataset.tool ? 'hand' : b.dataset.tool));
@@ -2634,7 +2635,7 @@ const V3 = (() => {
   let wrap = null, cv = null, ov = null, gl = null, P1 = null, P2 = null, fbo = null, tC = null, tD = null, quad = null, fw = 0, fh = 0, raf = 0, lost = false;
   const cache = new Map();
   const cam = { tg: [0, 0, 1.2], dist: 20, yaw: -2.2, pitch: 0.75, ortho: false, fov: 50 * Math.PI / 180 };
-  const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null };
+  const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null, noFloor: false };
   let solo = null, meas = [], drag = null, pend = false, lastMVP = null, lastVP = null, fitted = false, tpts = new Map();
   const vs = `#version 300 es
 in vec3 p; in vec3 c; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk; uniform float fpx; uniform int orth;
@@ -2643,8 +2644,8 @@ vec3 ramp(float t){ t=clamp(t,0.,1.); return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs
 void main(){ vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; float wd=orth==1?1.:max(gl_Position.w,1e-3); gl_PointSize=clamp(max(ps, .022*fpx/wd), 1., 48.); // вблизи точки крупнее — поверхность сплошная
  vc = mode==0 ? sc : mode==1 ? ramp((w.z-zr.x)/(zr.y-zr.x)) : (rgbOk>.5 ? c : vec3(.72)); }`;
   const fs = `#version 300 es
-precision highp float; in vec3 vc; in float wz; uniform vec2 clip; uniform float ps; out vec4 o;
-void main(){ if(wz>clip.y||wz<clip.x) discard; if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
+precision highp float; in vec3 vc; in float wz; uniform vec2 clip; uniform float ps; uniform float nfl; out vec4 o;
+void main(){ if(wz>clip.y||wz<clip.x) discard; if(nfl>0.&&abs(wz)<nfl) discard; if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
   const vsQ = `#version 300 es
 in vec2 q; void main(){ gl_Position=vec4(q,0.,1.); }`;
   const fsQ = `#version 300 es
@@ -2709,7 +2710,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const M = mats(W, H); lastMVP = M; const b = scene();
     gl.bindFramebuffer(gl.FRAMEBUFFER, opt.edl ? fbo : null); gl.viewport(0, 0, W, H); gl.clearColor(BG[0], BG[1], BG[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST);
     gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); gl.uniform1i(U.orth, cam.ortho ? 1 : 0); gl.uniform1f(U.fpx, cam.ortho ? H / (2 * cam.dist * Math.tan(cam.fov / 2)) : H / (2 * Math.tan(cam.fov / 2))); { const lo = opt.bot != null ? opt.bot : b.z0, hi = opt.top != null ? opt.top : b.z1 + 0.05; gl.uniform2f(U.zr, lo, Math.max(lo + 0.05, hi)); } // цвет по высоте — на всю видимую полосу: при срезе мелкий рельеф виден ярче
-    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top);
+    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top); gl.uniform1f(U.nfl, opt.noFloor ? 0.04 : 0);
     for (const s of shown()) { const c = buf(s); gl.uniformMatrix4fv(U.mdl, false, model(s)); const col = parseInt(s.color.slice(1), 16); gl.uniform3f(U.sc, (col >> 16) / 255, ((col >> 8) & 255) / 255, (col & 255) / 255); gl.uniform1f(U.rgbOk, c.cb ? 1 : 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, c.b); gl.enableVertexAttribArray(P1.a.p); gl.vertexAttribPointer(P1.a.p, 3, gl.FLOAT, false, 0, 0);
       if (P1.a.c >= 0) { if (c.cb) { gl.bindBuffer(gl.ARRAY_BUFFER, c.cb); gl.enableVertexAttribArray(P1.a.c); gl.vertexAttribPointer(P1.a.c, 3, gl.UNSIGNED_BYTE, true, 0, 0); } else { gl.disableVertexAttribArray(P1.a.c); gl.vertexAttrib3f(P1.a.c, 0.72, 0.72, 0.72); } }
@@ -2743,7 +2744,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const top = opt.top == null ? 1e9 : opt.top, bot = opt.bot == null ? -1e9 : opt.bot, W = cv.width, H = cv.height;
     for (const s of shown()) { const c = buf(s), A = c.A, { R, t } = worldRT(s);
       for (let i = 0; i < A.length; i += st) { const x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
-        if (z > top || z < bot) continue; const cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) continue;
+        if (z > top || z < bot || (opt.noFloor && Math.abs(z) < 0.04)) continue; const cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) continue;
         const sx = ((m[0] * x + m[4] * y + m[8] * z + m[12]) / cw + 1) / 2 * W, sy = (1 - (m[1] * x + m[5] * y + m[9] * z + m[13]) / cw) / 2 * H, d2 = (sx - px) ** 2 + (sy - py) ** 2; if (d2 > rr) continue;
         const dz = (m[2] * x + m[6] * y + m[10] * z + m[14]) / cw + d2 / rr * 0.002; if (dz < bz) { bz = dz; best = [x, y, z]; } } }
     return best;
@@ -2758,7 +2759,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     cv.onpointermove = e => { if (!drag) return; if (touches.has(e.pointerId)) touches.set(e.pointerId, [e.clientX, e.clientY]);
       if (drag.k === 'two' && touches.size >= 2) { const [a, b] = [...touches.values()], m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d = Math.hypot(a[0] - b[0], a[1] - b[1]); pan(m[0] - drag.m[0], m[1] - drag.m[1]); if (drag.d > 10 && d > 10) cam.dist = Math.max(0.3, cam.dist * drag.d / d); drag.m = m; drag.d = d; dirty(); return; }
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
-      if (drag.k === 'orbit') { cam.yaw -= dx * 0.008; cam.pitch = Math.max(-1.55, Math.min(1.5707, cam.pitch + dy * 0.008)); } else if (drag.k === 'pan') pan(dx, dy); dirty(); };
+      if (drag.k === 'orbit') { cam.yaw -= dx * 0.008; cam.pitch = Math.max(-1.5707, Math.min(1.5707, cam.pitch + dy * 0.008)); } else if (drag.k === 'pan') pan(dx, dy); dirty(); };
     const up = e => { touches.delete(e.pointerId); if (!drag) return; const d = drag; if (touches.size === 0) drag = null; else if (d.k === 'two') drag = null;
       if (d.k !== 'two' && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 600 && S.tool === 'm3d') { const p = pick(...pt(e)); if (!p) { stat('Под курсором нет точек — коснитесь поверхности.'); return; } const last = meas[meas.length - 1]; if (last && !last.b) last.b = p; else meas.push({ a: p }); if (meas.length > 6) meas.shift(); dirty(); const L = meas[meas.length - 1]; if (L.b) stat(`Расстояние ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1], L.b[2] - L.a[2]), 3)} м · в плане ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1]), 3)} м · по высоте ${nf(L.b[2] - L.a[2], 3)} м.`); } };
     cv.onpointerup = up; cv.onpointercancel = up;
@@ -2775,16 +2776,22 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   function home() { // вернуть модель в центр: все видимые сканы, вид сохраняется (если смотрели снизу — наклонный)
     if (!S.scans.some(s => s.vis)) { stat('Все сканы скрыты — включите 👁 в списке слева.'); return; }
     if (cam.pitch < -0.2) cam.pitch = 0.75; fit(); stat('Модель по центру.'); }
-  function view(k) { const v = { top: [cam.yaw, 1.5707], front: [-Math.PI / 2, 0], side: [0, 0], iso: [-2.2, 0.75] }[k]; cam.yaw = v[0]; cam.pitch = v[1]; if (k === 'top' && !cam.ortho) { } dirty(); }
+  function view(k) { const v = { top: [cam.yaw, 1.5707], bottom: [cam.yaw, -1.5707], front: [-Math.PI / 2, 0], side: [0, 0], iso: [-2.2, 0.75] }[k]; cam.yaw = v[0]; cam.pitch = v[1]; if (k === 'top' && !cam.ortho) { } dirty(); }
   function maxH() { return Math.max(2.7, ...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); }
   function minZ() { return Math.min(-0.2, ...S.scans.filter(s => s.vis).map(s => zRange(s)[0])) - 0.1; }
   // низ: фундаменты, люки, приямки — срез от самого низа до полуметра над полом, цвет по высоте, вид сверху
   let lowPrev = null;
-  function lowView() { if (lowPrev) { Object.assign(opt, lowPrev.opt); cam.ortho = lowPrev.ortho; lowPrev = null; stat('Обычный вид.'); }
+  function lowView() { if (lowPrev) { const was = lowPrev; Object.assign(opt, was.opt); if (opt.noFloor == null) opt.noFloor = false; cam.ortho = was.ortho; if (was.bottom) { cam.pitch = was.pitch > -0.2 ? was.pitch : 0.75; } lowPrev = null; stat('Обычный вид.'); }
     else { lowPrev = { opt: { top: opt.top, bot: opt.bot, color: opt.color, size: opt.size }, ortho: cam.ortho }; opt.bot = null; opt.top = 0.5; opt.color = 'h'; opt.size = Math.max(opt.size, 3); view('top');
       const z0 = minZ() + 0.1; stat(z0 < -0.3 ? `Низ: всё ниже полуметра над полом, цвет — по высоте (синее — ниже). Самые низкие точки — ${nf(-z0, 2)} м под полом. Ползунками слева можно сузить полосу.` : 'Низ: ниже пола точек почти нет. Если сканы загружены до версии 4.4 — их низ был обрезан при загрузке: «📁 → Перечитать сканы во всю высоту».'); }
     renderList(); renderBar(); dirty(); }
   const isLow = () => !!lowPrev;
+  // снизу: камера под полом смотрит вверх, пол скрыт — приямки, колодцы, люки, подошвы фундаментов видны без перекрытий (изображение зеркальное, как если смотреть снизу)
+  function bottomView() { if (lowPrev && lowPrev.bottom) { lowView(); return; }
+    if (lowPrev) lowView(); lowPrev = { opt: { top: opt.top, bot: opt.bot, color: opt.color, size: opt.size, noFloor: opt.noFloor }, ortho: cam.ortho, pitch: cam.pitch, bottom: true };
+    opt.top = 0.6; opt.color = 'h'; opt.size = Math.max(opt.size, 3); opt.noFloor = true; cam.ortho = true; view('bottom');
+    stat('Вид снизу: пол скрыт (±4 см), видно всё до 0,6 м над полом; цвет — по высоте (синее — ниже). Изображение зеркальное — как если смотреть снизу. Вращать можно как обычно; повторное нажатие — обычный вид.'); renderList(); renderBar(); dirty(); }
+  const isBottom = () => !!(lowPrev && lowPrev.bottom);
   function noCeil() { if (opt.top != null) { opt.top = null; } else { const H = Math.min(...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); opt.top = +(Math.max(1, H - 0.25)).toFixed(2); } renderList(); renderBar(); dirty(); }
   function panelHTML() {
     const H = maxH(), mm = v => (v * 1000).toFixed(1).replace('.', ','), R = S.fineRep, byId = id => scanById(id);
@@ -2793,6 +2800,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
       ${sl('top', 'Срез сверху', opt.top, H + 0.6)}${sl('bot', 'Срез снизу', opt.bot, Z0)}
       <label class="v3r"><span>Точки</span><input type="range" data-v3c="size" min="1" max="6" step="1" value="${opt.size}"><b>${opt.size} px</b></label>
       <label class="v3c"><input type="checkbox" id="v3edl" ${opt.edl ? 'checked' : ''}> Подсветка рельефа (тени по глубине)</label>
+      <label class="v3c" title="Скрыть пол|Убрать точки пола (±4 см от нуля) — сверху и снизу видно, что под полом и на полу"><input type="checkbox" id="v3nf" ${opt.noFloor ? 'checked' : ''}> Скрыть пол (±4 см)</label>
       <div class="v3h">Мышь: левая — вращать, правая или Shift — сдвигать, колесо — ближе/дальше, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</div></div>`
       + (R && R.edges.length ? `<div class="lh"><b>Точность стыков (${R.edges.length})</b></div><div class="v3e">${R.edges.map((e, i) => { const a = byId(e.a), b = byId(e.b); if (!a || !b) return ''; const g = fineGrade(e);
         return `<button class="v3j ${g} ${solo && solo[0] === e.a && solo[1] === e.b ? 'on' : ''}" data-v3j="${i}" title="${escH(a.name)} — ${escH(b.name)}|Расхождение поверхностей на стыке: обычно ${mm(e.med)} мм, у 90% точек до ${mm(e.p90)} мм, сравнено ${e.cnt} площадок. Щелчок — показать только эту пару"><i style="background:${a.color}"></i><i style="background:${b.color}"></i><span>${escH(a.name)} — ${escH(b.name)}</span><b>${mm(e.p90)} мм</b></button>`; }).join('')}</div>`
@@ -2800,11 +2808,11 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   }
   function bindPanel() {
     $$('[data-v3c]').forEach(inp => inp.oninput = () => { const k = inp.dataset.v3c, v = +inp.value; if (k === 'size') opt.size = v; else { const H = maxH(); opt[k] = k === 'top' ? (v >= H + 0.55 ? null : v) : (v <= minZ() + 0.05 ? null : v); } const b = inp.parentNode.querySelector('b'); b.textContent = k === 'size' ? v + ' px' : opt[k] == null ? 'выкл' : nf(opt[k], 2) + ' м'; renderBar(); dirty(); });
-    const e = $('#v3edl'); if (e) e.onchange = () => { opt.edl = e.checked; dirty(); };
+    const e = $('#v3edl'); if (e) e.onchange = () => { opt.edl = e.checked; dirty(); }; const nfl = $('#v3nf'); if (nfl) nfl.onchange = () => { opt.noFloor = nfl.checked; dirty(); };
     const a = $('#v3all'); if (a) a.onclick = () => { solo = null; renderList(); dirty(); };
     $$('[data-v3j]').forEach(b => b.onclick = () => { const ed = S.fineRep.edges[+b.dataset.v3j]; if (solo && solo[0] === ed.a && solo[1] === ed.b) solo = null; else { solo = [ed.a, ed.b]; opt.color = 'scan'; const A = scanById(ed.a), B = scanById(ed.b); cam.tg = [(A.pose.x + B.pose.x) / 2, (A.pose.y + B.pose.y) / 2, 1.2]; cam.dist = Math.max(6, Math.hypot(A.pose.x - B.pose.x, A.pose.y - B.pose.y) * 2.2); } renderList(); renderBar(); dirty(); });
   }
-  return { mount, unmount, resize, dirty, fit, home, view, lowView, isLow, noCeil, panelHTML, bindPanel, opt, cam, get gl() { return gl; }, set ortho(v) { cam.ortho = v; dirty(); }, clearMeas() { meas = []; dirty(); }, get mounted() { return !!gl; }, solo: v => { solo = v; dirty(); } };
+  return { mount, unmount, resize, dirty, fit, home, view, lowView, isLow, bottomView, isBottom, noCeil, panelHTML, bindPanel, opt, cam, get gl() { return gl; }, set ortho(v) { cam.ortho = v; dirty(); }, clearMeas() { meas = []; dirty(); }, get mounted() { return !!gl; }, solo: v => { solo = v; dirty(); } };
 })();
 
 // сканы, загруженные до 4.4, обрезаны по высоте (только от пола до потолка) — перечитать из файлов во всю высоту, сшивка остаётся как есть
