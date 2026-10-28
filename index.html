@@ -81,6 +81,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 .d3p{position:absolute;right:12px;top:12px;width:300px;background:rgba(255,255,255,.97);border:1px solid #cfd6df;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:12.5px;z-index:5;overflow:hidden}
 .d3h{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#1b1f26;color:#fff;font-weight:600;font-size:13px}.d3h button{background:transparent;border:0;color:#cbd5e1;font-size:14px;cursor:pointer}
 .d3t{display:flex;gap:4px;padding:8px 8px 2px}.d3t button{flex:1;padding:7px 4px;border:1px solid #cfd6df;border-radius:8px;background:#fff;font:inherit;cursor:pointer}.d3t button.on{background:#0b6bd0;color:#fff;border-color:#0b6bd0}
+.d3lv{display:flex;align-items:center;gap:5px;margin:4px 10px;font-size:12.5px;color:#334155}.d3lv input{width:52px;font:inherit;padding:2px 5px;border:1px solid #cfd6df;border-radius:6px}.d3lv button{margin-left:auto;padding:3px 7px;border:1px solid #cfd6df;border-radius:6px;background:#fff;font:inherit;font-size:11.5px;cursor:pointer}
 .d3k{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}.d3k button{padding:4px 8px;border:1px solid #cfd6df;border-radius:7px;background:#fff;font:inherit;font-size:12px;cursor:pointer}.d3k button.on{background:#0b6bd0;color:#fff;border-color:#0b6bd0}.d3sel{margin-top:6px;padding-top:6px;border-top:1px solid #dbe3ec}.d3sel input{width:58px;font:inherit;padding:2px 5px;border:1px solid #cfd6df;border-radius:6px}.d3b button.on{background:#0b6bd0;color:#fff;border-color:#0b6bd0}.d3b button.on:hover,.d3t button.on:hover,.d3k button.on:hover{background:#0a5fb8!important;color:#fff}
 .d3i{margin:4px 10px;padding:7px 8px;background:#f1f5f9;border-radius:8px;color:#334155;line-height:1.35}.d3s{margin-top:4px;color:#64748b;font-size:11.5px}
 .d3b{display:flex;flex-wrap:wrap;gap:4px;padding:4px 8px 9px}.d3b button{flex:1 1 auto;padding:6px 8px;border:1px solid #cfd6df;border-radius:8px;background:#fff;font:inherit;cursor:pointer}.d3b button:hover,.d3t button:hover:not(.on){background:#eef4fb}
@@ -125,7 +126,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.9 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.10 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -150,7 +151,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <li>Мышь: левая — вращать, правая или Shift — сдвиг, колесо — ближе/дальше к курсору, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</li>
 <li><b>По центру</b> (или клавиша Home / F) — вернуть модель в центр, если потерялась. Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте. <b>Низ</b> — фундаменты, люки, приямки: всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу (повторно — обычный вид). <b>Снизу</b> — камера под полом смотрит вверх, пол скрыт: приямки, колодцы, люки и подошвы фундаментов видны без перекрытий (картинка зеркальная, как если смотреть снизу). Флажок «Скрыть пол» слева работает и в обычном виде. Сканы, загруженные до версии 4.4, обрезаны ниже пола — «📁 → Перечитать сканы во всю высоту».</li>
 <li><b>Расстояние</b> — две точки: длина, в плане и по высоте.</li>
-<li><b>Черчение</b> — окно инструментов для плана прямо по облаку. «Срез для плана» — вид сверху: срез 0,8–1,6 м ярко, всё ниже — бледным фоном (облако остаётся целым); повторное нажатие — как было. <b>Линия</b>: щелчок — точка (липнет к облаку и к поставленным точкам), щелчок по первой — замкнуть, Enter / двойной щелчок / правая кнопка — закончить, Backspace — убрать последнюю; первая линия задаёт оси для «Прямых углов» (Shift — наоборот). <b>Правка</b>: тянуть точку — связанные линии подстраиваются (как в AutoCAD), тянуть линию — она сдвигается вместе с соседями, тянуть края проёма; Delete — удалить выбранное. <b>Проём</b>: дверь, окно или проём — щелчок по стене у одного края, потом у другого; ширину и вид можно поправить в окне. <b>Подпись</b>: название помещения, отметка. <b>Стереть</b>: точку, отрезок, проём, подпись. Выгрузка — DXF (стены с проёмами, двери с дугой, окна, площади, подписи) или «→ План».</li>
+<li><b>Черчение</b> — окно инструментов для плана прямо по облаку. «Срез для плана» — вид сверху: срез 0,8–1,6 м ярко, всё ниже — бледным фоном (облако остаётся целым); повторное нажатие — как было. <b>Линия</b>: щелчок — точка (липнет к облаку и к поставленным точкам), щелчок по первой — замкнуть, Enter / двойной щелчок / правая кнопка — закончить, Backspace — убрать последнюю; первая линия задаёт оси для «Прямых углов» (Shift — наоборот). <b>Правка</b>: тянуть точку — связанные линии подстраиваются (как в AutoCAD), тянуть линию — она сдвигается вместе с соседями, тянуть края проёма; Delete — удалить выбранное. <b>Проём</b>: дверь, окно или проём — щелчок по стене у одного края, потом у другого; ширину и вид можно поправить в окне. <b>Подпись</b>: название помещения, отметка. <b>Стереть</b>: точку, отрезок, проём, подпись; то же — <b>правой кнопкой</b> в любом инструменте. Весь чертёж лежит на одном <b>уровне плана</b> (поле в окне, «по срезу» — середина среза): точки берут с облака только положение в плане, поэтому при повороте чертёж остаётся ровным. Выгрузка — DXF (стены с проёмами, двери с дугой, окна, площади, подписи) или «→ План».</li>
 <li><b>E57</b> — выгрузка для камеральной обработки: полная плотность из исходных файлов (с цветом и яркостью) или 2–10 см; один файл со сканами по отдельности (с положением, как из SCENE), одним облаком или каждый скан своим файлом. В Chrome и Edge файл пишется прямо на диск — подходит для больших объёмов.</li></ul>
 <h4>4 План — стены и проёмы</h4>
 <ul><li><b>🏠 План по сканам</b> (справа) — готовый план сразу: стены — плоскости во всю высоту, помещения — по потолку (двери отделяют помещения перемычкой), двери и окна — дыры в стенах (окно — с низом выше пола и перемычкой), подоконник — горизонтальная полка у низа окна. Косые стены программа находит сама: стороны идут по направлениям стен, не только под 90°. Номера и площади помещений — на плане и в DXF. Шторы при съёмке откройте, иначе окна за ними не видны.</li><li><b>Линии и углы для плана</b> — на шаге «2 Сборка»: <b>⌇ Линия стены</b> (касание стены — прямая по точкам), <b>／ Линия</b> (нарисовать, где стену не видно — за шкафом, за шторой), <b>⌖ Угол плана</b>, <b>⌫</b> — удалить. «🏠 План по сканам» проводит стороны помещений точно по этим линиям и через эти углы; линия ещё и разделяет помещения.</li><li><b>⬇ Для Рулетки</b> — файл проекта: помещения со сторонами, двери, окна, подоконники. В Рулетке «Открыть файл» — и домерьте на месте окна и подоконники.</li><li><b>Фон — тонкий срез</b> точек всех сканов на одной высоте (по умолчанию 1,2 м от пола, 6 см) — высота и толщина в карточке справа. В срезе сразу видно, сошлись ли стены разных сканов в одну линию.</li><li><b>⌇ Стена по точкам</b> — коснитесь стены в срезе: программа впишет прямую по точкам (сколько точек и разброс в мм — внизу), продлит вдоль стены и замкнёт угол с соседней. Так план собирается стена за стеной: решаете вы, точность — от точек.</li><li>На ленте: «Построение» (план по сканам, только стены), «Стены» (по точкам, нарисовать, удалить), «Правка» (углы, к осям), «Фон», «Выгрузка» (DXF, Рулетка). Касание стены — выбрать и править.</li></ul>
@@ -2788,7 +2789,11 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   // S.draw = { pl: [{ id, p: [[x,y,z]…], closed }], op: [{ id, pl, seg, t0, t1, kind: 'door'|'window'|'gap', fl }], tx: [{ id, p, s }], next }
   // точки, совпадающие в плане (до 1,5 мм), связаны: тянешь одну — едут все и линии за ними (как в AutoCAD)
   const DR = { on: false, tool: 'line', act: null, sel: null, hov: null, ortho: true, dims: true, okind: 'door', opA: null, cut: null, pk: { t: 0, x: -1, y: -1, p: null } };
-  const D = () => { const d = S.draw || (S.draw = { pl: [], next: 1 }); d.op = d.op || []; d.tx = d.tx || []; return d; };
+  const D = () => { const d = S.draw || (S.draw = { pl: [], next: 1 }); d.op = d.op || []; d.tx = d.tx || [];
+    if (d.z == null || !Number.isFinite(d.z)) { d.z = 1.2; flatten(d); } return d; };
+  // всё на уровне плана: точка берёт с облака только положение в плане, высота у всех одна — при повороте чертёж не перекашивается
+  function flatten(d) { for (const L of d.pl) for (const q of L.p) q[2] = d.z; for (const t of d.tx) t.p[2] = d.z; }
+  const lvl = () => D().z;
   const plen = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
   const area = P => { let s = 0; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; s += a[0] * b[1] - b[0] * a[1]; } return Math.abs(s) / 2; };
   const nseg = L => L.closed ? L.p.length : L.p.length - 1;
@@ -2815,7 +2820,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   // где встанет точка: вершина рядом → точно в неё; иначе точка облака под курсором (или плоскость последней точки); «прямые углы» — по осям контура
   function cand(px, py, shift, full) { const A = active(), last = A && A.p[A.p.length - 1];
     const v = vertAt(px, py, (L, i) => A && L === A && i === A.p.length - 1); if (v) return { p: v.q.slice(), snap: 'v', first: !!(A && v.L === A && v.i === 0 && A.p.length >= 3) };
-    let p = cloudPt(px, py, full); const snap = p ? 'c' : 'f'; if (!p) p = onPlane(px, py, last ? last[2] : (opt.top != null ? Math.min(opt.top - 0.2, 1.2) : 1.2)); if (!p) return null;
+    let p = cloudPt(px, py, full); const snap = p ? 'c' : 'f'; if (!p) p = onPlane(px, py, lvl()); if (!p) return null; p = [p[0], p[1], lvl()];
     const ax = last ? axis(A) : null;
     if (last && ax != null && DR.ortho !== !!shift) { const c = Math.cos(ax), s = Math.sin(ax), dx = p[0] - last[0], dy = p[1] - last[1], u = dx * c + dy * s, w = -dx * s + dy * c;
       p = Math.abs(u) >= Math.abs(w) ? [last[0] + u * c, last[1] + u * s, p[2]] : [last[0] - w * s, last[1] + w * c, p[2]]; return { p, snap: 'o' }; }
@@ -2849,15 +2854,15 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   function projOn(L, i, p) { const [a, b] = segEnds(L, i), len = plen(a, b) || 1e-9, ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len; return Math.max(0, Math.min(len, (p[0] - a[0]) * ux + (p[1] - a[1]) * uy)); }
   function opClick(px, py) { const d = D();
     if (!DR.opA) { const sg = segAt(px, py, 14); if (!sg) { stat('Щёлкните по линии стены — там, где начинается проём.'); return; } const p = cloudPt(px, py, true) || lerp3(...segEnds(sg.L, sg.i), sg.t); DR.opA = { pl: sg.L.id, seg: sg.i, t: projOn(sg.L, sg.i, p) }; stat(`${OPN[DR.okind]}: теперь щёлкните второй край проёма на той же стене.`); info(); dirty(); return; }
-    const L = d.pl.find(l => l.id === DR.opA.pl); if (!L) { DR.opA = null; return; } const [a, b] = segEnds(L, DR.opA.seg); let p = cloudPt(px, py, true) || onPlane(px, py, a[2]); if (!p) return;
+    const L = d.pl.find(l => l.id === DR.opA.pl); if (!L) { DR.opA = null; return; } let p = cloudPt(px, py, true) || onPlane(px, py, lvl()); if (!p) return;
     const t1 = projOn(L, DR.opA.seg, p), t0 = DR.opA.t; if (Math.abs(t1 - t0) < 0.05) { stat('Проём уже 5 см — щёлкните второй край дальше.'); return; }
     pushUndo(); const o = { id: d.next++, pl: L.id, seg: DR.opA.seg, t0: Math.min(t0, t1), t1: Math.max(t0, t1), kind: DR.okind, fl: 0 }; d.op.push(o); DR.opA = null; DR.sel = { op: o.id }; saveSoon(); info(); dirty(); drawPanel();
-    stat(`${OPN[o.kind]} ${nf(o.t1 - o.t0, 3)} м. Ширину и вид можно поправить в окне черчения.`); void b; }
+    stat(`${OPN[o.kind]} ${nf(o.t1 - o.t0, 3)} м. Ширину и вид можно поправить в окне черчения.`); }
   async function txClick(px, py) { const c = cand(px, py, false, true); if (!c) return; const s = await uiDialog({ title: 'Подпись на плане', text: 'Например: «Кухня», «Колонна 40×40», «h = 2,65», «люк Ø0,7».', input: '', ok: 'Поставить', cancel: 'Отмена' }); if (s == null || !String(s).trim()) return;
     pushUndo(); D().tx.push({ id: D().next++, p: c.p, s: String(s).trim() }); saveSoon(); dirty(); info(); }
   function info() { const el = document.getElementById('d3info'); if (!el) return; const A = active(), d = D();
     const selL = DR.sel && DR.sel.id && d.pl.find(l => l.id === DR.sel.id), selO = DR.sel && DR.sel.op && d.op.find(o => o.id === DR.sel.op);
-    let t = DR.tool === 'line' ? (A ? `Контур: ${A.p.length} точ., ${nf(perim(A), 3)} м. Щелчок по первой точке — замкнуть; Enter, двойной щелчок или правая кнопка — закончить; Backspace — убрать последнюю.` : 'Щёлкайте по углам стен на облаке — точки соединятся линией. К уже поставленным точкам линия прилипает.')
+    let t = DR.tool === 'line' ? (A ? `Контур: ${A.p.length} точ., ${nf(perim(A), 3)} м. Щелчок по первой точке — замкнуть; Enter, двойной щелчок или правая кнопка — закончить; Backspace — убрать последнюю.` : 'Щёлкайте по углам стен на облаке — точки соединятся линией. Правая кнопка по точке или линии — удалить.')
       : DR.tool === 'edit' ? 'Тяните точку — связанные линии подстроятся. Тяните линию — она сдвинется вместе с соседями. Края проёма тоже тянутся. Щелчок — выбрать, Delete — удалить.'
       : DR.tool === 'op' ? (DR.opA ? 'Второй край проёма — на той же стене.' : 'Выберите вид ниже и щёлкните по линии стены у одного края проёма, потом у другого.')
       : DR.tool === 'txt' ? 'Щелчок — поставить подпись (название помещения, отметку, примечание).' : 'Щелчок по точке, отрезку, проёму или подписи — убрать.';
@@ -2912,6 +2917,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
       ${DR.tool === 'op' ? `<div class="d3k" style="padding:2px 8px">${Object.keys(OPN).map(k => `<button data-d3nk="${k}" class="${DR.okind === k ? 'on' : ''}">${OPN[k]}</button>`).join('')}</div>` : ''}
       <label class="v3c"><input type="checkbox" id="d3o" ${DR.ortho ? 'checked' : ''}> Прямые углы <small>(Shift — наоборот)</small></label>
       <label class="v3c"><input type="checkbox" id="d3d" ${DR.dims ? 'checked' : ''}> Длины, площади, ширины проёмов</label>
+      <label class="d3lv" title="Уровень плана|Высота, на которой лежит весь чертёж (над полом). Точки берут с облака только положение в плане, поэтому при повороте чертёж остаётся ровным. Обычно — середина среза">Уровень плана <input id="d3z" value="${nf(lvl(), 2)}"> м <button id="d3zc" title="По срезу|Поставить уровень в середину среза">по срезу</button></label>
       <div class="d3i" id="d3info"></div>
       <div class="d3b"><button id="d3cut" class="${DR.cut ? 'on' : ''}" title="Срез для плана|Сверху, без перспективы: срез 0,8–1,6 м — яркий, всё ниже — бледным фоном (облако остаётся целым), потолок скрыт. Повторное нажатие — вернуть, как было">${DR.cut ? '✓ Срез для плана' : 'Срез для плана'}</button><button id="d3dxf" title="DXF|План в AutoCAD, мм: стены, проёмы (двери с дугой, окна), площади, подписи">DXF</button>${S.mode === 'stitch' ? '' : '<button id="d3plan" title="В план|Перенести стены и проёмы во вкладку «План»">→ План</button>'}<button id="d3clr" title="Очистить|Удалить весь чертёж (можно отменить)">Очистить</button></div>`;
     el.querySelector('[data-d3x]').onclick = () => setDraw(false);
@@ -2919,6 +2925,9 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     el.querySelectorAll('[data-d3nk]').forEach(b => b.onclick = () => { DR.okind = b.dataset.d3nk; drawPanel(); });
     el.querySelector('#d3o').onchange = e => { DR.ortho = e.target.checked; }; el.querySelector('#d3d').onchange = e => { DR.dims = e.target.checked; dirty(); };
     el.querySelector('#d3cut').onclick = toggleCut;
+    const setLvl = v => { if (!Number.isFinite(v)) return; pushUndo(); D().z = v; flatten(D()); saveSoon(); drawPanel(); dirty(); stat(`Уровень плана — ${nf(v, 2)} м: весь чертёж на этой высоте.`); };
+    el.querySelector('#d3z').onchange = e => setLvl(parseFloat(String(e.target.value).replace(',', '.')));
+    el.querySelector('#d3zc').onclick = () => { const lo = opt.bot != null ? opt.bot : 0, hi = opt.top != null ? opt.top : Math.min(2.4, lo + 1.6); setLvl(+((lo + hi) / 2).toFixed(2)); };
     el.querySelector('#d3dxf').onclick = drawDXF; const bp = el.querySelector('#d3plan'); if (bp) bp.onclick = toPlan;
     el.querySelector('#d3clr').onclick = () => { const d = D(); if (!d.pl.length && !d.tx.length) return; pushUndo(); d.pl = []; d.op = []; d.tx = []; DR.act = null; DR.sel = null; saveSoon(); info(); dirty(); stat('Чертёж удалён (↶ — вернуть).'); };
     info(); }
@@ -2928,7 +2937,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     else { DR.cut = { top: opt.top, bot: opt.bot, ghost: opt.ghost, size: opt.size, noFloor: opt.noFloor, ortho: cam.ortho, pitch: cam.pitch }; if (lowPrev) lowPrev = null; opt.top = 1.6; opt.bot = 0.8; opt.ghost = true; opt.noFloor = false; opt.size = Math.max(opt.size, 3); cam.ortho = true; view('top');
       stat('Срез для плана: 0,8–1,6 м над полом — ярко, всё ниже — бледным фоном. Высоту среза меняйте ползунками слева прямо во время черчения; повторное нажатие — вернуть облако как было.'); }
     renderList(); renderBar(); drawPanel(); dirty(); }
-  function setDraw(on) { DR.on = on; if (on) { if (S.tool !== 'hand') setTool('hand'); DR.tool = 'line'; stat('Черчение: щёлкайте по углам стен на облаке. «Срез для плана» в окне — удобный вид сверху (облако остаётся целым). Вращать и приближать можно как обычно.'); }
+  function setDraw(on) { DR.on = on; if (on) { if (S.draw) flatten(D()); if (S.tool !== 'hand') setTool('hand'); DR.tool = 'line'; stat('Черчение: щёлкайте по углам стен на облаке. «Срез для плана» в окне — удобный вид сверху (облако остаётся целым). Вращать и приближать можно как обычно.'); }
     else { finishLine(); DR.hov = null; DR.sel = null; DR.opA = null; if (DR.cut) toggleCut(); } drawPanel(); renderBar(); dirty(); }
   function drawDXF() { const d = D(), P = d.pl.filter(l => l.p.length >= 2); if (!P.length && !d.tx.length) { uiAlert('Чертёж пуст.'); return; }
     const L = [], g = (c, v) => L.push(String(c), String(v)), k = 1000, f = v => (v * k).toFixed(1);
@@ -2966,13 +2975,13 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const t = txAt(px, py); if (t) return { k: 'tx', t, p0: t.p.slice() };
     const v = vertAt(px, py); if (v) return { k: 'vert', q0: v.q.slice(), group: linked(v.q), L: v.L };
     if (oh) return { k: 'opSel', o: oh.o };
-    const s = segAt(px, py); if (s) { const [a, b] = segEnds(s.L, s.i), z = (a[2] + b[2]) / 2, w0 = onPlane(px, py, z); if (!w0) return null; return { k: 'seg', L: s.L, z, w0, ga: linked(a).map(x => ({ ...x, q0: x.L.p[x.i].slice() })), gb: linked(b).map(x => ({ ...x, q0: x.L.p[x.i].slice() })) }; }
+    const s = segAt(px, py); if (s) { const z = lvl(), w0 = onPlane(px, py, z); if (!w0) return null; return { k: 'seg', L: s.L, z, w0, ga: linked(a).map(x => ({ ...x, q0: x.L.p[x.i].slice() })), gb: linked(b).map(x => ({ ...x, q0: x.L.p[x.i].slice() })) }; }
     return null; }
   function grabMove(G, px, py) {
-    if (G.k === 'vert') { const v = vertAt(px, py, (L, i) => G.group.some(x => x.L === L && x.i === i)); const p = v ? v.q : onPlane(px, py, G.q0[2]); if (!p) return; for (const x of G.group) x.L.p[x.i] = [p[0], p[1], x.z]; return; }
-    if (G.k === 'seg') { const w = onPlane(px, py, G.z); if (!w) return; const dx = w[0] - G.w0[0], dy = w[1] - G.w0[1]; for (const x of [...G.ga, ...G.gb]) x.L.p[x.i] = [x.q0[0] + dx, x.q0[1] + dy, x.q0[2]]; return; }
-    if (G.k === 'tx') { const p = onPlane(px, py, G.p0[2]); if (p) G.t.p = p; return; }
-    if (G.k === 'opEnd') { const L = D().pl.find(l => l.id === G.o.pl); if (!L) return; const [a] = segEnds(L, G.o.seg), p = onPlane(px, py, a[2]); if (!p) return; const t = projOn(L, G.o.seg, p);
+    if (G.k === 'vert') { const v = vertAt(px, py, (L, i) => G.group.some(x => x.L === L && x.i === i)); const p = v ? v.q : onPlane(px, py, lvl()); if (!p) return; for (const x of G.group) x.L.p[x.i] = [p[0], p[1], lvl()]; return; }
+    if (G.k === 'seg') { const w = onPlane(px, py, lvl()); if (!w) return; const dx = w[0] - G.w0[0], dy = w[1] - G.w0[1]; for (const x of [...G.ga, ...G.gb]) x.L.p[x.i] = [x.q0[0] + dx, x.q0[1] + dy, lvl()]; return; }
+    if (G.k === 'tx') { const p = onPlane(px, py, lvl()); if (p) G.t.p = p; return; }
+    if (G.k === 'opEnd') { const L = D().pl.find(l => l.id === G.o.pl); if (!L) return; const p = onPlane(px, py, lvl()); if (!p) return; const t = projOn(L, G.o.seg, p);
       if (G.end === 'a') G.o.t0 = Math.min(t, G.o.t1 - 0.05); else G.o.t1 = Math.max(t, G.o.t0 + 0.05); } }
   function bind() {
     const pt = e => { const r = cv.getBoundingClientRect(), d = dpr(); return [(e.clientX - r.left) * d, (e.clientY - r.top) * d]; };
@@ -2994,7 +3003,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
       if (d.k === 'dmove') { drag = null; if (!d.moved) { S.undo.pop(); } else saveSoon(); info(); dirty(); return; }
       if (DR.on && d.k !== 'two' && d.btn === 0 && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 700 && (DR.tool === 'op' || DR.tool === 'txt')) { const [px, py] = pt(e); if (DR.tool === 'op') opClick(px, py); else txClick(px, py); return; }
       if (DR.on && d.k !== 'two' && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 700) { const [px, py] = pt(e);
-        if (d.btn === 2) { if (active()) finishLine(); return; }
+        if (d.btn === 2) { if (active() || DR.opA) { DR.opA = null; finishLine(); } else if (!delAt(px, py)) stat('Правая кнопка удаляет точку, отрезок, проём или подпись под курсором — тут ничего нет.'); return; }
         if (DR.tool === 'line') { addPoint(cand(px, py, e.shiftKey, true)); DR.hov = null; return; }
         if (DR.tool === 'edit') { const h = segAt(px, py) || vertAt(px, py); DR.sel = h ? { id: h.L.id } : null; info(); dirty(); return; }
         if (DR.tool === 'del') { if (!delAt(px, py)) stat('Тут ничего нет — щёлкните по точке, отрезку, проёму или подписи.'); return; } }
