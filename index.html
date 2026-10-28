@@ -2638,14 +2638,14 @@ const V3 = (() => {
   const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null, noFloor: false };
   let solo = null, meas = [], drag = null, pend = false, lastMVP = null, lastVP = null, fitted = false, tpts = new Map();
   const vs = `#version 300 es
-in vec3 p; in vec3 c; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk; uniform float fpx; uniform int orth;
-out vec3 vc; out float wz;
+in vec3 p; in vec3 c; in float fl; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk; uniform float fpx; uniform int orth;
+out vec3 vc; out float wz; out float vfl;
 vec3 ramp(float t){ t=clamp(t,0.,1.); return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs(4.*t-2.),1.5-abs(4.*t-1.)),0.,1.)*.9+.05; }
-void main(){ vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; float wd=orth==1?1.:max(gl_Position.w,1e-3); gl_PointSize=clamp(max(ps, .022*fpx/wd), 1., 48.); // вблизи точки крупнее — поверхность сплошная
+void main(){ vfl=fl; vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; float wd=orth==1?1.:max(gl_Position.w,1e-3); gl_PointSize=clamp(max(ps, .022*fpx/wd), 1., 48.); // вблизи точки крупнее — поверхность сплошная
  vc = mode==0 ? sc : mode==1 ? ramp((w.z-zr.x)/(zr.y-zr.x)) : (rgbOk>.5 ? c : vec3(.72)); }`;
   const fs = `#version 300 es
-precision highp float; in vec3 vc; in float wz; uniform vec2 clip; uniform float ps; uniform float nfl; out vec4 o;
-void main(){ if(wz>clip.y||wz<clip.x) discard; if(nfl>0.&&abs(wz)<nfl) discard; if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
+precision highp float; in vec3 vc; in float wz; in float vfl; uniform vec2 clip; uniform float ps; uniform float nfl; out vec4 o;
+void main(){ if(wz>clip.y||wz<clip.x) discard; if(nfl>0.&&vfl>.5) discard; if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
   const vsQ = `#version 300 es
 in vec2 q; void main(){ gl_Position=vec4(q,0.,1.); }`;
   const fsQ = `#version 300 es
@@ -2656,7 +2656,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
  for(int i=0;i<8;i++){ float a=float(i)*.785398; vec2 off=vec2(cos(a),sin(a))*1.4*px; float dn=texture(td,uv+off).r; s+= dn>=1. ? 1.2 : max(0.,L-log2(lin(dn))); }
  float sh=k>0. ? exp(-s/8.*300.*k) : 1.; o=vec4(texture(tc,uv).rgb*sh,1.); }`;
   function sh(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
-  function prog(a, b) { const p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, a)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, b)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); const U = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); for (let i = 0; i < n; i++) { const u = gl.getActiveUniform(p, i); U[u.name] = gl.getUniformLocation(p, u.name); } return { p, U, a: { p: gl.getAttribLocation(p, 'p'), c: gl.getAttribLocation(p, 'c'), q: gl.getAttribLocation(p, 'q') } }; }
+  function prog(a, b) { const p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, a)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, b)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); const U = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); for (let i = 0; i < n; i++) { const u = gl.getActiveUniform(p, i); U[u.name] = gl.getUniformLocation(p, u.name); } return { p, U, a: { p: gl.getAttribLocation(p, 'p'), c: gl.getAttribLocation(p, 'c'), fl: gl.getAttribLocation(p, 'fl'), q: gl.getAttribLocation(p, 'q') } }; }
   function mount(el) {
     unmount(); wrap = el; cv = el.querySelector('#v3'); ov = el.querySelector('#v3o');
     gl = cv.getContext('webgl2', { antialias: false, preserveDrawingBuffer: true }); lost = false;
@@ -2675,7 +2675,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   }
   // точки скана в видеопамять (без стёртого кистью); пересобираются, если чистка поменялась
   function buf(s) {
-    let c = cache.get(s.id); if (c && c.cg === s.cg && c.pts === s.pts) return c; if (c) { gl.deleteBuffer(c.b); if (c.cb) gl.deleteBuffer(c.cb); }
+    let c = cache.get(s.id); if (c && c.cg === s.cg && c.pts === s.pts) return c; if (c) { gl.deleteBuffer(c.b); if (c.cb) gl.deleteBuffer(c.cb); if (c.fb) gl.deleteBuffer(c.fb); }
     const K = keptIdx(s), P = s.pts, C = s.col; let A = P, B = C;
     if (K) { A = new Float32Array(K.length * 3); B = C ? new Uint8Array(K.length * 3) : null; for (let k = 0; k < K.length; k++) { const i = K[k]; A[3 * k] = P[3 * i]; A[3 * k + 1] = P[3 * i + 1]; A[3 * k + 2] = P[3 * i + 2]; if (B) { B[3 * k] = C[3 * i]; B[3 * k + 1] = C[3 * i + 1]; B[3 * k + 2] = C[3 * i + 2]; } } }
     const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, A, gl.STATIC_DRAW);
@@ -2683,6 +2683,21 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     c = { b, cb, n: A.length / 3, cg: s.cg, pts: s.pts, A }; cache.set(s.id, c); return c;
   }
   const shown = () => S.scans.filter(s => s.vis && (!solo || solo.includes(s.id)));
+  // пол там, где он есть: в каждой клетке 30 см — самая «плотная» горизонталь (≥ четверти точек клетки); точки в ±3 см от неё — пол.
+  // Так скрывается пол на любом уровне: в коридоре, в приямке, на площадке; стенки приямков, люки, фундаменты остаются
+  let fKey = '', fMap = null;
+  function floorMap() { const L = S.scans.filter(s => s.vis), key = L.map(s => s.id + ':' + s.pose.x.toFixed(3) + ':' + s.pose.y.toFixed(3) + ':' + s.pose.a.toFixed(5) + ':' + s.floor.toFixed(3) + ':' + (s.lev ? s.lev.join(',') : '') + ':' + s.pts.length).join('|');
+    if (key === fKey && fMap) return fMap; const CELL = 0.3, B = 0.01, H = new Map(); let tot = 0; for (const s of L) tot += buf(s).n; const st = Math.max(1, Math.round(tot / 3e6));
+    for (const s of L) { const A = buf(s).A, { R, t } = worldRT(s); for (let i = 0; i < A.length; i += 3 * st) { const x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
+      const k = (Math.floor(x / CELL) + 32768) * 65536 + (Math.floor(y / CELL) + 32768); let m = H.get(k); if (!m) { m = new Map(); m.n = 0; H.set(k, m); } const zb = Math.round(z / B); m.set(zb, (m.get(zb) || 0) + 1); m.n++; } }
+    fMap = new Map(); for (const [k, m] of H) { let bc = 0; const sc = new Map(); for (const [zb, c] of m) { const s3 = c + (m.get(zb - 1) || 0) + (m.get(zb + 1) || 0); sc.set(zb, s3); if (s3 > bc) bc = s3; } if (bc < 6) continue;
+      // пол — самая НИЗКАЯ из плотных горизонталей (потолок и столы выше)
+      let bz = null; for (const [zb, s3] of sc) if (s3 >= Math.max(6, 0.4 * bc) && (bz == null || zb < bz)) bz = zb; if (bz == null) continue; let best = bz, bs = sc.get(bz); for (let d = -2; d <= 2; d++) { const v = sc.get(bz + d) || 0; if (v > bs) { bs = v; best = bz + d; } } fMap.set(k, best * B); }
+    fKey = key; for (const c of cache.values()) c.flKey = null; return fMap; }
+  function floorBuf(s, c) { if (c.flKey === fKey && c.fb) return c.fb; const A = c.A, { R, t } = worldRT(s), n = c.n, F = new Uint8Array(n), CELL = 0.3;
+    for (let q = 0; q < n; q++) { const i = 3 * q, x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
+      const fz = fMap.get((Math.floor(x / CELL) + 32768) * 65536 + (Math.floor(y / CELL) + 32768)); if (fz != null && Math.abs(z - fz) < 0.03) F[q] = 1; }
+    if (c.fb) gl.deleteBuffer(c.fb); c.fb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, c.fb); gl.bufferData(gl.ARRAY_BUFFER, F, gl.STATIC_DRAW); c.fl = F; c.flKey = fKey; return c.fb; }
   const zr = new WeakMap(); // высоты скана от пола (нижние 0,5% и верхние 99,5% точек)
   function zRange(s) { let r = zr.get(s.pts); if (r) return r; const P = s.pts, st = Math.max(1, Math.floor(P.length / 3 / 20000)) * 3, z = []; for (let i = 2; i < P.length; i += st) z.push(P[i] - s.floor); z.sort((a, b) => a - b); r = z.length ? [z[Math.floor(z.length * 0.005)], z[Math.floor(z.length * 0.995)]] : [0, 2.7]; zr.set(s.pts, r); return r; }
   function scene() { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, z1 = 2.7, z0 = -0.1; for (const s of shown()) { for (const p of scanBBoxW(s)) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } z1 = Math.max(z1, s.ceil - s.floor); const r = zRange(s); z0 = Math.min(z0, r[0]); } if (x0 > x1) { x0 = y0 = -5; x1 = y1 = 5; } return { x0, y0, x1, y1, z0, z1 }; }
@@ -2710,10 +2725,11 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const M = mats(W, H); lastMVP = M; const b = scene();
     gl.bindFramebuffer(gl.FRAMEBUFFER, opt.edl ? fbo : null); gl.viewport(0, 0, W, H); gl.clearColor(BG[0], BG[1], BG[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST);
     gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); gl.uniform1i(U.orth, cam.ortho ? 1 : 0); gl.uniform1f(U.fpx, cam.ortho ? H / (2 * cam.dist * Math.tan(cam.fov / 2)) : H / (2 * Math.tan(cam.fov / 2))); { const lo = opt.bot != null ? opt.bot : b.z0, hi = opt.top != null ? opt.top : b.z1 + 0.05; gl.uniform2f(U.zr, lo, Math.max(lo + 0.05, hi)); } // цвет по высоте — на всю видимую полосу: при срезе мелкий рельеф виден ярче
-    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top); gl.uniform1f(U.nfl, opt.noFloor ? 0.04 : 0);
+    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top); if (opt.noFloor) floorMap(); gl.uniform1f(U.nfl, opt.noFloor ? 1 : 0);
     for (const s of shown()) { const c = buf(s); gl.uniformMatrix4fv(U.mdl, false, model(s)); const col = parseInt(s.color.slice(1), 16); gl.uniform3f(U.sc, (col >> 16) / 255, ((col >> 8) & 255) / 255, (col & 255) / 255); gl.uniform1f(U.rgbOk, c.cb ? 1 : 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, c.b); gl.enableVertexAttribArray(P1.a.p); gl.vertexAttribPointer(P1.a.p, 3, gl.FLOAT, false, 0, 0);
       if (P1.a.c >= 0) { if (c.cb) { gl.bindBuffer(gl.ARRAY_BUFFER, c.cb); gl.enableVertexAttribArray(P1.a.c); gl.vertexAttribPointer(P1.a.c, 3, gl.UNSIGNED_BYTE, true, 0, 0); } else { gl.disableVertexAttribArray(P1.a.c); gl.vertexAttrib3f(P1.a.c, 0.72, 0.72, 0.72); } }
+      if (P1.a.fl >= 0) { const F = opt.noFloor ? floorBuf(s, c) : null; if (F) { gl.bindBuffer(gl.ARRAY_BUFFER, F); gl.enableVertexAttribArray(P1.a.fl); gl.vertexAttribPointer(P1.a.fl, 1, gl.UNSIGNED_BYTE, false, 0, 0); } else { gl.disableVertexAttribArray(P1.a.fl); gl.vertexAttrib1f(P1.a.fl, 0); } }
       gl.drawArrays(gl.POINTS, 0, c.n); }
     if (opt.edl) { gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.disable(gl.DEPTH_TEST); gl.useProgram(P2.p); const Q = P2.U;
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tC); gl.uniform1i(Q.tc, 0); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tD); gl.uniform1i(Q.td, 1);
@@ -2744,7 +2760,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const top = opt.top == null ? 1e9 : opt.top, bot = opt.bot == null ? -1e9 : opt.bot, W = cv.width, H = cv.height;
     for (const s of shown()) { const c = buf(s), A = c.A, { R, t } = worldRT(s);
       for (let i = 0; i < A.length; i += st) { const x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
-        if (z > top || z < bot || (opt.noFloor && Math.abs(z) < 0.04)) continue; const cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) continue;
+        if (z > top || z < bot || (opt.noFloor && c.fl && c.fl[i / 3])) continue; const cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) continue;
         const sx = ((m[0] * x + m[4] * y + m[8] * z + m[12]) / cw + 1) / 2 * W, sy = (1 - (m[1] * x + m[5] * y + m[9] * z + m[13]) / cw) / 2 * H, d2 = (sx - px) ** 2 + (sy - py) ** 2; if (d2 > rr) continue;
         const dz = (m[2] * x + m[6] * y + m[10] * z + m[14]) / cw + d2 / rr * 0.002; if (dz < bz) { bz = dz; best = [x, y, z]; } } }
     return best;
@@ -2775,7 +2791,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   function pan(dx, dy) { const { r, u } = basis(), H = cv.getBoundingClientRect().height || 500, s = 2 * cam.dist * Math.tan(cam.fov / 2) / H; cam.tg = cam.tg.map((v, i) => v - r[i] * dx * s + u[i] * dy * s); }
   function home() { // вернуть модель в центр: все видимые сканы, вид сохраняется (если смотрели снизу — наклонный)
     if (!S.scans.some(s => s.vis)) { stat('Все сканы скрыты — включите 👁 в списке слева.'); return; }
-    if (cam.pitch < -0.2) cam.pitch = 0.75; fit(); stat('Модель по центру.'); }
+    if (cam.pitch < -0.2 && !isBottom()) cam.pitch = 0.75; fit(); stat('Модель по центру.'); }
   function view(k) { const v = { top: [cam.yaw, 1.5707], bottom: [cam.yaw, -1.5707], front: [-Math.PI / 2, 0], side: [0, 0], iso: [-2.2, 0.75] }[k]; cam.yaw = v[0]; cam.pitch = v[1]; if (k === 'top' && !cam.ortho) { } dirty(); }
   function maxH() { return Math.max(2.7, ...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); }
   function minZ() { return Math.min(-0.2, ...S.scans.filter(s => s.vis).map(s => zRange(s)[0])) - 0.1; }
@@ -2790,7 +2806,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   function bottomView() { if (lowPrev && lowPrev.bottom) { lowView(); return; }
     if (lowPrev) lowView(); lowPrev = { opt: { top: opt.top, bot: opt.bot, color: opt.color, size: opt.size, noFloor: opt.noFloor }, ortho: cam.ortho, pitch: cam.pitch, bottom: true };
     opt.top = 0.6; opt.color = 'h'; opt.size = Math.max(opt.size, 3); opt.noFloor = true; cam.ortho = true; view('bottom');
-    stat('Вид снизу: пол скрыт (±4 см), видно всё до 0,6 м над полом; цвет — по высоте (синее — ниже). Изображение зеркальное — как если смотреть снизу. Вращать можно как обычно; повторное нажатие — обычный вид.'); renderList(); renderBar(); dirty(); }
+    stat('Вид снизу: пол скрыт (на любом уровне), видно всё до 0,6 м над нулём; цвет — по высоте (синее — ниже). Изображение зеркальное — как если смотреть снизу. Вращать можно как обычно; повторное нажатие — обычный вид.'); renderList(); renderBar(); dirty(); }
   const isBottom = () => !!(lowPrev && lowPrev.bottom);
   function noCeil() { if (opt.top != null) { opt.top = null; } else { const H = Math.min(...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); opt.top = +(Math.max(1, H - 0.25)).toFixed(2); } renderList(); renderBar(); dirty(); }
   function panelHTML() {
@@ -2800,7 +2816,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
       ${sl('top', 'Срез сверху', opt.top, H + 0.6)}${sl('bot', 'Срез снизу', opt.bot, Z0)}
       <label class="v3r"><span>Точки</span><input type="range" data-v3c="size" min="1" max="6" step="1" value="${opt.size}"><b>${opt.size} px</b></label>
       <label class="v3c"><input type="checkbox" id="v3edl" ${opt.edl ? 'checked' : ''}> Подсветка рельефа (тени по глубине)</label>
-      <label class="v3c" title="Скрыть пол|Убрать точки пола (±4 см от нуля) — сверху и снизу видно, что под полом и на полу"><input type="checkbox" id="v3nf" ${opt.noFloor ? 'checked' : ''}> Скрыть пол (±4 см)</label>
+      <label class="v3c" title="Скрыть пол|Убрать точки пола на любом уровне (коридор, приямок, площадка) — сверху и снизу видно всё, что ниже и выше пола"><input type="checkbox" id="v3nf" ${opt.noFloor ? 'checked' : ''}> Скрыть пол</label>
       <div class="v3h">Мышь: левая — вращать, правая или Shift — сдвигать, колесо — ближе/дальше, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</div></div>`
       + (R && R.edges.length ? `<div class="lh"><b>Точность стыков (${R.edges.length})</b></div><div class="v3e">${R.edges.map((e, i) => { const a = byId(e.a), b = byId(e.b); if (!a || !b) return ''; const g = fineGrade(e);
         return `<button class="v3j ${g} ${solo && solo[0] === e.a && solo[1] === e.b ? 'on' : ''}" data-v3j="${i}" title="${escH(a.name)} — ${escH(b.name)}|Расхождение поверхностей на стыке: обычно ${mm(e.med)} мм, у 90% точек до ${mm(e.p90)} мм, сравнено ${e.cnt} площадок. Щелчок — показать только эту пару"><i style="background:${a.color}"></i><i style="background:${b.color}"></i><span>${escH(a.name)} — ${escH(b.name)}</span><b>${mm(e.p90)} мм</b></button>`; }).join('')}</div>`
