@@ -118,7 +118,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.4 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.5 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -2637,10 +2637,10 @@ const V3 = (() => {
   const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null };
   let solo = null, meas = [], drag = null, pend = false, lastMVP = null, lastVP = null, fitted = false, tpts = new Map();
   const vs = `#version 300 es
-in vec3 p; in vec3 c; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk;
+in vec3 p; in vec3 c; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk; uniform float fpx; uniform int orth;
 out vec3 vc; out float wz;
 vec3 ramp(float t){ t=clamp(t,0.,1.); return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs(4.*t-2.),1.5-abs(4.*t-1.)),0.,1.)*.9+.05; }
-void main(){ vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; gl_PointSize=ps;
+void main(){ vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; float wd=orth==1?1.:max(gl_Position.w,1e-3); gl_PointSize=clamp(max(ps, .022*fpx/wd), 1., 48.); // вблизи точки крупнее — поверхность сплошная
  vc = mode==0 ? sc : mode==1 ? ramp((w.z-zr.x)/(zr.y-zr.x)) : (rgbOk>.5 ? c : vec3(.72)); }`;
   const fs = `#version 300 es
 precision highp float; in vec3 vc; in float wz; uniform vec2 clip; uniform float ps; out vec4 o;
@@ -2708,7 +2708,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     pend = false; if (!gl || lost) return; const W = cv.width, H = cv.height; target(W, H);
     const M = mats(W, H); lastMVP = M; const b = scene();
     gl.bindFramebuffer(gl.FRAMEBUFFER, opt.edl ? fbo : null); gl.viewport(0, 0, W, H); gl.clearColor(BG[0], BG[1], BG[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST);
-    gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); { const lo = opt.bot != null ? opt.bot : b.z0, hi = opt.top != null ? opt.top : b.z1 + 0.05; gl.uniform2f(U.zr, lo, Math.max(lo + 0.05, hi)); } // цвет по высоте — на всю видимую полосу: при срезе мелкий рельеф виден ярче
+    gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); gl.uniform1i(U.orth, cam.ortho ? 1 : 0); gl.uniform1f(U.fpx, cam.ortho ? H / (2 * cam.dist * Math.tan(cam.fov / 2)) : H / (2 * Math.tan(cam.fov / 2))); { const lo = opt.bot != null ? opt.bot : b.z0, hi = opt.top != null ? opt.top : b.z1 + 0.05; gl.uniform2f(U.zr, lo, Math.max(lo + 0.05, hi)); } // цвет по высоте — на всю видимую полосу: при срезе мелкий рельеф виден ярче
     gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top);
     for (const s of shown()) { const c = buf(s); gl.uniformMatrix4fv(U.mdl, false, model(s)); const col = parseInt(s.color.slice(1), 16); gl.uniform3f(U.sc, (col >> 16) / 255, ((col >> 8) & 255) / 255, (col & 255) / 255); gl.uniform1f(U.rgbOk, c.cb ? 1 : 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, c.b); gl.enableVertexAttribArray(P1.a.p); gl.vertexAttribPointer(P1.a.p, 3, gl.FLOAT, false, 0, 0);
@@ -2738,11 +2738,11 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     if (S.tool === 'm3d') { c.fillStyle = 'rgba(17,20,26,.82)'; const t = meas.length && !meas[meas.length - 1].b ? 'Измерение: коснитесь второй точки' : 'Измерение: коснитесь первой точки (Esc — убрать)'; c.font = `${12.5 * d}px system-ui`; const w = c.measureText(t).width + 16 * d; c.fillRect(10 * d, 10 * d, w, 24 * d); c.fillStyle = '#fff'; c.fillText(t, 18 * d, 26 * d); }
   }
   // точка под курсором: ближайшая к камере среди точек в радиусе 6 px
-  function pick(px, py) {
-    const M = lastMVP; if (!M) return null; const m = M.VP, rr = (6 * dpr()) ** 2; let best = null, bz = Infinity;
+  function pick(px, py, step = 1) {
+    const M = lastMVP; if (!M) return null; const m = M.VP, rr = (6 * dpr()) ** 2, st = 3 * step; let best = null, bz = Infinity;
     const top = opt.top == null ? 1e9 : opt.top, bot = opt.bot == null ? -1e9 : opt.bot, W = cv.width, H = cv.height;
     for (const s of shown()) { const c = buf(s), A = c.A, { R, t } = worldRT(s);
-      for (let i = 0; i < A.length; i += 3) { const x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
+      for (let i = 0; i < A.length; i += st) { const x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
         if (z > top || z < bot) continue; const cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) continue;
         const sx = ((m[0] * x + m[4] * y + m[8] * z + m[12]) / cw + 1) / 2 * W, sy = (1 - (m[1] * x + m[5] * y + m[9] * z + m[13]) / cw) / 2 * H, d2 = (sx - px) ** 2 + (sy - py) ** 2; if (d2 > rr) continue;
         const dz = (m[2] * x + m[6] * y + m[10] * z + m[14]) / cw + d2 / rr * 0.002; if (dz < bz) { bz = dz; best = [x, y, z]; } } }
@@ -2762,12 +2762,14 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const up = e => { touches.delete(e.pointerId); if (!drag) return; const d = drag; if (touches.size === 0) drag = null; else if (d.k === 'two') drag = null;
       if (d.k !== 'two' && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 600 && S.tool === 'm3d') { const p = pick(...pt(e)); if (!p) { stat('Под курсором нет точек — коснитесь поверхности.'); return; } const last = meas[meas.length - 1]; if (last && !last.b) last.b = p; else meas.push({ a: p }); if (meas.length > 6) meas.shift(); dirty(); const L = meas[meas.length - 1]; if (L.b) stat(`Расстояние ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1], L.b[2] - L.a[2]), 3)} м · в плане ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1]), 3)} м · по высоте ${nf(L.b[2] - L.a[2], 3)} м.`); } };
     cv.onpointerup = up; cv.onpointercancel = up;
-    cv.ondblclick = e => { const p = pick(...pt(e)); if (p) { cam.tg = p; dirty(); stat('Центр вращения — в этой точке.'); } };
-    cv.onwheel = e => { e.preventDefault(); const k = Math.exp(Math.sign(e.deltaY) * Math.min(0.5, Math.abs(e.deltaY) * 0.0015)); const r = cv.getBoundingClientRect(), W = r.width, H = r.height;
-      // зум к курсору: точка на плоскости цели под курсором остаётся под курсором
-      const { r: R, u } = basis(), hh = cam.dist * Math.tan(cam.fov / 2), sx = ((e.clientX - r.left) / W * 2 - 1) * hh * W / H, sy = (1 - (e.clientY - r.top) / H * 2) * hh;
-      const P = [cam.tg[0] + R[0] * sx + u[0] * sy, cam.tg[1] + R[1] * sx + u[1] * sy, cam.tg[2] + R[2] * sx + u[2] * sy];
-      cam.tg = cam.tg.map((v, i) => P[i] + (v - P[i]) * k); cam.dist = Math.max(0.3, Math.min(5000, cam.dist * k)); dirty(); };
+    cv.ondblclick = e => { const p = pick(...pt(e)); if (p) { const { e: E } = basis(); cam.dist = Math.max(0.3, Math.hypot(E[0] - p[0], E[1] - p[1], E[2] - p[2])); cam.tg = p; const dd = [E[0] - p[0], E[1] - p[1], E[2] - p[2]].map(v => v / cam.dist); cam.pitch = Math.asin(Math.max(-1, Math.min(1, dd[2]))); cam.yaw = Math.atan2(dd[1], dd[0]); dirty(); stat('Центр вращения — в этой точке.'); } };
+    let wz = null;
+    cv.onwheel = e => { e.preventDefault(); const k = Math.exp(Math.sign(e.deltaY) * Math.min(0.5, Math.abs(e.deltaY) * 0.0015)); const r = cv.getBoundingClientRect(), W = r.width, H = r.height, d = dpr(), px = (e.clientX - r.left) * d, py = (e.clientY - r.top) * d, now = Date.now();
+      // приближение к точке облака под курсором (её ищем раз в начале прокрутки); если под курсором пусто — к плоскости центра вращения
+      if (!wz || now - wz.t > 350 || Math.hypot(px - wz.x, py - wz.y) > 6 * d) { const n = shown().reduce((a, s) => a + buf(s).n, 0); wz = { x: px, y: py, P: pick(px, py, Math.max(1, Math.ceil(n / 3e6))) }; } wz.t = now;
+      let P = wz.P; if (!P) { const { r: R, u } = basis(), hh = cam.dist * Math.tan(cam.fov / 2), sx = ((e.clientX - r.left) / W * 2 - 1) * hh * W / H, sy = (1 - (e.clientY - r.top) / H * 2) * hh; P = [cam.tg[0] + R[0] * sx + u[0] * sy, cam.tg[1] + R[1] * sx + u[1] * sy, cam.tg[2] + R[2] * sx + u[2] * sy]; }
+      const kk = Math.max(0.02 / cam.dist, Math.min(5000 / cam.dist, k)); // подобие с центром в P: точка под курсором остаётся под курсором
+      cam.tg = cam.tg.map((v, i) => P[i] + (v - P[i]) * kk); cam.dist *= kk; dirty(); };
   }
   function pan(dx, dy) { const { r, u } = basis(), H = cv.getBoundingClientRect().height || 500, s = 2 * cam.dist * Math.tan(cam.fov / 2) / H; cam.tg = cam.tg.map((v, i) => v - r[i] * dx * s + u[i] * dy * s); }
   function home() { // вернуть модель в центр: все видимые сканы, вид сохраняется (если смотрели снизу — наклонный)
