@@ -2139,6 +2139,8 @@ function bindPlan(cv) {
 // --- DXF для камералки ---
 const CP1251 = (() => { const m = {}; for (let i = 0; i < 64; i++) m[0x410 + i] = 0xC0 + i; m[0x401] = 0xA8; m[0x451] = 0xB8; m[0x2116] = 0xB9; return m; })();
 function exportDXF() {
+  const okW = w => [...w.a, ...w.b].every(Number.isFinite); const bad = PL().walls.filter(w => !okW(w)).length; if (bad) { PL().walls = PL().walls.filter(okW); PL().ops = PL().ops.filter(o => wById(o.w)); }
+  if (!PL().walls.length) { uiAlert('В плане пока нет стен — сначала «План по сканам» (шаг «3 План», лента «Построение»), потом DXF.'); return; }
   const L = []; const g = (c, v) => L.push(String(c), String(v)); const k = 1000; // мм
   g(0, 'SECTION'); g(2, 'HEADER'); g(9, '$ACADVER'); g(1, 'AC1009'); g(9, '$DWGCODEPAGE'); g(3, 'ANSI_1251'); g(9, '$INSUNITS'); g(70, 4); g(0, 'ENDSEC');
   g(0, 'SECTION'); g(2, 'TABLES'); g(0, 'TABLE'); g(2, 'LAYER'); g(70, 4); for (const [n, c] of [['STENY', 7], ['PROEMY', 3], ['RAZMERY', 1], ['SKANY', 8]]) { g(0, 'LAYER'); g(2, n); g(70, 0); g(62, c); g(6, 'CONTINUOUS'); } g(0, 'ENDTAB'); g(0, 'ENDSEC');
@@ -2158,7 +2160,7 @@ function exportDXF() {
   g(0, 'ENDSEC'); g(0, 'EOF');
   const str = L.join('\r\n') + '\r\n', out = []; for (const ch of str) { const c = ch.codePointAt(0); out.push(c < 128 ? c : (CP1251[c] || 63)); }
   const blob = new Blob([new Uint8Array(out)], { type: 'application/dxf' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'План_по_сканам_' + new Date().toISOString().slice(0, 10) + '.dxf'; document.body.appendChild(a); a.click(); a.remove();
-  stat('DXF сохранён: слои STENY, PROEMY, RAZMERY, SKANY; единицы — мм.');
+  stat(`DXF сохранён: стен ${PL().walls.length}, проёмов ${PL().ops.length}, помещений ${roomPolys().length}. Слои STENY, PROEMY, RAZMERY, SKANY; единицы — мм. В AutoCAD — команда ПОКАЗАТЬ → Границы (ZOOM E).`);
 }
 
 // --- облако точек: все видимые сканы в общих координатах, высота — от пола ---
