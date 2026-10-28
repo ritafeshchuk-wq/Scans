@@ -99,7 +99,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
   <div class="grp ctx rg" data-for="v3d" data-cap="Сшивка"><button id="bFine3" class="big pri" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны. Слева появится точность каждого стыка"><span>Точно 3D</span></button><button id="bSelFit3" data-ic="selfit" title="Досшить выбранные|Сканы, выделенные в «Сборке», точно подгоняются друг к другу и к соседям; соседи стоят на месте"><span>Досшить выбранные</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Вид"><button id="bV3Home" class="big pri" data-ic="fit" title="По центру|Вернуть все видимые сканы в центр экрана, если модель потерялась при вращении или сдвиге|Home или F"><span>По центру</span></button><button data-v3v="top" data-ic="vtop" title="Сверху|Смотреть сверху, как план"><span>Сверху</span></button><button data-v3v="front" data-ic="vfront" title="Спереди|Вид вдоль оси Y"><span>Спереди</span></button><button data-v3v="side" data-ic="vside" title="Сбоку|Вид вдоль оси X"><span>Сбоку</span></button><button data-v3v="iso" data-ic="cube3d" title="3D|Наклонный вид"><span>3D</span></button><button id="bOrtho" data-ic="persp" title="Плоско|Без перспективы: размеры не искажаются с расстоянием — удобно сверху и сбоку"><span>Плоско</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Цвет"><div class="seg"><button data-v3col="scan" title="По сканам|Каждый скан своим цветом — видно, где сканы расходятся">Сканы</button><button data-v3col="h" title="По высоте|Цвет от пола к потолку">Высота</button><button data-v3col="rgb" title="Цвет сканера|Фото-цвет сканера или яркость отражения (для сканов, загруженных в версии 4.0 и новее)">Цвет</button></div></div>
-  <div class="grp ctx rg" data-for="v3d" data-cap="Срез"><button id="bNoCeil" data-ic="noceil" title="Без потолка|Убрать потолок, чтобы заглянуть в помещения сверху. Точнее — ползунками слева"><span>Без потолка</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Срез"><button id="bNoCeil" data-ic="noceil" title="Без потолка|Убрать потолок, чтобы заглянуть в помещения сверху. Точнее — ползунками слева"><span>Без потолка</span></button><button id="bLow" data-ic="low" title="Низ: фундаменты и люки|Всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу — фундаменты, люки, приямки, уступы видны чётко. Повторное нажатие — обычный вид"><span>Низ</span></button></div>
   <div class="grp ctx rg" data-for="v3d" data-cap="Измерить"><button data-tool="m3d" data-ic="ruler" title="Расстояние|Коснитесь двух точек облака — длина, в плане и по высоте|Esc — убрать"><span>Расстояние</span></button></div>
   <div class="grp ctx rg" data-for="asm" data-plan="1" data-cap="Линии плана"><button data-tool="gfit" data-ic="gfit" title="Линия стены|Коснитесь стены на сканах — прямая впишется по точкам среза. «План по сканам» проведёт сторону помещения точно по ней"><span>По точкам</span></button><button data-tool="gline" data-ic="gline" title="Линия|Тяните от точки до точки — линия для плана там, где стену не видно (за шкафом, шторой)"><span>Нарисовать</span></button><button data-tool="gpt" data-ic="gpt" title="Угол плана|Коснитесь угла — угол помещения пройдёт через эту точку. Липнет к пересечению линий"><span>Угол</span></button><button data-tool="gdel" data-ic="x" title="Удалить линию или угол плана|Коснитесь линии или угла"><span>Удалить</span></button></div>
   <div class="grp ctx rg" data-for="asm" data-cap="Опорные"><button id="bSph" data-ic="sphere" title="Шары|Найти шары на сканах — держат длинные однотипные объекты (тоннель, коллектор)"><span>Шары</span></button><button data-tool="corner" data-ic="corner" title="Общий угол|Угол, видный на нескольких сканах — сшивка держится за него"><span>Общий угол</span></button></div>
@@ -114,11 +114,11 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
   <div class="grp ctx rg" data-for="grid asm plan" data-cap="Выбранное"><button id="fDel" data-ic="trash" title="Удалить выбранное|Скан, метку, стену или проём — что выбрано|Delete"><span>Удалить</span></button></div>
  </div>
 </div>
-<div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">⬇ Выгрузить сшитые сканы — E57, XYZ, DXF</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
+<div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">⬇ Выгрузить сшитые сканы — E57, XYZ, DXF</button><button id="bReread">↻ Перечитать сканы во всю высоту (низ, фундаменты, люки)</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.3 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.4 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -141,7 +141,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <h4>3 3D — точная сшивка, проверка, выгрузка</h4>
 <ul><li><b>🎯 Точно 3D</b> — финальная подгонка всех сканов сразу по всем шести степеням: сдвиги X, Y, Z, поворот и наклоны. Делается после автосшивки. Слева — точность каждого стыка (у 90% точек): зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше; щелчок по стыку — показать только эту пару.</li>
 <li>Мышь: левая — вращать, правая или Shift — сдвиг, колесо — ближе/дальше к курсору, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</li>
-<li><b>По центру</b> (или клавиша Home / F) — вернуть модель в центр, если потерялась. Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте.</li>
+<li><b>По центру</b> (или клавиша Home / F) — вернуть модель в центр, если потерялась. Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте. <b>Низ</b> — фундаменты, люки, приямки: всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу (повторно — обычный вид). Сканы, загруженные до версии 4.4, обрезаны ниже пола — «📁 → Перечитать сканы во всю высоту».</li>
 <li><b>Расстояние</b> — две точки: длина, в плане и по высоте.</li>
 <li><b>E57</b> — выгрузка для камеральной обработки: полная плотность из исходных файлов (с цветом и яркостью) или 2–10 см; один файл со сканами по отдельности (с положением, как из SCENE), одним облаком или каждый скан своим файлом. В Chrome и Edge файл пишется прямо на диск — подходит для больших объёмов.</li></ul>
 <h4>4 План — стены и проёмы</h4>
@@ -1018,7 +1018,7 @@ self.onmessage = e => {
     for (let k = 0; k < list.length; k++) {
       const sc = list[k], P = sc.pts;
       const fc = floorCeil(P);
-      const lo = fc.floor - 0.15, hi = fc.ceil + 0.15, keep = new Float32Array(P.length), CO = sc.col, kc = CO ? new Uint8Array(P.length) : null; let n = 0;
+      const lo = fc.floor - 3.5, hi = fc.ceil + 3.0, keep = new Float32Array(P.length), CO = sc.col, kc = CO ? new Uint8Array(P.length) : null; let n = 0;
       const H = Math.max(1, Math.ceil((fc.ceil - fc.floor + 0.3) / 0.05)), hist = new Float64Array(H);
       for (let i = 0; i < P.length; i += 3) { const z = P[i + 2]; if (z < lo || z > hi) continue; if (kc) { kc[n] = CO[i]; kc[n + 1] = CO[i + 1]; kc[n + 2] = CO[i + 2]; } keep[n++] = P[i]; keep[n++] = P[i + 1]; keep[n++] = z;
         if (P[i] * P[i] + P[i + 1] * P[i + 1] < 64) { const b = Math.floor((z - fc.floor + 0.15) / 0.05); if (b >= 0 && b < H) hist[b]++; } }
@@ -1642,7 +1642,7 @@ function renderBar() { $$('[data-pbg]').forEach(b => b.classList.toggle('on', b.
   $$('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === S.view)); $$('[data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === S.tool));
   $$('#top .ctx').forEach(g => { g.hidden = !g.dataset.for.split(' ').includes(S.view) || (S.mode === 'stitch' && !!g.dataset.plan); });
   { const pv = $('[data-view="plan"]'); if (pv) pv.hidden = S.mode === 'stitch'; $$('#modeSeg [data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === S.mode)); }
-  $$('[data-v3col]').forEach(b => b.classList.toggle('on', b.dataset.v3col === V3.opt.color)); { const bo = $('#bOrtho'); if (bo) bo.classList.toggle('on', !!V3.cam.ortho); const bn = $('#bNoCeil'); if (bn) bn.classList.toggle('on', V3.opt.top != null); }
+  $$('[data-v3col]').forEach(b => b.classList.toggle('on', b.dataset.v3col === V3.opt.color)); { const bo = $('#bOrtho'); if (bo) bo.classList.toggle('on', !!V3.cam.ortho); const bn = $('#bNoCeil'); if (bn) bn.classList.toggle('on', V3.opt.top != null && !V3.isLow()); const bl = $('#bLow'); if (bl) bl.classList.toggle('on', V3.isLow()); }
   try { layoutTop(); } catch (e) { } $('#fUndo').disabled = !S.undo.length; $('#fRedo').disabled = !S.redo.length; $$('[data-cols]').forEach(b => b.classList.toggle('on', +b.dataset.cols === S.cols)); const tw = $('#bTW'); if (tw) tw.classList.toggle('on', !!S.tileWorld); 
 }
 function setMode(m) { S.mode = m; if (m === 'stitch' && S.view === 'plan') { setView('v3d'); } else renderAll(); saveSoon();
@@ -1920,6 +1920,7 @@ const ICONS = {
   dxf: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>', tape: '<rect x="3" y="7" width="13" height="10" rx="2"/><circle cx="9.5" cy="12" r="2.5"/><path d="M16 15h5"/>',
   cloud: '<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>',
   selfit: '<rect x="3" y="3" width="10" height="10" rx="1" stroke-dasharray="2.5 2"/><rect x="11" y="11" width="10" height="10" rx="1"/><path d="m14 7 3-3m0 0v2.5M17 4h-2.5"/>',
+  low: '<path d="M3 9h18" stroke-dasharray="2 2.5"/><path d="M5 13h4v6h6v-6h4"/><path d="M10 16h4"/>',
   fine: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><path d="m5 5 2.5 2.5M16.5 16.5 19 19"/>',
   cube3d: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/>', vtop: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h9v10M13 4v6"/>',
   vfront: '<path d="M3 20h18"/><rect x="6" y="6" width="12" height="14"/><path d="M10 20v-6h4v6"/>', vside: '<path d="M3 20h18"/><path d="M6 20V9l6-4 6 4v11"/>',
@@ -1949,7 +1950,7 @@ window.addEventListener('resize', layoutTop);
 document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layoutTop();
   $('#rbRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); };
   $('#rbWalls').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
-  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bV3Home').onclick = () => V3.home(); $('#bSelFit').onclick = stitchSelected; $('#bSelFit3').onclick = stitchSelected; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
+  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bV3Home').onclick = () => V3.home(); $('#bSelFit').onclick = stitchSelected; $('#bSelFit3').onclick = stitchSelected; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $('#bLow').onclick = () => V3.lowView(); $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
   $$('[data-pbg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.pbg === 'off' ? false : b.dataset.pbg; renderBar(); drawPlan(); });
   $('#bAdd').onclick = () => $('#fileIn').click(); $('#fileIn').onchange = e => { const f = e.target.files; if (f && f.length) loadFiles(f); e.target.value = ''; };
   $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); $$('[data-tool]').forEach(b => b.onclick = () => setTool(S.tool === b.dataset.tool ? 'hand' : b.dataset.tool));
@@ -1957,7 +1958,7 @@ document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layout
   $('#bTW').onclick = () => { S.tileWorld = !S.tileWorld; S.scans.forEach(x => x.tile = null); renderAll(); stat(S.tileWorld ? 'Рамки повёрнуты как в сборке: одна и та же стена на соседних сканах смотрит в одну сторону.' : 'Рамки — каждый скан как снят.'); }; $('#bStitch').onclick = stitch; $('#bAuto').onclick = autoStitch; $('#bRefine').onclick = refineStitch; $('#bSph').onclick = spheresDialog; $('#fUndo').onclick = undo; $('#fRedo').onclick = redo; $('#fDel').onclick = delSelected; $('#bFit').onclick = () => { if (S.view === 'v3d') V3.home(); else if (S.view === 'asm' || S.view === 'plan') fitAsm(); else { S.scans.forEach(fitTile); redraw(); } };
   $('#bMulti').onclick = () => { S.multi = !S.multi; renderBar(); stat(S.multi ? '⬚ Несколько: касание по скану — добавить или убрать; обведите рамкой по пустому месту — выбрать все внутри. Тяните любой выбранный — едут все. Выйти — ещё раз «⬚ Несколько».' : 'Обычный выбор: касание — один скан.'); }; $('#bR1').onclick = () => rotSel(1); $('#bR01').onclick = () => rotSel(0.1); $('#bRm01').onclick = () => rotSel(-0.1); $('#bRm1').onclick = () => rotSel(-1); $('#bR90').onclick = () => rotSel(90);
   $('#bSave').onclick = saveProjectFile; $('#bOpen').onclick = () => $('#projIn').click(); $('#projIn').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) openProjectFile(f); };
-  $('#bNew').onclick = pjNew; $('#bCloud').onclick = cloudDialog; $('#bAllProj').onclick = pjMenu; $('#bAdd2').onclick = () => $('#fileIn').click();
+  $('#bNew').onclick = pjNew; $('#bCloud').onclick = cloudDialog; $('#bReread').onclick = rereadScans; $('#bAllProj').onclick = pjMenu; $('#bAdd2').onclick = () => $('#fileIn').click();
   { const pm = $('#pmenu'); $('#bProj').onclick = e => { e.stopPropagation(); pm.hidden = !pm.hidden; const r = $('#bProj').getBoundingClientRect(); pm.style.left = r.left + 'px'; pm.style.top = (r.bottom + 6) + 'px'; $('#pmName').textContent = (pjCur() && pjCur().name) || ''; };
     pm.addEventListener('click', e => { if (e.target.closest('button')) pm.hidden = true; }); document.addEventListener('pointerdown', e => { if (!pm.hidden && !e.target.closest('#pmenu') && !e.target.closest('#bProj')) pm.hidden = true; }); }
   $('#bHelp').onclick = () => $('#help').hidden = !$('#help').hidden; $('#helpX').onclick = () => $('#help').hidden = true;
@@ -2044,7 +2045,8 @@ async function planFromScans() {
   try {
     const scans = [];
     for (const s of L) { const P = s.pts, c = Math.cos(s.pose.a), sn = Math.sin(s.pose.a), cg = s.cg, er = cg && cg.er, out = new Float32Array(P.length); let n = 0;
-      for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1];
+      const zlo = s.floor - 0.15, zhi = s.ceil + 0.15;
+      for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1]; if (P[i + 2] < zlo || P[i + 2] > zhi) continue;
         if (er) { const u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res); if (u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]) continue; }
         out[n++] = c * x - sn * y + s.pose.x; out[n++] = sn * x + c * y + s.pose.y; out[n++] = P[i + 2] - s.floor; }
       scans.push({ P: out.slice(0, n), cx: s.pose.x, cy: s.pose.y }); }
@@ -2554,7 +2556,10 @@ const levOf = s => s.lev || [1, 0, 0, 0, 1, 0, 0, 0, 1];
 function worldRT(s) { const c = Math.cos(s.pose.a), sn = Math.sin(s.pose.a); return { R: m3([c, -sn, 0, sn, c, 0, 0, 0, 1], levOf(s)), t: [s.pose.x, s.pose.y, -s.floor] }; }
 function erasedTest(s) { const cg = s.cg, er = cg && cg.er; if (!er) return null; return (x, y) => { const u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res); return u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]; }; }
 function keptIdx(s) { const P = s.pts, n = P.length / 3, E = erasedTest(s); if (!E) return null; const K = new Uint32Array(n); let m = 0; for (let i = 0; i < n; i++) if (!E(P[3 * i], P[3 * i + 1])) K[m++] = i; return K.subarray(0, m); }
-function keptPts(s) { const K = keptIdx(s), P = s.pts; if (!K) return P.slice(); const o = new Float32Array(K.length * 3); for (let k = 0; k < K.length; k++) { const i = K[k]; o[3 * k] = P[3 * i]; o[3 * k + 1] = P[3 * i + 1]; o[3 * k + 2] = P[3 * i + 2]; } return o; }
+// точки этажа (от пола до потолка): ими сшивают и строят план; ниже пола и выше потолка — только для показа и выгрузки
+function corePts(s) { const P = s.pts, lo = s.floor - 0.15, hi = s.ceil + 0.15; let n = 0; for (let i = 2; i < P.length; i += 3) if (P[i] >= lo && P[i] <= hi) n++; if (n * 3 === P.length) return P.slice(); const o = new Float32Array(n * 3); let k = 0; for (let i = 0; i < P.length; i += 3) { const z = P[i + 2]; if (z < lo || z > hi) continue; o[k++] = P[i]; o[k++] = P[i + 1]; o[k++] = z; } return o; }
+function keptPts(s) { const K = keptIdx(s), P = s.pts, lo = s.floor - 0.15, hi = s.ceil + 0.15; if (!K) return corePts(s); const o = new Float32Array(K.length * 3); let m = 0; for (let k = 0; k < K.length; k++) { const i = K[k], z = P[3 * i + 2]; if (z < lo || z > hi) continue; o[m++] = P[3 * i]; o[m++] = P[3 * i + 1]; o[m++] = z; } return o.slice(0, m);
+}
 function runWorker(msg, transfer, label) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || label}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on); w.postMessage(Object.assign({ job }, msg), transfer || []); }); }
 function fineGrade(e) { return e.p90 <= 0.003 ? 'ok' : e.p90 <= 0.006 ? 'wa' : 'bad'; }
 async function fineStitch() {
@@ -2677,7 +2682,9 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     c = { b, cb, n: A.length / 3, cg: s.cg, pts: s.pts, A }; cache.set(s.id, c); return c;
   }
   const shown = () => S.scans.filter(s => s.vis && (!solo || solo.includes(s.id)));
-  function scene() { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, z1 = 2.7; for (const s of shown()) { for (const p of scanBBoxW(s)) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } z1 = Math.max(z1, s.ceil - s.floor); } if (x0 > x1) { x0 = y0 = -5; x1 = y1 = 5; } return { x0, y0, x1, y1, z0: -0.1, z1 }; }
+  const zr = new WeakMap(); // высоты скана от пола (нижние 0,5% и верхние 99,5% точек)
+  function zRange(s) { let r = zr.get(s.pts); if (r) return r; const P = s.pts, st = Math.max(1, Math.floor(P.length / 3 / 20000)) * 3, z = []; for (let i = 2; i < P.length; i += st) z.push(P[i] - s.floor); z.sort((a, b) => a - b); r = z.length ? [z[Math.floor(z.length * 0.005)], z[Math.floor(z.length * 0.995)]] : [0, 2.7]; zr.set(s.pts, r); return r; }
+  function scene() { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, z1 = 2.7, z0 = -0.1; for (const s of shown()) { for (const p of scanBBoxW(s)) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } z1 = Math.max(z1, s.ceil - s.floor); const r = zRange(s); z0 = Math.min(z0, r[0]); } if (x0 > x1) { x0 = y0 = -5; x1 = y1 = 5; } return { x0, y0, x1, y1, z0, z1 }; }
   function fit() { // по основной массе точек: редкие точки за окнами не отдаляют вид
     const b = scene(), xs = [], ys = []; for (const s of shown()) { const A = gl ? buf(s).A : s.pts, { R, t } = worldRT(s), st = Math.max(1, Math.floor(A.length / 3 / 5000)) * 3;
       for (let i = 0; i < A.length; i += st) { xs.push(R[0] * A[i] + R[1] * A[i + 1] + R[2] * A[i + 2] + t[0]); ys.push(R[3] * A[i] + R[4] * A[i + 1] + R[5] * A[i + 2] + t[1]); } }
@@ -2701,7 +2708,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     pend = false; if (!gl || lost) return; const W = cv.width, H = cv.height; target(W, H);
     const M = mats(W, H); lastMVP = M; const b = scene();
     gl.bindFramebuffer(gl.FRAMEBUFFER, opt.edl ? fbo : null); gl.viewport(0, 0, W, H); gl.clearColor(BG[0], BG[1], BG[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST);
-    gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); gl.uniform2f(U.zr, -0.05, b.z1 + 0.05);
+    gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); { const lo = opt.bot != null ? opt.bot : b.z0, hi = opt.top != null ? opt.top : b.z1 + 0.05; gl.uniform2f(U.zr, lo, Math.max(lo + 0.05, hi)); } // цвет по высоте — на всю видимую полосу: при срезе мелкий рельеф виден ярче
     gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top);
     for (const s of shown()) { const c = buf(s); gl.uniformMatrix4fv(U.mdl, false, model(s)); const col = parseInt(s.color.slice(1), 16); gl.uniform3f(U.sc, (col >> 16) / 255, ((col >> 8) & 255) / 255, (col & 255) / 255); gl.uniform1f(U.rgbOk, c.cb ? 1 : 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, c.b); gl.enableVertexAttribArray(P1.a.p); gl.vertexAttribPointer(P1.a.p, 3, gl.FLOAT, false, 0, 0);
@@ -2768,12 +2775,20 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     if (cam.pitch < -0.2) cam.pitch = 0.75; fit(); stat('Модель по центру.'); }
   function view(k) { const v = { top: [cam.yaw, 1.5707], front: [-Math.PI / 2, 0], side: [0, 0], iso: [-2.2, 0.75] }[k]; cam.yaw = v[0]; cam.pitch = v[1]; if (k === 'top' && !cam.ortho) { } dirty(); }
   function maxH() { return Math.max(2.7, ...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); }
+  function minZ() { return Math.min(-0.2, ...S.scans.filter(s => s.vis).map(s => zRange(s)[0])) - 0.1; }
+  // низ: фундаменты, люки, приямки — срез от самого низа до полуметра над полом, цвет по высоте, вид сверху
+  let lowPrev = null;
+  function lowView() { if (lowPrev) { Object.assign(opt, lowPrev.opt); cam.ortho = lowPrev.ortho; lowPrev = null; stat('Обычный вид.'); }
+    else { lowPrev = { opt: { top: opt.top, bot: opt.bot, color: opt.color, size: opt.size }, ortho: cam.ortho }; opt.bot = null; opt.top = 0.5; opt.color = 'h'; opt.size = Math.max(opt.size, 3); view('top');
+      const z0 = minZ() + 0.1; stat(z0 < -0.3 ? `Низ: всё ниже полуметра над полом, цвет — по высоте (синее — ниже). Самые низкие точки — ${nf(-z0, 2)} м под полом. Ползунками слева можно сузить полосу.` : 'Низ: ниже пола точек почти нет. Если сканы загружены до версии 4.4 — их низ был обрезан при загрузке: «📁 → Перечитать сканы во всю высоту».'); }
+    renderList(); renderBar(); dirty(); }
+  const isLow = () => !!lowPrev;
   function noCeil() { if (opt.top != null) { opt.top = null; } else { const H = Math.min(...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); opt.top = +(Math.max(1, H - 0.25)).toFixed(2); } renderList(); renderBar(); dirty(); }
   function panelHTML() {
     const H = maxH(), mm = v => (v * 1000).toFixed(1).replace('.', ','), R = S.fineRep, byId = id => scanById(id);
-    const sl = (k, lab, v, def) => `<label class="v3r"><span>${lab}</span><input type="range" data-v3c="${k}" min="-0.5" max="${(H + 0.6).toFixed(2)}" step="0.05" value="${v == null ? def : v}"><b>${v == null ? 'выкл' : nf(v, 2) + ' м'}</b></label>`;
+    const Z0 = minZ(), sl = (k, lab, v, def) => `<label class="v3r"><span>${lab}</span><input type="range" data-v3c="${k}" min="${Z0.toFixed(2)}" max="${(H + 0.6).toFixed(2)}" step="0.05" value="${v == null ? def : v}"><b>${v == null ? 'выкл' : nf(v, 2) + ' м'}</b></label>`;
     return `<div class="v3p"><div class="lh"><b>3D: вид</b>${solo ? '<button id="v3all">Показать все</button>' : ''}</div>
-      ${sl('top', 'Срез сверху', opt.top, H + 0.6)}${sl('bot', 'Срез снизу', opt.bot, -0.5)}
+      ${sl('top', 'Срез сверху', opt.top, H + 0.6)}${sl('bot', 'Срез снизу', opt.bot, Z0)}
       <label class="v3r"><span>Точки</span><input type="range" data-v3c="size" min="1" max="6" step="1" value="${opt.size}"><b>${opt.size} px</b></label>
       <label class="v3c"><input type="checkbox" id="v3edl" ${opt.edl ? 'checked' : ''}> Подсветка рельефа (тени по глубине)</label>
       <div class="v3h">Мышь: левая — вращать, правая или Shift — сдвигать, колесо — ближе/дальше, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</div></div>`
@@ -2782,24 +2797,39 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
       : `<div class="v3h" style="margin:6px 10px">После «Точно 3D» здесь будет точность каждого стыка: зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше.</div>`);
   }
   function bindPanel() {
-    $$('[data-v3c]').forEach(inp => inp.oninput = () => { const k = inp.dataset.v3c, v = +inp.value; if (k === 'size') opt.size = v; else { const H = maxH(); opt[k] = k === 'top' ? (v >= H + 0.55 ? null : v) : (v <= -0.45 ? null : v); } const b = inp.parentNode.querySelector('b'); b.textContent = k === 'size' ? v + ' px' : opt[k] == null ? 'выкл' : nf(opt[k], 2) + ' м'; renderBar(); dirty(); });
+    $$('[data-v3c]').forEach(inp => inp.oninput = () => { const k = inp.dataset.v3c, v = +inp.value; if (k === 'size') opt.size = v; else { const H = maxH(); opt[k] = k === 'top' ? (v >= H + 0.55 ? null : v) : (v <= minZ() + 0.05 ? null : v); } const b = inp.parentNode.querySelector('b'); b.textContent = k === 'size' ? v + ' px' : opt[k] == null ? 'выкл' : nf(opt[k], 2) + ' м'; renderBar(); dirty(); });
     const e = $('#v3edl'); if (e) e.onchange = () => { opt.edl = e.checked; dirty(); };
     const a = $('#v3all'); if (a) a.onclick = () => { solo = null; renderList(); dirty(); };
     $$('[data-v3j]').forEach(b => b.onclick = () => { const ed = S.fineRep.edges[+b.dataset.v3j]; if (solo && solo[0] === ed.a && solo[1] === ed.b) solo = null; else { solo = [ed.a, ed.b]; opt.color = 'scan'; const A = scanById(ed.a), B = scanById(ed.b); cam.tg = [(A.pose.x + B.pose.x) / 2, (A.pose.y + B.pose.y) / 2, 1.2]; cam.dist = Math.max(6, Math.hypot(A.pose.x - B.pose.x, A.pose.y - B.pose.y) * 2.2); } renderList(); renderBar(); dirty(); });
   }
-  return { mount, unmount, resize, dirty, fit, home, view, noCeil, panelHTML, bindPanel, opt, cam, get gl() { return gl; }, set ortho(v) { cam.ortho = v; dirty(); }, clearMeas() { meas = []; dirty(); }, get mounted() { return !!gl; }, solo: v => { solo = v; dirty(); } };
+  return { mount, unmount, resize, dirty, fit, home, view, lowView, isLow, noCeil, panelHTML, bindPanel, opt, cam, get gl() { return gl; }, set ortho(v) { cam.ortho = v; dirty(); }, clearMeas() { meas = []; dirty(); }, get mounted() { return !!gl; }, solo: v => { solo = v; dirty(); } };
 })();
 
+// сканы, загруженные до 4.4, обрезаны по высоте (только от пола до потолка) — перечитать из файлов во всю высоту, сшивка остаётся как есть
+async function rereadScans() {
+  if (!S.scans.length) { uiAlert('Сканов нет.'); return; }
+  const fname = s => (s.src && s.src.file) || s.file, miss = [...new Set(S.scans.filter(s => fname(s) && !S.srcFiles.has(fname(s))).map(fname))];
+  if (S.scans.some(s => !fname(s))) { uiAlert('У части сканов нет имени исходного файла (загружены в старой версии) — их перечитать нельзя, загрузите заново.'); }
+  if (miss.length && !(await askSourceFiles(miss, 'Перечитать', 'Программа перечитает сканы во всю высоту (ниже пола и выше потолка), сшивка и план не изменятся.'))) return;
+  const files = [...new Set(S.scans.map(fname).filter(f => f && S.srcFiles.has(f)))]; let n = 0, low = 0; const err = [];
+  for (const f of files) { let list; try { list = await readOne(S.srcFiles.get(f), 0.02); } catch (e) { err.push(f + ': ' + e.message); continue; }
+    for (const s of S.scans.filter(q => fname(q) === f)) { const q = list.find(x => x.idx === ((s.src && s.src.idx) || 0)) || list.find(x => x.name === s.name) || list[0]; if (!q) continue;
+      s.pts = q.pts; s.col = q.col || null; s.rgb = !!q.rgb; if (!s.total) s.total = q.total; prepScan(s); n++;
+      { const P = s.pts; let k = 0; for (let i = 2; i < P.length; i += 3) if (P[i] < s.floor - 0.2) k++; low += k; }
+      await put('pts:' + s.key, s.pts.buffer.slice(0)); if (s.col) await put('col:' + s.key, s.col.buffer.slice(0)); } }
+  busy(''); renderAll(); saveSoon(); if (S.view === 'v3d') V3.dirty(true);
+  stat(`Перечитано сканов: ${n} — во всю высоту. Точек ниже пола: ${low.toLocaleString('ru')}. Сшивка не изменилась.${err.length ? ' Не прочитались: ' + err.join('; ') : ''} Во вкладке «3D» — кнопка «Низ».`);
+}
 // ===================== ВЫГРУЗКА E57: полная плотность из исходных файлов или как в программе =====================
 function readFull(file, s) { return file.arrayBuffer().then(buf => runWorker({ cmd: 'full', buf, idx: (s.src && s.src.idx) || 0, name: s.name, cg: s.cg && s.cg.er ? { x0: s.cg.x0, y1: s.cg.y1, w: s.cg.w, h: s.cg.h, res: s.cg.res, er: s.cg.er } : null }, [buf], 'Читаю ' + s.name)); }
-function askSourceFiles(missing) { // исходные E57 не в памяти (после перезапуска) — попросить выбрать
+function askSourceFiles(missing, go = 'Выгрузить', why = 'Для полной плотности программа читает точки из исходных файлов сканов, а их нет в памяти (страницу открывали заново).') { // исходные E57 не в памяти (после перезапуска) — попросить выбрать
   return new Promise(res => { const ov = document.createElement('div'); ov.className = 'dlg';
-    ov.innerHTML = `<div class="dlg-b" style="max-width:520px"><div class="dlg-t">Нужны исходные файлы E57</div><div class="dlg-x">Для полной плотности программа читает точки из исходных файлов сканов, а их нет в памяти (страницу открывали заново). Выберите эти файлы — можно все сразу:<br><small>${missing.slice(0, 12).map(escH).join(', ')}${missing.length > 12 ? ' и ещё ' + (missing.length - 12) : ''}</small></div><div class="row r"><button class="c">Отмена</button><button class="pri" data-pick>Выбрать файлы…</button></div></div>`;
+    ov.innerHTML = `<div class="dlg-b" style="max-width:520px"><div class="dlg-t">Нужны исходные файлы E57</div><div class="dlg-x">${why} Выберите эти файлы — можно все сразу:<br><small>${missing.slice(0, 12).map(escH).join(', ')}${missing.length > 12 ? ' и ещё ' + (missing.length - 12) : ''}</small></div><div class="row r"><button class="c">Отмена</button><button class="pri" data-pick>Выбрать файлы…</button></div></div>`;
     document.body.appendChild(ov); const inp = document.createElement('input'); inp.type = 'file'; inp.multiple = true; inp.accept = '.e57';
     inp.onchange = () => { for (const f of inp.files) S.srcFiles.set(f.name, f); const left = missing.filter(n => !S.srcFiles.has(n));
       // новое нажатие нужно браузеру, чтобы открыть окно «Сохранить как»
-      ov.querySelector('.dlg-x').innerHTML = left.length ? `Не хватает: ${left.map(escH).join(', ')}. Имена должны совпадать с загруженными — выберите ещё или продолжите без них.` : `Файлы найдены (${missing.length}). Можно выгружать.`;
-      const b = ov.querySelector('[data-pick]'); b.textContent = left.length ? 'Выбрать ещё…' : 'Выгрузить'; if (!left.length) b.onclick = () => { ov.remove(); res(true); }; };
+      ov.querySelector('.dlg-x').innerHTML = left.length ? `Не хватает: ${left.map(escH).join(', ')}. Имена должны совпадать с загруженными — выберите ещё или продолжите без них.` : `Файлы найдены (${missing.length}).`;
+      const b = ov.querySelector('[data-pick]'); b.textContent = left.length ? 'Выбрать ещё…' : go; if (!left.length) b.onclick = () => { ov.remove(); res(true); }; };
     ov.querySelector('.c').onclick = () => { ov.remove(); res(false); }; ov.querySelector('[data-pick]').onclick = () => inp.click(); });
 }
 async function exportE57(L, opts) {
@@ -2843,7 +2873,7 @@ async function exportE57(L, opts) {
 
 // ===================== АВТОСШИВКА, разбор стыков и подсказки =====================
 function runAuto(scans) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || 'Сшиваю'}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on);
-  w.postMessage({ cmd: 'auto', job, scans: scans.map(s => ({ name: s.name, floor: s.floor, ceil: s.ceil, pts: s.pts.slice() })) }); }); }
+  w.postMessage({ cmd: 'auto', job, scans: scans.map(s => ({ name: s.name, floor: s.floor, ceil: s.ceil, pts: corePts(s) })) }); }); }
 const scanOrder = (a, b) => { const na = +(String(a.name).match(/\d+/g) || [0]).pop(), nb = +(String(b.name).match(/\d+/g) || [0]).pop(); return na - nb || String(a.name).localeCompare(String(b.name)); };
 async function autoStitch() {
   const list = S.scans.slice().sort(scanOrder); if (list.length < 2) { uiAlert('Для сшивки нужно хотя бы два скана.'); return; }
@@ -2870,7 +2900,7 @@ async function autoStitch() {
 }
 // --- шары: найти на всех сканах, одинаковые шары — одной буквой (по нынешнему положению сканов) ---
 function runSpheres(list, R) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || 'Ищу шары'}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on);
-  w.postMessage({ cmd: 'spheres', job, R, scans: list.map(s => ({ name: s.name, pts: s.pts.slice() })) }); }); }
+  w.postMessage({ cmd: 'spheres', job, R, scans: list.map(s => ({ name: s.name, pts: corePts(s) })) }); }); }
 function sphereMatch(found) {
   const par = found.map((_, i) => i), f = x => par[x] === x ? x : (par[x] = f(par[x])), byScan = new Map(); found.forEach((x, i) => { if (!byScan.has(x.sc)) byScan.set(x.sc, []); byScan.get(x.sc).push(i); });
   const scs = [...byScan.keys()];
@@ -2900,7 +2930,7 @@ async function spheresDialog() {
 }
 // --- уточнить: от того, как сканы стоят сейчас (после автосшивки и ручной подгонки) ---
 function runRefine(list, poses, pairs, fixed, fixedSet) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || 'Уточняю'}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on);
-  w.postMessage({ cmd: 'refine', job, scans: list.map(s => ({ name: s.name, floor: s.floor, ceil: s.ceil, pts: s.pts.slice() })), poses, pairs, fixed, fixedSet: fixedSet || null, spheres: sphereGroups(list) }); }); }
+  w.postMessage({ cmd: 'refine', job, scans: list.map(s => ({ name: s.name, floor: s.floor, ceil: s.ceil, pts: corePts(s) })), poses, pairs, fixed, fixedSet: fixedSet || null, spheres: sphereGroups(list) }); }); }
 function sphereGroups(list) { const by = {}; for (const m of S.marks) { if (!m.sphere) continue; const k = list.findIndex(s => s.id === m.sid); if (k < 0) continue; (by[m.lab] = by[m.lab] || []).push({ k, x: m.a[0], y: m.a[1], z: m.z }); } return Object.entries(by).map(([lab, obs]) => ({ lab, obs })); }
 async function refineStitch() {
   const list = S.scans.filter(s => s.vis).sort(scanOrder); if (list.length < 2) { uiAlert('Для уточнения нужно хотя бы два видимых скана.'); return; }
