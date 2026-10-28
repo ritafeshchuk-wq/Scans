@@ -81,6 +81,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 .d3p{position:absolute;right:12px;top:12px;width:300px;background:rgba(255,255,255,.97);border:1px solid #cfd6df;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:12.5px;z-index:5;overflow:hidden}
 .d3h{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#1b1f26;color:#fff;font-weight:600;font-size:13px}.d3h button{background:transparent;border:0;color:#cbd5e1;font-size:14px;cursor:pointer}
 .d3t{display:flex;gap:4px;padding:8px 8px 2px}.d3t button{flex:1;padding:7px 4px;border:1px solid #cfd6df;border-radius:8px;background:#fff;font:inherit;cursor:pointer}.d3t button.on{background:#0b6bd0;color:#fff;border-color:#0b6bd0}
+.d3k{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}.d3k button{padding:4px 8px;border:1px solid #cfd6df;border-radius:7px;background:#fff;font:inherit;font-size:12px;cursor:pointer}.d3k button.on{background:#0b6bd0;color:#fff;border-color:#0b6bd0}.d3sel{margin-top:6px;padding-top:6px;border-top:1px solid #dbe3ec}.d3sel input{width:58px;font:inherit;padding:2px 5px;border:1px solid #cfd6df;border-radius:6px}.d3b button.on{background:#0b6bd0;color:#fff;border-color:#0b6bd0}.d3b button.on:hover,.d3t button.on:hover,.d3k button.on:hover{background:#0a5fb8!important;color:#fff}
 .d3i{margin:4px 10px;padding:7px 8px;background:#f1f5f9;border-radius:8px;color:#334155;line-height:1.35}.d3s{margin-top:4px;color:#64748b;font-size:11.5px}
 .d3b{display:flex;flex-wrap:wrap;gap:4px;padding:4px 8px 9px}.d3b button{flex:1 1 auto;padding:6px 8px;border:1px solid #cfd6df;border-radius:8px;background:#fff;font:inherit;cursor:pointer}.d3b button:hover,.d3t button:hover:not(.on){background:#eef4fb}
 #tip{position:fixed;z-index:99;max-width:320px;background:#1b1f26;color:#e6ebf2;border:1px solid #3a424e;border-radius:8px;padding:8px 10px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s}#tip.on{opacity:1}#tip b{display:block;color:#fff;font-size:13px;margin-bottom:2px}#tip kbd{display:inline-block;margin-top:5px;padding:0 6px;border:1px solid #4a5462;border-bottom-width:2px;border-radius:4px;font:11px/1.6 ui-monospace,monospace;color:#cfd8e3}
@@ -124,7 +125,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.8 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.9 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -149,7 +150,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <li>Мышь: левая — вращать, правая или Shift — сдвиг, колесо — ближе/дальше к курсору, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</li>
 <li><b>По центру</b> (или клавиша Home / F) — вернуть модель в центр, если потерялась. Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте. <b>Низ</b> — фундаменты, люки, приямки: всё ниже полуметра над полом, вид сверху, цвет по высоте на всю полосу (повторно — обычный вид). <b>Снизу</b> — камера под полом смотрит вверх, пол скрыт: приямки, колодцы, люки и подошвы фундаментов видны без перекрытий (картинка зеркальная, как если смотреть снизу). Флажок «Скрыть пол» слева работает и в обычном виде. Сканы, загруженные до версии 4.4, обрезаны ниже пола — «📁 → Перечитать сканы во всю высоту».</li>
 <li><b>Расстояние</b> — две точки: длина, в плане и по высоте.</li>
-<li><b>Черчение</b> (первая линия рисуется свободно и задаёт оси здания для «прямых углов») — окно инструментов для плана прямо по облаку. «Срез для плана» — вид сверху со срезом 0,8–1,6 м. <b>Линия</b>: щелчок — точка (липнет к облаку и к уже поставленным точкам), щелчок по первой точке — замкнуть контур, Enter / двойной щелчок / правая кнопка — закончить, Backspace — убрать последнюю. «Прямые углы» — линии по осям контура (Shift — наоборот). <b>Правка</b>: тянуть точку, щелчок по линии — выбрать контур, Delete — удалить. <b>Стереть</b>: точку или отрезок. Длины и площади — сразу на экране. Вращать, приближать и менять срезы можно в любой момент. Выгрузка — DXF (мм) или «→ План».</li>
+<li><b>Черчение</b> — окно инструментов для плана прямо по облаку. «Срез для плана» — вид сверху: срез 0,8–1,6 м ярко, всё ниже — бледным фоном (облако остаётся целым); повторное нажатие — как было. <b>Линия</b>: щелчок — точка (липнет к облаку и к поставленным точкам), щелчок по первой — замкнуть, Enter / двойной щелчок / правая кнопка — закончить, Backspace — убрать последнюю; первая линия задаёт оси для «Прямых углов» (Shift — наоборот). <b>Правка</b>: тянуть точку — связанные линии подстраиваются (как в AutoCAD), тянуть линию — она сдвигается вместе с соседями, тянуть края проёма; Delete — удалить выбранное. <b>Проём</b>: дверь, окно или проём — щелчок по стене у одного края, потом у другого; ширину и вид можно поправить в окне. <b>Подпись</b>: название помещения, отметка. <b>Стереть</b>: точку, отрезок, проём, подпись. Выгрузка — DXF (стены с проёмами, двери с дугой, окна, площади, подписи) или «→ План».</li>
 <li><b>E57</b> — выгрузка для камеральной обработки: полная плотность из исходных файлов (с цветом и яркостью) или 2–10 см; один файл со сканами по отдельности (с положением, как из SCENE), одним облаком или каждый скан своим файлом. В Chrome и Edge файл пишется прямо на диск — подходит для больших объёмов.</li></ul>
 <h4>4 План — стены и проёмы</h4>
 <ul><li><b>🏠 План по сканам</b> (справа) — готовый план сразу: стены — плоскости во всю высоту, помещения — по потолку (двери отделяют помещения перемычкой), двери и окна — дыры в стенах (окно — с низом выше пола и перемычкой), подоконник — горизонтальная полка у низа окна. Косые стены программа находит сама: стороны идут по направлениям стен, не только под 90°. Номера и площади помещений — на плане и в DXF. Шторы при съёмке откройте, иначе окна за ними не видны.</li><li><b>Линии и углы для плана</b> — на шаге «2 Сборка»: <b>⌇ Линия стены</b> (касание стены — прямая по точкам), <b>／ Линия</b> (нарисовать, где стену не видно — за шкафом, за шторой), <b>⌖ Угол плана</b>, <b>⌫</b> — удалить. «🏠 План по сканам» проводит стороны помещений точно по этим линиям и через эти углы; линия ещё и разделяет помещения.</li><li><b>⬇ Для Рулетки</b> — файл проекта: помещения со сторонами, двери, окна, подоконники. В Рулетке «Открыть файл» — и домерьте на месте окна и подоконники.</li><li><b>Фон — тонкий срез</b> точек всех сканов на одной высоте (по умолчанию 1,2 м от пола, 6 см) — высота и толщина в карточке справа. В срезе сразу видно, сошлись ли стены разных сканов в одну линию.</li><li><b>⌇ Стена по точкам</b> — коснитесь стены в срезе: программа впишет прямую по точкам (сколько точек и разброс в мм — внизу), продлит вдоль стены и замкнёт угол с соседней. Так план собирается стена за стеной: решаете вы, точность — от точек.</li><li>На ленте: «Построение» (план по сканам, только стены), «Стены» (по точкам, нарисовать, удалить), «Правка» (углы, к осям), «Фон», «Выгрузка» (DXF, Рулетка). Касание стены — выбрать и править.</li></ul>
@@ -2652,7 +2653,7 @@ const V3 = (() => {
   let wrap = null, cv = null, ov = null, gl = null, P1 = null, P2 = null, fbo = null, tC = null, tD = null, quad = null, fw = 0, fh = 0, raf = 0, lost = false;
   const cache = new Map();
   const cam = { tg: [0, 0, 1.2], dist: 20, yaw: -2.2, pitch: 0.75, ortho: false, fov: 50 * Math.PI / 180 };
-  const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null, noFloor: false };
+  const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null, noFloor: false, ghost: false };
   let solo = null, meas = [], drag = null, pend = false, lastMVP = null, lastVP = null, fitted = false, tpts = new Map();
   const vs = `#version 300 es
 in vec3 p; in vec3 c; in float fl; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk; uniform float fpx; uniform int orth;
@@ -2661,8 +2662,8 @@ vec3 ramp(float t){ t=clamp(t,0.,1.); return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs
 void main(){ vfl=fl; vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; float wd=orth==1?1.:max(gl_Position.w,1e-3); gl_PointSize=clamp(max(ps, .022*fpx/wd), 1., 48.); // вблизи точки крупнее — поверхность сплошная
  vc = mode==0 ? sc : mode==1 ? ramp((w.z-zr.x)/(zr.y-zr.x)) : (rgbOk>.5 ? c : vec3(.72)); }`;
   const fs = `#version 300 es
-precision highp float; in vec3 vc; in float wz; in float vfl; uniform vec2 clip; uniform float ps; uniform float nfl; out vec4 o;
-void main(){ if(wz>clip.y||wz<clip.x) discard; if(nfl>0.&&vfl>.5) discard; if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
+precision highp float; in vec3 vc; in float wz; in float vfl; uniform vec2 clip; uniform float ps; uniform float nfl; uniform float gh; out vec4 o;
+void main(){ if(nfl>0.&&vfl>.5) discard; if(wz>clip.y) discard; if(wz<clip.x){ if(gh<.5) discard; if(ps>2.5){ vec2 q=gl_PointCoord-.5; if(dot(q,q)>.25) discard; } o=vec4(vec3(.44)+vc*.1,1.); return; } if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
   const vsQ = `#version 300 es
 in vec2 q; void main(){ gl_Position=vec4(q,0.,1.); }`;
   const fsQ = `#version 300 es
@@ -2742,7 +2743,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     const M = mats(W, H); lastMVP = M; const b = scene();
     gl.bindFramebuffer(gl.FRAMEBUFFER, opt.edl ? fbo : null); gl.viewport(0, 0, W, H); gl.clearColor(BG[0], BG[1], BG[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST);
     gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); gl.uniform1i(U.orth, cam.ortho ? 1 : 0); gl.uniform1f(U.fpx, cam.ortho ? H / (2 * cam.dist * Math.tan(cam.fov / 2)) : H / (2 * Math.tan(cam.fov / 2))); { const lo = opt.bot != null ? opt.bot : b.z0, hi = opt.top != null ? opt.top : b.z1 + 0.05; gl.uniform2f(U.zr, lo, Math.max(lo + 0.05, hi)); } // цвет по высоте — на всю видимую полосу: при срезе мелкий рельеф виден ярче
-    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top); if (opt.noFloor) floorMap(); gl.uniform1f(U.nfl, opt.noFloor ? 1 : 0);
+    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top); if (opt.noFloor) floorMap(); gl.uniform1f(U.nfl, opt.noFloor ? 1 : 0); gl.uniform1f(U.gh, opt.ghost ? 1 : 0);
     for (const s of shown()) { const c = buf(s); gl.uniformMatrix4fv(U.mdl, false, model(s)); const col = parseInt(s.color.slice(1), 16); gl.uniform3f(U.sc, (col >> 16) / 255, ((col >> 8) & 255) / 255, (col & 255) / 255); gl.uniform1f(U.rgbOk, c.cb ? 1 : 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, c.b); gl.enableVertexAttribArray(P1.a.p); gl.vertexAttribPointer(P1.a.p, 3, gl.FLOAT, false, 0, 0);
       if (P1.a.c >= 0) { if (c.cb) { gl.bindBuffer(gl.ARRAY_BUFFER, c.cb); gl.enableVertexAttribArray(P1.a.c); gl.vertexAttribPointer(P1.a.c, 3, gl.UNSIGNED_BYTE, true, 0, 0); } else { gl.disableVertexAttribArray(P1.a.c); gl.vertexAttrib3f(P1.a.c, 0.72, 0.72, 0.72); } }
@@ -2784,123 +2785,219 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
     return best;
   }
   // ===================== ЧЕРЧЕНИЕ ПЛАНА ПО ОБЛАКУ =====================
-  // контуры: S.draw.pl = [{ id, p: [[x,y,z]…], closed }]; точки ставятся прямо на облако (или в плоскость последней точки), длины и площади — в плане
-  const DR = { on: false, tool: 'line', act: null, sel: null, hov: null, ortho: true, dims: true, pk: { t: 0, x: -1, y: -1, p: null } };
-  const D = () => S.draw || (S.draw = { pl: [], next: 1 });
+  // S.draw = { pl: [{ id, p: [[x,y,z]…], closed }], op: [{ id, pl, seg, t0, t1, kind: 'door'|'window'|'gap', fl }], tx: [{ id, p, s }], next }
+  // точки, совпадающие в плане (до 1,5 мм), связаны: тянешь одну — едут все и линии за ними (как в AutoCAD)
+  const DR = { on: false, tool: 'line', act: null, sel: null, hov: null, ortho: true, dims: true, okind: 'door', opA: null, cut: null, pk: { t: 0, x: -1, y: -1, p: null } };
+  const D = () => { const d = S.draw || (S.draw = { pl: [], next: 1 }); d.op = d.op || []; d.tx = d.tx || []; return d; };
   const plen = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
   const area = P => { let s = 0; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; s += a[0] * b[1] - b[0] * a[1]; } return Math.abs(s) / 2; };
+  const nseg = L => L.closed ? L.p.length : L.p.length - 1;
+  const segEnds = (L, i) => [L.p[i], L.p[(i + 1) % L.p.length]];
+  const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  const OPN = { door: 'Дверь', window: 'Окно', gap: 'Проём' };
   function rayAt(px, py) { const { e, f, r, u } = basis(), W = cv.width, H = cv.height, t = Math.tan(cam.fov / 2), sx = (px / W * 2 - 1) * t * W / H, sy = (1 - py / H * 2) * t;
     if (cam.ortho) return { o: [0, 1, 2].map(i => e[i] + (r[i] * sx + u[i] * sy) * cam.dist), d: f };
     const d = [0, 1, 2].map(i => f[i] + r[i] * sx + u[i] * sy), n = Math.hypot(...d); return { o: e, d: d.map(v => v / n) }; }
   function onPlane(px, py, z) { const { o, d } = rayAt(px, py); if (Math.abs(d[2]) < 1e-6) return null; const t = (z - o[2]) / d[2]; if (t < 0 && !cam.ortho) return null; return [o[0] + d[0] * t, o[1] + d[1] * t, z]; }
   function vertAt(px, py, skip) { const M = lastMVP; if (!M) return null; let best = null, bd = (12 * dpr()) ** 2;
     for (const L of D().pl) L.p.forEach((q, i) => { if (skip && skip(L, i)) return; const s = toScr(M, ...q); if (!s) return; const d2 = (s[0] - px) ** 2 + (s[1] - py) ** 2; if (d2 < bd) { bd = d2; best = { L, i, q }; } }); return best; }
-  function segAt(px, py) { const M = lastMVP; if (!M) return null; let best = null, bd = 8 * dpr();
-    for (const L of D().pl) { const n = L.p.length, m = L.closed ? n : n - 1; for (let i = 0; i < m; i++) { const A = toScr(M, ...L.p[i]), B = toScr(M, ...L.p[(i + 1) % n]); if (!A || !B) continue;
-      const vx = B[0] - A[0], vy = B[1] - A[1], l2 = vx * vx + vy * vy || 1, t = Math.max(0, Math.min(1, ((px - A[0]) * vx + (py - A[1]) * vy) / l2)), d = Math.hypot(A[0] + vx * t - px, A[1] + vy * t - py); if (d < bd) { bd = d; best = { L, i }; } } } return best; }
+  function segAt(px, py, tol = 8) { const M = lastMVP; if (!M) return null; let best = null, bd = tol * dpr();
+    for (const L of D().pl) for (let i = 0; i < nseg(L); i++) { const [a, b] = segEnds(L, i), A = toScr(M, ...a), B = toScr(M, ...b); if (!A || !B) continue;
+      const vx = B[0] - A[0], vy = B[1] - A[1], l2 = vx * vx + vy * vy || 1, t = Math.max(0, Math.min(1, ((px - A[0]) * vx + (py - A[1]) * vy) / l2)), d = Math.hypot(A[0] + vx * t - px, A[1] + vy * t - py); if (d < bd) { bd = d; best = { L, i, t }; } } return best; }
+  // проём: его концы в мире
+  function opEnds(o) { const L = D().pl.find(l => l.id === o.pl); if (!L || o.seg >= nseg(L)) return null; const [a, b] = segEnds(L, o.seg), len = plen(a, b) || 1e-9, t0 = Math.max(0, Math.min(len, o.t0)), t1 = Math.max(0, Math.min(len, o.t1)); return { a, b, len, A: lerp3(a, b, t0 / len), B: lerp3(a, b, t1 / len), t0, t1 }; }
+  function opAt(px, py) { const M = lastMVP; if (!M) return null; let best = null, bd = 9 * dpr();
+    for (const o of D().op) { const E = opEnds(o); if (!E) continue; for (const [k, q] of [['a', E.A], ['b', E.B], ['m', lerp3(E.A, E.B, 0.5)]]) { const s = toScr(M, ...q); if (!s) continue; const d = Math.hypot(s[0] - px, s[1] - py); if (d < bd) { bd = d; best = { o, end: k }; } } } return best; }
+  function txAt(px, py) { const M = lastMVP; if (!M) return null; for (const t of D().tx) { const s = toScr(M, ...t.p); if (s && Math.abs(s[0] - px) < 40 * dpr() && Math.abs(s[1] - py) < 10 * dpr()) return t; } return null; }
   const active = () => DR.act ? D().pl.find(l => l.id === DR.act) : null;
-  function axis(A) { if (A && A.p.length >= 2) return Math.atan2(A.p[1][1] - A.p[0][1], A.p[1][0] - A.p[0][0]); const F = D().pl.find(l => l !== A && l.p.length >= 2); return F ? Math.atan2(F.p[1][1] - F.p[0][1], F.p[1][0] - F.p[0][0]) : null; } // первая линия чертежа — свободная, она задаёт оси
+  function axis(A) { if (A && A.p.length >= 2) return Math.atan2(A.p[1][1] - A.p[0][1], A.p[1][0] - A.p[0][0]); const F = D().pl.find(l => l !== A && l.p.length >= 2); return F ? Math.atan2(F.p[1][1] - F.p[0][1], F.p[1][0] - F.p[0][0]) : null; } // первая линия — свободная, она задаёт оси
+  function cloudPt(px, py, full) { if (full) return pick(px, py); const now = Date.now(); if (now - DR.pk.t > 110 || Math.hypot(px - DR.pk.x, py - DR.pk.y) > 30) { const n = shown().reduce((a, s) => a + buf(s).n, 0); DR.pk = { t: now, x: px, y: py, p: pick(px, py, Math.max(1, Math.ceil(n / 1.5e6))) }; } return DR.pk.p && Math.hypot(px - DR.pk.x, py - DR.pk.y) < 4 ? DR.pk.p : null; }
   // где встанет точка: вершина рядом → точно в неё; иначе точка облака под курсором (или плоскость последней точки); «прямые углы» — по осям контура
   function cand(px, py, shift, full) { const A = active(), last = A && A.p[A.p.length - 1];
     const v = vertAt(px, py, (L, i) => A && L === A && i === A.p.length - 1); if (v) return { p: v.q.slice(), snap: 'v', first: !!(A && v.L === A && v.i === 0 && A.p.length >= 3) };
-    let p = null, now = Date.now();
-    if (full) p = pick(px, py); else { if (now - DR.pk.t > 110 || Math.hypot(px - DR.pk.x, py - DR.pk.y) > 30) { const n = shown().reduce((a, s) => a + buf(s).n, 0); DR.pk = { t: now, x: px, y: py, p: pick(px, py, Math.max(1, Math.ceil(n / 1.5e6))) }; } p = DR.pk.p && Math.hypot(px - DR.pk.x, py - DR.pk.y) < 4 ? DR.pk.p : null; }
-    const snap = p ? 'c' : 'f'; if (!p) p = onPlane(px, py, last ? last[2] : (opt.top != null ? Math.min(opt.top - 0.2, 1.2) : 1.2)); if (!p) return null;
-    const ax = last ? axis(A) : null; if (last && ax != null && DR.ortho !== !!shift) { const c = Math.cos(ax), s = Math.sin(ax), dx = p[0] - last[0], dy = p[1] - last[1], u = dx * c + dy * s, w = -dx * s + dy * c;
+    let p = cloudPt(px, py, full); const snap = p ? 'c' : 'f'; if (!p) p = onPlane(px, py, last ? last[2] : (opt.top != null ? Math.min(opt.top - 0.2, 1.2) : 1.2)); if (!p) return null;
+    const ax = last ? axis(A) : null;
+    if (last && ax != null && DR.ortho !== !!shift) { const c = Math.cos(ax), s = Math.sin(ax), dx = p[0] - last[0], dy = p[1] - last[1], u = dx * c + dy * s, w = -dx * s + dy * c;
       p = Math.abs(u) >= Math.abs(w) ? [last[0] + u * c, last[1] + u * s, p[2]] : [last[0] - w * s, last[1] + w * c, p[2]]; return { p, snap: 'o' }; }
     return { p, snap }; }
-  function finishLine() { const A = active(); DR.act = null; if (A && A.p.length < 2) D().pl = D().pl.filter(l => l !== A); saveSoon(); info(); dirty(); }
+  // ---- правки с учётом проёмов на отрезках ----
+  function dropPl(L) { const d = D(); d.pl = d.pl.filter(l => l !== L); d.op = d.op.filter(o => o.pl !== L.id); if (DR.act === L.id) DR.act = null; if (DR.sel && DR.sel.id === L.id) DR.sel = null; }
+  function delVertex(L, i) { const n = L.p.length, d = D(), segs = nseg(L);
+    d.op = d.op.filter(o => { if (o.pl !== L.id) return true; const prev = L.closed ? (i - 1 + n) % n : i - 1; if (o.seg === i || o.seg === prev) return false; if (o.seg > i) o.seg--; return true; });
+    L.p.splice(i, 1); if (L.closed && L.p.length < 3) L.closed = false; if (L.p.length < 2) dropPl(L); void segs; }
+  function delSegment(L, i) { const d = D(), n = L.p.length;
+    if (L.closed) { L.p = L.p.slice(i + 1).concat(L.p.slice(0, i + 1)); L.closed = false; d.op = d.op.filter(o => o.pl !== L.id || o.seg !== i); d.op.forEach(o => { if (o.pl === L.id) o.seg = (o.seg - (i + 1) + n) % n; }); return; }
+    const a = L.p.slice(0, i + 1), b = L.p.slice(i + 1); let nb = null; if (b.length >= 2) { nb = { id: d.next++, p: b, closed: false }; d.pl.push(nb); }
+    d.op = d.op.filter(o => o.pl !== L.id || o.seg !== i); d.op.forEach(o => { if (o.pl === L.id && o.seg > i) { if (nb) { o.pl = nb.id; o.seg -= i + 1; } else o.seg = -1; } }); d.op = d.op.filter(o => o.seg >= 0);
+    L.p = a; if (a.length < 2) dropPl(L); }
+  function finishLine() { const A = active(); DR.act = null; if (A && A.p.length < 2) dropPl(A); saveSoon(); info(); dirty(); }
   function addPoint(c) { if (!c) { stat('Тут нет точек облака — коснитесь поверхности или включите вид сверху.'); return; } let A = active(); pushUndo();
     if (!A) { A = { id: D().next++, p: [c.p], closed: false }; D().pl.push(A); DR.act = A.id; info(); dirty(); saveSoon(); return; }
     if (c.first) { A.closed = true; finishLine(); stat(`Контур замкнут: периметр ${nf(perim(A), 3)} м, площадь ${nf(area(A.p), 2)} м².`); return; }
     const last = A.p[A.p.length - 1]; if (Math.hypot(c.p[0] - last[0], c.p[1] - last[1]) < 0.003) { S.undo.pop(); finishLine(); return; } // двойной щелчок — закончить
     A.p.push(c.p); saveSoon(); info(); dirty(); }
-  const perim = L => { let s = 0; for (let i = 0; i < L.p.length - (L.closed ? 0 : 1); i++) s += plen(L.p[i], L.p[(i + 1) % L.p.length]); return s; };
-  function delAt(px, py) { const v = vertAt(px, py); pushUndo();
-    if (v) { v.L.p.splice(v.i, 1); if (v.L.closed && v.L.p.length < 3) v.L.closed = false; if (v.L.p.length < 2) D().pl = D().pl.filter(l => l !== v.L); if (DR.act === v.L.id && !D().pl.includes(v.L)) DR.act = null; saveSoon(); dirty(); info(); return true; }
-    const sg = segAt(px, py); if (sg) { const L = sg.L, i = sg.i; if (L.closed) { L.p = L.p.slice(i + 1).concat(L.p.slice(0, i + 1)); L.closed = false; } else { const a = L.p.slice(0, i + 1), b = L.p.slice(i + 1); L.p = a; if (b.length >= 2) D().pl.push({ id: D().next++, p: b, closed: false }); if (a.length < 2) D().pl = D().pl.filter(l => l !== L); } saveSoon(); dirty(); info(); return true; }
+  const perim = L => { let s = 0; for (let i = 0; i < nseg(L); i++) s += plen(...segEnds(L, i)); return s; };
+  // связанные точки: все вершины, совпадающие в плане с данной
+  function linked(q) { const out = []; for (const L of D().pl) L.p.forEach((v, i) => { if (Math.hypot(v[0] - q[0], v[1] - q[1]) < 0.0015) out.push({ L, i, z: v[2] }); }); return out; }
+  function delAt(px, py) { pushUndo();
+    const t = txAt(px, py); if (t) { D().tx = D().tx.filter(x => x !== t); saveSoon(); dirty(); info(); return true; }
+    const oh = opAt(px, py); if (oh) { D().op = D().op.filter(o => o !== oh.o); saveSoon(); dirty(); info(); return true; }
+    const v = vertAt(px, py); if (v) { delVertex(v.L, v.i); saveSoon(); dirty(); info(); return true; }
+    const sg = segAt(px, py); if (sg) { delSegment(sg.L, sg.i); saveSoon(); dirty(); info(); return true; }
     S.undo.pop(); return false; }
-  function info() { const el = document.getElementById('d3info'); if (!el) return; const A = active(), sel = DR.sel && D().pl.find(l => l.id === DR.sel.id);
-    let t = DR.tool === 'line' ? (A ? `Контур: ${A.p.length} точ., ${nf(perim(A), 3)} м. Щелчок по первой точке — замкнуть; Enter, двойной щелчок или правая кнопка — закончить; Backspace — убрать последнюю.` : 'Щёлкайте по углам стен на облаке — точки соединятся линией. Удобнее всего сверху со срезом.')
-      : DR.tool === 'edit' ? (sel ? `Контур: периметр ${nf(perim(sel), 3)} м${sel.closed ? `, площадь ${nf(area(sel.p), 2)} м²` : ''}. Delete — удалить контур.` : 'Тяните точку — передвинуть (липнет к другим точкам). Щелчок по линии — выбрать контур.')
-      : 'Щелчок по точке — убрать точку, по линии — убрать отрезок.';
-    const n = D().pl.length; el.innerHTML = escH(t) + `<div class="d3s">Контуров: ${n}${n ? `, линий: ${D().pl.reduce((a, l) => a + l.p.length - (l.closed ? 0 : 1), 0)}` : ''}</div>`; }
+  // проём: два щелчка по линии (по краям проёма на облаке) — точки проецируются на отрезок
+  function projOn(L, i, p) { const [a, b] = segEnds(L, i), len = plen(a, b) || 1e-9, ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len; return Math.max(0, Math.min(len, (p[0] - a[0]) * ux + (p[1] - a[1]) * uy)); }
+  function opClick(px, py) { const d = D();
+    if (!DR.opA) { const sg = segAt(px, py, 14); if (!sg) { stat('Щёлкните по линии стены — там, где начинается проём.'); return; } const p = cloudPt(px, py, true) || lerp3(...segEnds(sg.L, sg.i), sg.t); DR.opA = { pl: sg.L.id, seg: sg.i, t: projOn(sg.L, sg.i, p) }; stat(`${OPN[DR.okind]}: теперь щёлкните второй край проёма на той же стене.`); info(); dirty(); return; }
+    const L = d.pl.find(l => l.id === DR.opA.pl); if (!L) { DR.opA = null; return; } const [a, b] = segEnds(L, DR.opA.seg); let p = cloudPt(px, py, true) || onPlane(px, py, a[2]); if (!p) return;
+    const t1 = projOn(L, DR.opA.seg, p), t0 = DR.opA.t; if (Math.abs(t1 - t0) < 0.05) { stat('Проём уже 5 см — щёлкните второй край дальше.'); return; }
+    pushUndo(); const o = { id: d.next++, pl: L.id, seg: DR.opA.seg, t0: Math.min(t0, t1), t1: Math.max(t0, t1), kind: DR.okind, fl: 0 }; d.op.push(o); DR.opA = null; DR.sel = { op: o.id }; saveSoon(); info(); dirty(); drawPanel();
+    stat(`${OPN[o.kind]} ${nf(o.t1 - o.t0, 3)} м. Ширину и вид можно поправить в окне черчения.`); void b; }
+  async function txClick(px, py) { const c = cand(px, py, false, true); if (!c) return; const s = await uiDialog({ title: 'Подпись на плане', text: 'Например: «Кухня», «Колонна 40×40», «h = 2,65», «люк Ø0,7».', input: '', ok: 'Поставить', cancel: 'Отмена' }); if (s == null || !String(s).trim()) return;
+    pushUndo(); D().tx.push({ id: D().next++, p: c.p, s: String(s).trim() }); saveSoon(); dirty(); info(); }
+  function info() { const el = document.getElementById('d3info'); if (!el) return; const A = active(), d = D();
+    const selL = DR.sel && DR.sel.id && d.pl.find(l => l.id === DR.sel.id), selO = DR.sel && DR.sel.op && d.op.find(o => o.id === DR.sel.op);
+    let t = DR.tool === 'line' ? (A ? `Контур: ${A.p.length} точ., ${nf(perim(A), 3)} м. Щелчок по первой точке — замкнуть; Enter, двойной щелчок или правая кнопка — закончить; Backspace — убрать последнюю.` : 'Щёлкайте по углам стен на облаке — точки соединятся линией. К уже поставленным точкам линия прилипает.')
+      : DR.tool === 'edit' ? 'Тяните точку — связанные линии подстроятся. Тяните линию — она сдвинется вместе с соседями. Края проёма тоже тянутся. Щелчок — выбрать, Delete — удалить.'
+      : DR.tool === 'op' ? (DR.opA ? 'Второй край проёма — на той же стене.' : 'Выберите вид ниже и щёлкните по линии стены у одного края проёма, потом у другого.')
+      : DR.tool === 'txt' ? 'Щелчок — поставить подпись (название помещения, отметку, примечание).' : 'Щелчок по точке, отрезку, проёму или подписи — убрать.';
+    let x = '';
+    if (selO) { const E = opEnds(selO); x = `<div class="d3sel"><b>${OPN[selO.kind]}</b> · ширина <input id="d3ow" value="${nf(selO.t1 - selO.t0, 3)}"> м
+      <div class="d3k">${Object.keys(OPN).map(k => `<button data-d3ok="${k}" class="${selO.kind === k ? 'on' : ''}">${OPN[k]}</button>`).join('')}${selO.kind === 'door' ? '<button data-d3flip title="Сторона открывания и петли">⟲ Развернуть</button>' : ''}</div>${E ? `<div class="d3s">от начала стены ${nf(E.t0, 3)} м, стена ${nf(E.len, 3)} м</div>` : ''}</div>`; }
+    else if (selL) x = `<div class="d3sel">Контур: периметр <b>${nf(perim(selL), 3)} м</b>${selL.closed ? `, площадь <b>${nf(area(selL.p), 2)} м²</b>` : ''}, проёмов ${d.op.filter(o => o.pl === selL.id).length}</div>`;
+    const n = d.pl.length; el.innerHTML = escH(t) + x + `<div class="d3s">Контуров: ${n}${n ? `, линий: ${d.pl.reduce((a, l) => a + nseg(l), 0)}` : ''}${d.op.length ? `, проёмов: ${d.op.length}` : ''}${d.tx.length ? `, подписей: ${d.tx.length}` : ''}</div>`;
+    const w = el.querySelector('#d3ow'); if (w) w.onchange = () => { const v = parseFloat(String(w.value).replace(',', '.')); if (!(v > 0.05)) return; pushUndo(); const E = opEnds(selO), c = (selO.t0 + selO.t1) / 2; selO.t0 = Math.max(0, c - v / 2); selO.t1 = Math.min(E ? E.len : c + v / 2, selO.t0 + v); saveSoon(); info(); dirty(); };
+    el.querySelectorAll('[data-d3ok]').forEach(b => b.onclick = () => { pushUndo(); selO.kind = b.dataset.d3ok; DR.okind = selO.kind; saveSoon(); info(); dirty(); drawPanel(); });
+    const fb = el.querySelector('[data-d3flip]'); if (fb) fb.onclick = () => { pushUndo(); selO.fl = ((selO.fl || 0) + 1) % 4; saveSoon(); dirty(); }; }
+  // ---- рисование чертежа поверх облака ----
   function drawPlanLayer(M, c, d) {
-    const L0 = D().pl; if (!L0.length && !DR.hov) return; c.lineJoin = 'round';
-    for (const L of L0) { const S2 = L.p.map(q => toScr(M, ...q)); if (S2.some(q => !q)) continue; const sel = DR.sel && DR.sel.id === L.id;
-      c.beginPath(); S2.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); if (L.closed) { c.closePath(); c.fillStyle = 'rgba(34,211,238,.10)'; c.fill(); }
-      c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 4.5 * d; c.stroke(); c.strokeStyle = sel ? '#facc15' : '#22d3ee'; c.lineWidth = 2.2 * d; c.stroke();
+    const dd = D(); if (!dd.pl.length && !DR.hov && !dd.tx.length) return; c.lineJoin = 'round'; c.lineCap = 'round';
+    const P = q => toScr(M, ...q), stroke = (pts, col, w) => { c.beginPath(); pts.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = (w + 2.5) * d; c.stroke(); c.strokeStyle = col; c.lineWidth = w * d; c.stroke(); };
+    const label = (x, y, t, col, bold) => { c.font = `${bold ? 700 : 600} ${(bold ? 13 : 11) * d}px system-ui`; c.textAlign = 'center'; const w = c.measureText(t).width + 8 * d; c.fillStyle = 'rgba(15,23,32,.82)'; c.fillRect(x - w / 2, y - 8 * d, w, 16 * d); c.fillStyle = col; c.fillText(t, x, y + 4 * d); c.textAlign = 'left'; };
+    for (const L of dd.pl) { const S2 = L.p.map(P); if (S2.some(q => !q)) continue; const sel = DR.sel && DR.sel.id === L.id, col = sel ? '#facc15' : '#22d3ee';
+      if (L.closed) { c.beginPath(); S2.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath(); c.fillStyle = 'rgba(34,211,238,.09)'; c.fill(); }
+      for (let i = 0; i < nseg(L); i++) { const [a, b] = segEnds(L, i), len = plen(a, b) || 1e-9; // отрезок с разрывами под проёмы
+        const ops = dd.op.filter(o => o.pl === L.id && o.seg === i).map(o => [Math.max(0, Math.min(len, o.t0)), Math.max(0, Math.min(len, o.t1))]).sort((x, y) => x[0] - y[0]); let t = 0;
+        for (const [t0, t1] of ops) { if (t0 > t) { const A = P(lerp3(a, b, t / len)), B = P(lerp3(a, b, t0 / len)); if (A && B) stroke([A, B], col, 2.4); } t = Math.max(t, t1); }
+        if (t < len) { const A = P(lerp3(a, b, t / len)), B = P(b); if (A && B) stroke([A, B], col, 2.4); }
+        if (DR.dims) { const A = S2[i], B = S2[(i + 1) % L.p.length]; if (Math.hypot(B[0] - A[0], B[1] - A[1]) > 45 * d) label((A[0] + B[0]) / 2, (A[1] + B[1]) / 2, nf(len, 3), '#a5f3fc'); } }
       c.fillStyle = '#fff'; for (const q of S2) c.fillRect(q[0] - 2.5 * d, q[1] - 2.5 * d, 5 * d, 5 * d);
-      if (DR.dims) { c.font = `600 ${11 * d}px system-ui`; c.textAlign = 'center'; const n = L.p.length, m = L.closed ? n : n - 1;
-        for (let i = 0; i < m; i++) { const a = S2[i], b = S2[(i + 1) % n], len = plen(L.p[i], L.p[(i + 1) % n]); if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 45 * d) continue; const t = nf(len, 3), w = c.measureText(t).width + 8 * d;
-          c.fillStyle = 'rgba(15,23,32,.82)'; c.fillRect((a[0] + b[0]) / 2 - w / 2, (a[1] + b[1]) / 2 - 8 * d, w, 16 * d); c.fillStyle = '#a5f3fc'; c.fillText(t, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 4 * d); }
-        if (L.closed && L.p.length >= 3) { const cx = S2.reduce((a, q) => a + q[0], 0) / S2.length, cy = S2.reduce((a, q) => a + q[1], 0) / S2.length, t = nf(area(L.p), 2) + ' м²'; c.font = `700 ${13 * d}px system-ui`; const w = c.measureText(t).width + 10 * d; c.fillStyle = 'rgba(15,23,32,.82)'; c.fillRect(cx - w / 2, cy - 10 * d, w, 20 * d); c.fillStyle = '#fef08a'; c.fillText(t, cx, cy + 5 * d); }
-        c.textAlign = 'left'; } }
-    const A = active(), h = DR.hov;
-    if (DR.on && DR.tool === 'line' && h) { const P = toScr(M, ...h.p); if (P) {
-      if (A) { const last = toScr(M, ...A.p[A.p.length - 1]); if (last) { c.setLineDash([7 * d, 5 * d]); c.strokeStyle = '#fde047'; c.lineWidth = 2 * d; c.beginPath(); c.moveTo(last[0], last[1]); c.lineTo(P[0], P[1]); c.stroke(); c.setLineDash([]);
-        const len = plen(A.p[A.p.length - 1], h.p), t = nf(len, 3) + ' м'; c.font = `700 ${12 * d}px system-ui`; const w = c.measureText(t).width + 10 * d; c.fillStyle = 'rgba(15,23,32,.9)'; c.fillRect(P[0] + 12 * d, P[1] - 26 * d, w, 18 * d); c.fillStyle = '#fde047'; c.fillText(t, P[0] + 17 * d, P[1] - 13 * d); } }
-      c.strokeStyle = h.snap === 'v' ? '#4ade80' : h.snap === 'c' ? '#fde047' : '#94a3b8'; c.lineWidth = 2 * d; c.beginPath(); if (h.snap === 'v') c.arc(P[0], P[1], 8 * d, 0, 7); else { c.moveTo(P[0] - 7 * d, P[1]); c.lineTo(P[0] + 7 * d, P[1]); c.moveTo(P[0], P[1] - 7 * d); c.lineTo(P[0], P[1] + 7 * d); } c.stroke();
-      if (h.first) { c.fillStyle = 'rgba(15,23,32,.9)'; c.fillRect(P[0] + 12 * d, P[1] + 6 * d, 80 * d, 18 * d); c.fillStyle = '#4ade80'; c.font = `600 ${12 * d}px system-ui`; c.fillText('замкнуть', P[0] + 17 * d, P[1] + 19 * d); } } }
+      if (DR.dims && L.closed && L.p.length >= 3) { const cx = S2.reduce((a, q) => a + q[0], 0) / S2.length, cy = S2.reduce((a, q) => a + q[1], 0) / S2.length; label(cx, cy + 16 * d, nf(area(L.p), 2) + ' м²', '#fef08a', true); } }
+    // проёмы: дверь — полотно и дуга открывания, окно — двойная линия, проём — засечки
+    for (const o of dd.op) { const E = opEnds(o); if (!E) continue; const w = E.t1 - E.t0, ux = (E.b[0] - E.a[0]) / E.len, uy = (E.b[1] - E.a[1]) / E.len, side = (o.fl & 1) ? -1 : 1, nx = -uy * side, ny = ux * side, sel = DR.sel && DR.sel.op === o.id;
+      const col = sel ? '#facc15' : o.kind === 'door' ? '#fb923c' : o.kind === 'window' ? '#60a5fa' : '#e879f9', z = (E.A[2] + E.B[2]) / 2;
+      const W = (x, y) => P([x, y, z]); const A = E.A, B = E.B;
+      for (const q of [A, B]) { const s1 = W(q[0] - nx * 0.08, q[1] - ny * 0.08), s2 = W(q[0] + nx * 0.08, q[1] + ny * 0.08); if (s1 && s2) stroke([s1, s2], col, 2); }
+      if (o.kind === 'window') for (const k of [-0.04, 0.04]) { const s1 = W(A[0] + nx * k, A[1] + ny * k), s2 = W(B[0] + nx * k, B[1] + ny * k); if (s1 && s2) stroke([s1, s2], col, 1.6); }
+      if (o.kind === 'door') { const hinge = (o.fl & 2) ? B : A, other = (o.fl & 2) ? A : B, tip = [hinge[0] + nx * w, hinge[1] + ny * w], s1 = W(hinge[0], hinge[1]), s2 = W(...tip); if (s1 && s2) stroke([s1, s2], col, 2);
+        const a0 = Math.atan2(other[1] - hinge[1], other[0] - hinge[0]), a1 = Math.atan2(ny, nx); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+        const arc = []; for (let k = 0; k <= 16; k++) { const an = a0 + da * k / 16, q = W(hinge[0] + Math.cos(an) * w, hinge[1] + Math.sin(an) * w); if (q) arc.push(q); } c.setLineDash([5 * d, 4 * d]); if (arc.length > 1) stroke(arc, col, 1.2); c.setLineDash([]); }
+      if (DR.dims) { const m = P(lerp3(A, B, 0.5)); if (m) label(m[0], m[1] - 14 * d, nf(w, 2), col); } }
+    for (const t of dd.tx) { const s = P(t.p); if (!s) continue; c.font = `700 ${12.5 * d}px system-ui`; const w = c.measureText(t.s).width + 12 * d, sel = DR.sel && DR.sel.tx === t.id; c.fillStyle = sel ? 'rgba(250,204,21,.95)' : 'rgba(255,255,255,.92)'; c.fillRect(s[0] - w / 2, s[1] - 10 * d, w, 20 * d); c.fillStyle = '#111827'; c.textAlign = 'center'; c.fillText(t.s, s[0], s[1] + 4.5 * d); c.textAlign = 'left'; }
+    // резиновая линия и прицел
+    const Aa = active(), h = DR.hov;
+    if (DR.on && h && (DR.tool === 'line' || DR.tool === 'op')) { const Q = P(h.p); if (Q) {
+      if (DR.tool === 'line' && Aa) { const last = P(Aa.p[Aa.p.length - 1]); if (last) { c.setLineDash([7 * d, 5 * d]); stroke([last, Q], '#fde047', 2); c.setLineDash([]); const len = plen(Aa.p[Aa.p.length - 1], h.p); label(Q[0] + 34 * d, Q[1] - 18 * d, nf(len, 3) + ' м', '#fde047', true); } }
+      if (DR.tool === 'op' && DR.opA) { const L = dd.pl.find(l => l.id === DR.opA.pl); if (L) { const [a, b] = segEnds(L, DR.opA.seg), len = plen(a, b) || 1e-9, t1 = projOn(L, DR.opA.seg, h.p), A = P(lerp3(a, b, DR.opA.t / len)), B = P(lerp3(a, b, t1 / len)); if (A && B) { stroke([A, B], '#fde047', 5); label((A[0] + B[0]) / 2, (A[1] + B[1]) / 2 - 16 * d, nf(Math.abs(t1 - DR.opA.t), 3) + ' м', '#fde047', true); } } }
+      c.strokeStyle = h.snap === 'v' ? '#4ade80' : h.snap === 'c' ? '#fde047' : '#94a3b8'; c.lineWidth = 2 * d; c.beginPath(); if (h.snap === 'v') c.arc(Q[0], Q[1], 8 * d, 0, 7); else { c.moveTo(Q[0] - 7 * d, Q[1]); c.lineTo(Q[0] + 7 * d, Q[1]); c.moveTo(Q[0], Q[1] - 7 * d); c.lineTo(Q[0], Q[1] + 7 * d); } c.stroke();
+      if (h.first) label(Q[0] + 46 * d, Q[1] + 16 * d, 'замкнуть', '#4ade80'); } }
   }
-  // окно инструментов
+  // ---- окно инструментов ----
   function drawPanel() { if (!wrap) return; let el = wrap.querySelector('#d3p'); if (!DR.on) { if (el) el.remove(); return; }
     if (!el) { el = document.createElement('div'); el.id = 'd3p'; el.className = 'd3p'; wrap.appendChild(el); }
+    const T = (k, ic, lab, tip) => `<button data-d3t="${k}" class="${DR.tool === k ? 'on' : ''}" title="${tip}">${ic} ${lab}</button>`;
     el.innerHTML = `<div class="d3h">✏ Черчение плана<button data-d3x title="Закрыть окно черчения">✕</button></div>
-      <div class="d3t"><button data-d3t="line" class="${DR.tool === 'line' ? 'on' : ''}" title="Линия|Щелчок — точка на облаке, точки соединяются линией. Щелчок по первой точке — замкнуть контур|L">✏ Линия</button><button data-d3t="edit" class="${DR.tool === 'edit' ? 'on' : ''}" title="Правка|Тянуть точку — передвинуть; щелчок по линии — выбрать контур (Delete — удалить)|E">✥ Правка</button><button data-d3t="del" class="${DR.tool === 'del' ? 'on' : ''}" title="Стереть|Щелчок по точке или отрезку — убрать">⌫ Стереть</button></div>
+      <div class="d3t">${T('line', '✏', 'Линия', 'Линия|Щелчок — точка на облаке, точки соединяются линией. Щелчок по первой точке — замкнуть контур|L')}${T('edit', '✥', 'Правка', 'Правка|Тянуть точку или линию — связанные линии подстраиваются (как в AutoCAD). Щелчок — выбрать, Delete — удалить|E')}${T('del', '⌫', 'Стереть', 'Стереть|Щелчок по точке, отрезку, проёму или подписи — убрать')}</div>
+      <div class="d3t">${T('op', '▭', 'Проём', 'Проём|Дверь, окно или проём: щёлкните по линии стены у одного края, потом у другого|O')}${T('txt', 'Т', 'Подпись', 'Подпись|Название помещения, отметка, примечание|T')}</div>
+      ${DR.tool === 'op' ? `<div class="d3k" style="padding:2px 8px">${Object.keys(OPN).map(k => `<button data-d3nk="${k}" class="${DR.okind === k ? 'on' : ''}">${OPN[k]}</button>`).join('')}</div>` : ''}
       <label class="v3c"><input type="checkbox" id="d3o" ${DR.ortho ? 'checked' : ''}> Прямые углы <small>(Shift — наоборот)</small></label>
-      <label class="v3c"><input type="checkbox" id="d3d" ${DR.dims ? 'checked' : ''}> Длины и площади</label>
+      <label class="v3c"><input type="checkbox" id="d3d" ${DR.dims ? 'checked' : ''}> Длины, площади, ширины проёмов</label>
       <div class="d3i" id="d3info"></div>
-      <div class="d3b"><button id="d3cut" title="Срез для плана|Вид сверху без перспективы, срез 0,8–1,6 м над полом: стены видны тонкими линиями, мебель и потолок не мешают">Срез для плана</button><button id="d3dxf" title="DXF|Нарисованные контуры — в AutoCAD (мм, слой PLAN, площади — слой PLOSHCHADI)">DXF</button>${S.mode === 'stitch' ? '' : '<button id="d3plan" title="В план|Перенести линии в «План» как стены — там можно добавить двери, окна и размеры">→ План</button>'}<button id="d3clr" title="Очистить|Удалить все нарисованные контуры (можно отменить)">Очистить</button></div>`;
+      <div class="d3b"><button id="d3cut" class="${DR.cut ? 'on' : ''}" title="Срез для плана|Сверху, без перспективы: срез 0,8–1,6 м — яркий, всё ниже — бледным фоном (облако остаётся целым), потолок скрыт. Повторное нажатие — вернуть, как было">${DR.cut ? '✓ Срез для плана' : 'Срез для плана'}</button><button id="d3dxf" title="DXF|План в AutoCAD, мм: стены, проёмы (двери с дугой, окна), площади, подписи">DXF</button>${S.mode === 'stitch' ? '' : '<button id="d3plan" title="В план|Перенести стены и проёмы во вкладку «План»">→ План</button>'}<button id="d3clr" title="Очистить|Удалить весь чертёж (можно отменить)">Очистить</button></div>`;
     el.querySelector('[data-d3x]').onclick = () => setDraw(false);
-    el.querySelectorAll('[data-d3t]').forEach(b => b.onclick = () => { DR.tool = b.dataset.d3t; if (DR.tool !== 'line') finishLine(); DR.hov = null; drawPanel(); dirty(); });
+    el.querySelectorAll('[data-d3t]').forEach(b => b.onclick = () => setDTool(b.dataset.d3t));
+    el.querySelectorAll('[data-d3nk]').forEach(b => b.onclick = () => { DR.okind = b.dataset.d3nk; drawPanel(); });
     el.querySelector('#d3o').onchange = e => { DR.ortho = e.target.checked; }; el.querySelector('#d3d').onchange = e => { DR.dims = e.target.checked; dirty(); };
-    el.querySelector('#d3cut').onclick = () => { opt.top = 1.6; opt.bot = 0.8; opt.noFloor = false; if (lowPrev) lowPrev = null; cam.ortho = true; view('top'); renderList(); renderBar(); dirty(); stat('Срез 0,8–1,6 м над полом, вид сверху: стены — тонкими линиями. Высоту среза можно менять ползунками слева прямо во время черчения.'); };
+    el.querySelector('#d3cut').onclick = toggleCut;
     el.querySelector('#d3dxf').onclick = drawDXF; const bp = el.querySelector('#d3plan'); if (bp) bp.onclick = toPlan;
-    el.querySelector('#d3clr').onclick = () => { if (!D().pl.length) return; pushUndo(); D().pl = []; DR.act = null; DR.sel = null; saveSoon(); info(); dirty(); stat('Контуры удалены (↶ — вернуть).'); };
-    applyIcons(el); info(); }
-  function setDraw(on) { DR.on = on; if (on) { if (S.tool !== 'hand') setTool('hand'); DR.tool = 'line'; stat('Черчение: щёлкайте по углам стен на облаке. «Срез для плана» в окне — удобный вид сверху. Вращать и приближать можно как обычно.'); } else { finishLine(); DR.hov = null; DR.sel = null; } drawPanel(); renderBar(); dirty(); }
-  function drawDXF() { const P = D().pl.filter(l => l.p.length >= 2); if (!P.length) { uiAlert('Нарисованных контуров нет.'); return; }
+    el.querySelector('#d3clr').onclick = () => { const d = D(); if (!d.pl.length && !d.tx.length) return; pushUndo(); d.pl = []; d.op = []; d.tx = []; DR.act = null; DR.sel = null; saveSoon(); info(); dirty(); stat('Чертёж удалён (↶ — вернуть).'); };
+    info(); }
+  function setDTool(k) { if (k !== 'line') finishLine(); DR.tool = k; DR.opA = null; DR.hov = null; drawPanel(); dirty(); }
+  // срез для плана — включается и выключается одной кнопкой; остальное облако остаётся бледным фоном
+  function toggleCut() { if (DR.cut) { const c = DR.cut; opt.top = c.top; opt.bot = c.bot; opt.ghost = c.ghost; opt.size = c.size; opt.noFloor = c.noFloor; cam.ortho = c.ortho; cam.pitch = c.pitch; DR.cut = null; stat('Облако — как было до среза.'); }
+    else { DR.cut = { top: opt.top, bot: opt.bot, ghost: opt.ghost, size: opt.size, noFloor: opt.noFloor, ortho: cam.ortho, pitch: cam.pitch }; if (lowPrev) lowPrev = null; opt.top = 1.6; opt.bot = 0.8; opt.ghost = true; opt.noFloor = false; opt.size = Math.max(opt.size, 3); cam.ortho = true; view('top');
+      stat('Срез для плана: 0,8–1,6 м над полом — ярко, всё ниже — бледным фоном. Высоту среза меняйте ползунками слева прямо во время черчения; повторное нажатие — вернуть облако как было.'); }
+    renderList(); renderBar(); drawPanel(); dirty(); }
+  function setDraw(on) { DR.on = on; if (on) { if (S.tool !== 'hand') setTool('hand'); DR.tool = 'line'; stat('Черчение: щёлкайте по углам стен на облаке. «Срез для плана» в окне — удобный вид сверху (облако остаётся целым). Вращать и приближать можно как обычно.'); }
+    else { finishLine(); DR.hov = null; DR.sel = null; DR.opA = null; if (DR.cut) toggleCut(); } drawPanel(); renderBar(); dirty(); }
+  function drawDXF() { const d = D(), P = d.pl.filter(l => l.p.length >= 2); if (!P.length && !d.tx.length) { uiAlert('Чертёж пуст.'); return; }
     const L = [], g = (c, v) => L.push(String(c), String(v)), k = 1000, f = v => (v * k).toFixed(1);
-    g(0, 'SECTION'); g(2, 'HEADER'); g(9, '$ACADVER'); g(1, 'AC1009'); g(9, '$INSUNITS'); g(70, 4); g(0, 'ENDSEC');
-    g(0, 'SECTION'); g(2, 'TABLES'); g(0, 'TABLE'); g(2, 'LAYER'); g(70, 2); for (const [n, c] of [['PLAN', 7], ['PLOSHCHADI', 2]]) { g(0, 'LAYER'); g(2, n); g(70, 0); g(62, c); g(6, 'CONTINUOUS'); } g(0, 'ENDTAB'); g(0, 'ENDSEC');
+    const line = (a, b, lay) => { g(0, 'LINE'); g(8, lay); g(10, f(a[0])); g(20, f(a[1])); g(30, 0); g(11, f(b[0])); g(21, f(b[1])); g(31, 0); };
+    const text = (p, h, s, lay) => { g(0, 'TEXT'); g(8, lay); g(10, f(p[0])); g(20, f(p[1])); g(30, 0); g(40, f(h)); g(1, s); g(72, 1); g(11, f(p[0])); g(21, f(p[1])); g(31, 0); };
+    g(0, 'SECTION'); g(2, 'HEADER'); g(9, '$ACADVER'); g(1, 'AC1009'); g(9, '$DWGCODEPAGE'); g(3, 'ANSI_1251'); g(9, '$INSUNITS'); g(70, 4); g(0, 'ENDSEC');
+    g(0, 'SECTION'); g(2, 'TABLES'); g(0, 'TABLE'); g(2, 'LAYER'); g(70, 5); for (const [n, c] of [['STENY', 7], ['PROEMY', 3], ['OKNA', 5], ['PLOSHCHADI', 2], ['PODPISI', 1]]) { g(0, 'LAYER'); g(2, n); g(70, 0); g(62, c); g(6, 'CONTINUOUS'); } g(0, 'ENDTAB'); g(0, 'ENDSEC');
     g(0, 'SECTION'); g(2, 'ENTITIES');
-    for (const C of P) { g(0, 'POLYLINE'); g(8, 'PLAN'); g(66, 1); g(10, 0); g(20, 0); g(30, 0); g(70, C.closed ? 1 : 0); for (const q of C.p) { g(0, 'VERTEX'); g(8, 'PLAN'); g(10, f(q[0])); g(20, f(q[1])); g(30, 0); } g(0, 'SEQEND'); g(8, 'PLAN');
-      if (C.closed && C.p.length >= 3) { const cx = C.p.reduce((a, q) => a + q[0], 0) / C.p.length, cy = C.p.reduce((a, q) => a + q[1], 0) / C.p.length; g(0, 'TEXT'); g(8, 'PLOSHCHADI'); g(10, f(cx)); g(20, f(cy)); g(30, 0); g(40, f(0.2)); g(1, area(C.p).toFixed(2) + ' m2'); g(72, 1); g(11, f(cx)); g(21, f(cy)); g(31, 0); } }
+    for (const C of P) { for (let i = 0; i < nseg(C); i++) { const [a, b] = segEnds(C, i), len = plen(a, b) || 1e-9, ops = d.op.filter(o => o.pl === C.id && o.seg === i).map(o => [Math.max(0, Math.min(len, o.t0)), Math.max(0, Math.min(len, o.t1))]).sort((x, y) => x[0] - y[0]); let t = 0;
+        for (const [t0, t1] of ops) { if (t0 > t) line(lerp3(a, b, t / len), lerp3(a, b, t0 / len), 'STENY'); t = Math.max(t, t1); } if (t < len) line(lerp3(a, b, t / len), b, 'STENY'); }
+      if (C.closed && C.p.length >= 3) { const cx = C.p.reduce((a, q) => a + q[0], 0) / C.p.length, cy = C.p.reduce((a, q) => a + q[1], 0) / C.p.length; text([cx, cy - 0.3], 0.2, area(C.p).toFixed(2) + ' m2', 'PLOSHCHADI'); } }
+    for (const o of d.op) { const E = opEnds(o); if (!E) continue; const w = E.t1 - E.t0, ux = (E.b[0] - E.a[0]) / E.len, uy = (E.b[1] - E.a[1]) / E.len, side = (o.fl & 1) ? -1 : 1, nx = -uy * side, ny = ux * side, A = E.A, B = E.B, lay = o.kind === 'window' ? 'OKNA' : 'PROEMY';
+      for (const q of [A, B]) line([q[0] - nx * 0.08, q[1] - ny * 0.08], [q[0] + nx * 0.08, q[1] + ny * 0.08], lay);
+      if (o.kind === 'window') for (const kk of [-0.04, 0.04]) line([A[0] + nx * kk, A[1] + ny * kk], [B[0] + nx * kk, B[1] + ny * kk], 'OKNA');
+      if (o.kind === 'door') { const hinge = (o.fl & 2) ? B : A, other = (o.fl & 2) ? A : B; line(hinge, [hinge[0] + nx * w, hinge[1] + ny * w], 'PROEMY');
+        let a0 = Math.atan2(other[1] - hinge[1], other[0] - hinge[0]) * 180 / Math.PI, a1 = Math.atan2(ny, nx) * 180 / Math.PI; let da = a1 - a0; while (da > 180) da -= 360; while (da < -180) da += 360; const s0 = da > 0 ? a0 : a1, s1 = da > 0 ? a1 : a0;
+        g(0, 'ARC'); g(8, 'PROEMY'); g(10, f(hinge[0])); g(20, f(hinge[1])); g(30, 0); g(40, f(w)); g(50, ((s0 % 360) + 360) % 360); g(51, ((s1 % 360) + 360) % 360); } }
+    for (const t of d.tx) text(t.p, 0.18, t.s, 'PODPISI');
     g(0, 'ENDSEC'); g(0, 'EOF');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([L.join('\r\n')], { type: 'application/dxf' })); a.download = (((pjCur() && pjCur().name) || 'План').replace(/[\\/:*?"<>|]/g, '_')) + '_план_3D.dxf'; document.body.appendChild(a); a.click(); a.remove();
-    stat(`DXF: контуров ${P.length}, в миллиметрах; слой PLAN — линии, PLOSHCHADI — площади.`); }
-  function toPlan() { const P = D().pl.filter(l => l.p.length >= 2); if (!P.length) { uiAlert('Нарисованных контуров нет.'); return; } const pl = PL(); pushUndo(); let n = 0;
-    for (const C of P) { const m = C.closed ? C.p.length : C.p.length - 1; for (let i = 0; i < m; i++) { const a = C.p[i], b = C.p[(i + 1) % C.p.length]; if (plen(a, b) < 0.02) continue; pl.walls.push({ id: pl.nextW++, a: [a[0], a[1]], b: [b[0], b[1]] }); n++; } }
-    saveSoon(); stat(`В «План» перенесено линий: ${n}. Там можно добавить двери, окна и выгрузить DXF.`); setView('plan'); }
+    const s = L.join('\r\n'), u8 = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) { const ch = s.charCodeAt(i); u8[i] = ch < 128 ? ch : (CP1251[ch] || 63); }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([u8], { type: 'application/dxf' })); a.download = (((pjCur() && pjCur().name) || 'План').replace(/[\\/:*?"<>|]/g, '_')) + '_план_3D.dxf'; document.body.appendChild(a); a.click(); a.remove();
+    stat(`DXF: контуров ${P.length}, проёмов ${d.op.length}, подписей ${d.tx.length}; мм; слои STENY, PROEMY, OKNA, PLOSHCHADI, PODPISI.`); }
+  function toPlan() { const d = D(), P = d.pl.filter(l => l.p.length >= 2); if (!P.length) { uiAlert('Нарисованных контуров нет.'); return; } const pl = PL(); pushUndo(); let n = 0, no = 0;
+    for (const C of P) for (let i = 0; i < nseg(C); i++) { const [a, b] = segEnds(C, i), len = plen(a, b); if (len < 0.02) continue; const id = pl.nextW++; pl.walls.push({ id, a: [a[0], a[1]], b: [b[0], b[1]] }); n++;
+      for (const o of d.op.filter(o => o.pl === C.id && o.seg === i)) { pl.ops.push({ id: pl.nextO++, w: id, t0: Math.max(0, o.t0), t1: Math.min(len, o.t1), kind: o.kind }); no++; } }
+    saveSoon(); stat(`В «План» перенесено стен: ${n}, проёмов: ${no}.`); setView('plan'); }
   function key(e) { if (!DR.on) return false; const A = active();
-    if (e.key === 'Enter' || (e.key === 'Escape' && A)) { finishLine(); e.preventDefault(); return true; }
-    if (e.key === 'Backspace' && A) { pushUndo(); A.p.pop(); if (!A.p.length) { D().pl = D().pl.filter(l => l !== A); DR.act = null; } saveSoon(); info(); dirty(); e.preventDefault(); return true; }
-    if ((e.key === 'Delete') && DR.sel) { pushUndo(); D().pl = D().pl.filter(l => l.id !== DR.sel.id); DR.sel = null; saveSoon(); info(); dirty(); e.preventDefault(); return true; }
-    if (e.key === 'l' || e.key === 'д') { DR.tool = 'line'; drawPanel(); return true; } if (e.key === 'e' || e.key === 'у') { finishLine(); DR.tool = 'edit'; drawPanel(); return true; }
+    if (e.key === 'Enter' || (e.key === 'Escape' && (A || DR.opA))) { DR.opA = null; finishLine(); e.preventDefault(); return true; }
+    if (e.key === 'Backspace' && A) { pushUndo(); A.p.pop(); if (!A.p.length) dropPl(A); saveSoon(); info(); dirty(); e.preventDefault(); return true; }
+    if (e.key === 'Delete' && DR.sel) { pushUndo(); const d = D(); if (DR.sel.op) d.op = d.op.filter(o => o.id !== DR.sel.op); else if (DR.sel.tx) d.tx = d.tx.filter(t => t.id !== DR.sel.tx); else { const L = d.pl.find(l => l.id === DR.sel.id); if (L) dropPl(L); } DR.sel = null; saveSoon(); info(); dirty(); e.preventDefault(); return true; }
+    const k = e.key.toLowerCase(); const map = { l: 'line', 'д': 'line', e: 'edit', 'у': 'edit', o: 'op', 'щ': 'op', t: 'txt', 'е': 'txt' }; if (map[k] && !e.ctrlKey && !e.metaKey) { setDTool(map[k]); return true; }
     return false; }
+  // правка: что взяли под курсором
+  function grab(px, py) { const oh = opAt(px, py); if (oh && oh.end !== 'm') return { k: 'opEnd', o: oh.o, end: oh.end };
+    const t = txAt(px, py); if (t) return { k: 'tx', t, p0: t.p.slice() };
+    const v = vertAt(px, py); if (v) return { k: 'vert', q0: v.q.slice(), group: linked(v.q), L: v.L };
+    if (oh) return { k: 'opSel', o: oh.o };
+    const s = segAt(px, py); if (s) { const [a, b] = segEnds(s.L, s.i), z = (a[2] + b[2]) / 2, w0 = onPlane(px, py, z); if (!w0) return null; return { k: 'seg', L: s.L, z, w0, ga: linked(a).map(x => ({ ...x, q0: x.L.p[x.i].slice() })), gb: linked(b).map(x => ({ ...x, q0: x.L.p[x.i].slice() })) }; }
+    return null; }
+  function grabMove(G, px, py) {
+    if (G.k === 'vert') { const v = vertAt(px, py, (L, i) => G.group.some(x => x.L === L && x.i === i)); const p = v ? v.q : onPlane(px, py, G.q0[2]); if (!p) return; for (const x of G.group) x.L.p[x.i] = [p[0], p[1], x.z]; return; }
+    if (G.k === 'seg') { const w = onPlane(px, py, G.z); if (!w) return; const dx = w[0] - G.w0[0], dy = w[1] - G.w0[1]; for (const x of [...G.ga, ...G.gb]) x.L.p[x.i] = [x.q0[0] + dx, x.q0[1] + dy, x.q0[2]]; return; }
+    if (G.k === 'tx') { const p = onPlane(px, py, G.p0[2]); if (p) G.t.p = p; return; }
+    if (G.k === 'opEnd') { const L = D().pl.find(l => l.id === G.o.pl); if (!L) return; const [a] = segEnds(L, G.o.seg), p = onPlane(px, py, a[2]); if (!p) return; const t = projOn(L, G.o.seg, p);
+      if (G.end === 'a') G.o.t0 = Math.min(t, G.o.t1 - 0.05); else G.o.t1 = Math.max(t, G.o.t0 + 0.05); } }
   function bind() {
     const pt = e => { const r = cv.getBoundingClientRect(), d = dpr(); return [(e.clientX - r.left) * d, (e.clientY - r.top) * d]; };
     const touches = new Map();
     cv.oncontextmenu = e => e.preventDefault();
     cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); touches.set(e.pointerId, [e.clientX, e.clientY]);
       if (touches.size === 2) { const [a, b] = [...touches.values()]; drag = { k: 'two', m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d: Math.hypot(a[0] - b[0], a[1] - b[1]) }; return; }
-      if (DR.on && DR.tool === 'edit' && e.button === 0) { const v = vertAt(...pt(e)); if (v) { pushUndo(); drag = { k: 'dmove', L: v.L, i: v.i, z: v.q[2], moved: false, x0: e.clientX, y0: e.clientY }; DR.sel = { id: v.L.id }; return; } }
+      if (DR.on && DR.tool === 'edit' && e.button === 0) { const G = grab(...pt(e)); if (G) { pushUndo(); drag = { k: 'dmove', G, moved: false, x0: e.clientX, y0: e.clientY };
+        DR.sel = G.k === 'opEnd' || G.k === 'opSel' ? { op: G.o.id } : G.k === 'tx' ? { tx: G.t.id } : { id: G.L.id }; info(); dirty(); return; } }
       drag = { k: e.button === 2 || e.button === 1 || (e.shiftKey && !(DR.on && DR.tool === 'line')) ? 'pan' : 'orbit', btn: e.button, x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t: Date.now() }; };
     cv.onpointerleave = () => { if (DR.hov) { DR.hov = null; dirty(); } };
-    cv.onpointermove = e => { if (!drag) { if (DR.on && DR.tool === 'line' && e.pointerType === 'mouse') { DR.hov = cand(...pt(e), e.shiftKey); dirty(); } return; }
-      if (drag.k === 'dmove') { const [px, py] = pt(e), v = vertAt(px, py, (L, i) => L === drag.L && i === drag.i); const q = v ? v.q.slice() : onPlane(px, py, drag.z); if (q && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) > 2) { drag.L.p[drag.i] = q; drag.moved = true; dirty(); } return; }
+    cv.onpointermove = e => { if (!drag) { if (DR.on && (DR.tool === 'line' || DR.tool === 'op') && e.pointerType === 'mouse') { DR.hov = cand(...pt(e), e.shiftKey); dirty(); } return; }
+      if (drag.k === 'dmove') { if (drag.G.k === 'opSel') return; if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 3) return; grabMove(drag.G, ...pt(e)); drag.moved = true; dirty(); return; }
       if (touches.has(e.pointerId)) touches.set(e.pointerId, [e.clientX, e.clientY]);
       if (drag.k === 'two' && touches.size >= 2) { const [a, b] = [...touches.values()], m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d = Math.hypot(a[0] - b[0], a[1] - b[1]); pan(m[0] - drag.m[0], m[1] - drag.m[1]); if (drag.d > 10 && d > 10) cam.dist = Math.max(0.3, cam.dist * drag.d / d); drag.m = m; drag.d = d; dirty(); return; }
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
       if (drag.k === 'orbit') { cam.yaw -= dx * 0.008; cam.pitch = Math.max(-1.5707, Math.min(1.5707, cam.pitch + dy * 0.008)); } else if (drag.k === 'pan') pan(dx, dy); dirty(); };
     const up = e => { touches.delete(e.pointerId); if (!drag) return; const d = drag; if (touches.size === 0) drag = null; else if (d.k === 'two') drag = null;
       if (d.k === 'dmove') { drag = null; if (!d.moved) { S.undo.pop(); } else saveSoon(); info(); dirty(); return; }
+      if (DR.on && d.k !== 'two' && d.btn === 0 && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 700 && (DR.tool === 'op' || DR.tool === 'txt')) { const [px, py] = pt(e); if (DR.tool === 'op') opClick(px, py); else txClick(px, py); return; }
       if (DR.on && d.k !== 'two' && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 700) { const [px, py] = pt(e);
         if (d.btn === 2) { if (active()) finishLine(); return; }
         if (DR.tool === 'line') { addPoint(cand(px, py, e.shiftKey, true)); DR.hov = null; return; }
         if (DR.tool === 'edit') { const h = segAt(px, py) || vertAt(px, py); DR.sel = h ? { id: h.L.id } : null; info(); dirty(); return; }
-        if (DR.tool === 'del') { if (!delAt(px, py)) stat('Тут нет линии — щёлкните по точке или отрезку.'); return; } }
+        if (DR.tool === 'del') { if (!delAt(px, py)) stat('Тут ничего нет — щёлкните по точке, отрезку, проёму или подписи.'); return; } }
       if (d.k !== 'two' && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 600 && S.tool === 'm3d') { const p = pick(...pt(e)); if (!p) { stat('Под курсором нет точек — коснитесь поверхности.'); return; } const last = meas[meas.length - 1]; if (last && !last.b) last.b = p; else meas.push({ a: p }); if (meas.length > 6) meas.shift(); dirty(); const L = meas[meas.length - 1]; if (L.b) stat(`Расстояние ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1], L.b[2] - L.a[2]), 3)} м · в плане ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1]), 3)} м · по высоте ${nf(L.b[2] - L.a[2], 3)} м.`); } };
     cv.onpointerup = up; cv.onpointercancel = up;
     cv.ondblclick = e => { if (DR.on) { e.preventDefault(); return; } const p = pick(...pt(e)); if (p) { const { e: E } = basis(); cam.dist = Math.max(0.3, Math.hypot(E[0] - p[0], E[1] - p[1], E[2] - p[2])); cam.tg = p; const dd = [E[0] - p[0], E[1] - p[1], E[2] - p[2]].map(v => v / cam.dist); cam.pitch = Math.asin(Math.max(-1, Math.min(1, dd[2]))); cam.yaw = Math.atan2(dd[1], dd[0]); dirty(); stat('Центр вращения — в этой точке.'); } };
@@ -2940,6 +3037,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
       ${sl('top', 'Срез сверху', opt.top, H + 0.6)}${sl('bot', 'Срез снизу', opt.bot, Z0)}
       <label class="v3r"><span>Точки</span><input type="range" data-v3c="size" min="1" max="6" step="1" value="${opt.size}"><b>${opt.size} px</b></label>
       <label class="v3c"><input type="checkbox" id="v3edl" ${opt.edl ? 'checked' : ''}> Подсветка рельефа (тени по глубине)</label>
+      <label class="v3c" title="Ниже среза — бледным фоном|Точки ниже «Среза снизу» не прячутся, а показываются серым фоном: облако остаётся целым, а срез — ярким"><input type="checkbox" id="v3gh" ${opt.ghost ? 'checked' : ''}> Ниже среза — бледным фоном</label>
       <label class="v3c" title="Скрыть пол|Убрать точки пола на любом уровне (коридор, приямок, площадка) — сверху и снизу видно всё, что ниже и выше пола"><input type="checkbox" id="v3nf" ${opt.noFloor ? 'checked' : ''}> Скрыть пол</label>
       <div class="v3h">Мышь: левая — вращать, правая или Shift — сдвигать, колесо — ближе/дальше, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</div></div>`
       + (R && R.edges.length ? `<div class="lh"><b>Точность стыков (${R.edges.length})</b></div><div class="v3e">${R.edges.map((e, i) => { const a = byId(e.a), b = byId(e.b); if (!a || !b) return ''; const g = fineGrade(e);
@@ -2948,7 +3046,7 @@ void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=
   }
   function bindPanel() {
     $$('[data-v3c]').forEach(inp => inp.oninput = () => { const k = inp.dataset.v3c, v = +inp.value; if (k === 'size') opt.size = v; else { const H = maxH(); opt[k] = k === 'top' ? (v >= H + 0.55 ? null : v) : (v <= minZ() + 0.05 ? null : v); } const b = inp.parentNode.querySelector('b'); b.textContent = k === 'size' ? v + ' px' : opt[k] == null ? 'выкл' : nf(opt[k], 2) + ' м'; renderBar(); dirty(); });
-    const e = $('#v3edl'); if (e) e.onchange = () => { opt.edl = e.checked; dirty(); }; const nfl = $('#v3nf'); if (nfl) nfl.onchange = () => { opt.noFloor = nfl.checked; dirty(); };
+    const e = $('#v3edl'); if (e) e.onchange = () => { opt.edl = e.checked; dirty(); }; const nfl = $('#v3nf'); if (nfl) nfl.onchange = () => { opt.noFloor = nfl.checked; dirty(); }; const ghb = $('#v3gh'); if (ghb) ghb.onchange = () => { opt.ghost = ghb.checked; dirty(); };
     const a = $('#v3all'); if (a) a.onclick = () => { solo = null; renderList(); dirty(); };
     $$('[data-v3j]').forEach(b => b.onclick = () => { const ed = S.fineRep.edges[+b.dataset.v3j]; if (solo && solo[0] === ed.a && solo[1] === ed.b) solo = null; else { solo = [ed.a, ed.b]; opt.color = 'scan'; const A = scanById(ed.a), B = scanById(ed.b); cam.tg = [(A.pose.x + B.pose.x) / 2, (A.pose.y + B.pose.y) / 2, 1.2]; cam.dist = Math.max(6, Math.hypot(A.pose.x - B.pose.x, A.pose.y - B.pose.y) * 2.2); } renderList(); renderBar(); dirty(); });
   }
