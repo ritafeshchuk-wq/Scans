@@ -73,6 +73,11 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 #pcard{border-radius:10px;border:1px solid #d5dbe3;box-shadow:0 6px 20px rgba(15,23,36,.14)}
 #gucard{position:fixed;right:14px;top:150px;z-index:8;width:260px;background:#fff;border:1px solid #d5dbe3;border-radius:10px;box-shadow:0 6px 20px rgba(15,23,36,.16);padding:10px;display:flex;flex-direction:column;gap:6px;font-size:13px}#gucard label{display:flex;align-items:center;gap:6px;color:#5d6877}#gucard input{width:90px;font:inherit;font-size:15px;padding:5px 7px;border:1px solid var(--line);border-radius:7px}#gucard .gb{display:flex;flex-wrap:wrap;gap:4px}#gucard .gb button{padding:4px 7px;font-size:12px}#gucard small{color:#8a95a3}
 .cl-list{max-height:34vh;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px;margin:4px 0 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:2px}.cl-i{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;cursor:pointer}.cl-i:hover{background:#f2f5f9}.cl-i i{width:12px;height:12px;border-radius:3px}.cl-i small{margin-left:auto;color:#8a95a3}
+#v3w{position:absolute;inset:0;background:#1c2026;overflow:hidden}#v3w canvas{position:absolute;left:0;top:0;width:100%;height:100%;touch-action:none}#v3o{pointer-events:none}
+.v3p{padding:0 0 6px}.v3r{display:grid;grid-template-columns:92px 1fr 56px;align-items:center;gap:6px;margin:5px 10px;font-size:12.5px;color:#4a5563}.v3r input{width:100%}.v3r b{font-weight:600;text-align:right;color:#1f2937;font-size:12px}.v3c{display:flex;align-items:center;gap:6px;margin:6px 10px;font-size:12.5px}.v3h{font-size:11.5px;color:#6b7684;margin:6px 10px;line-height:1.35}
+.v3e{display:flex;flex-direction:column;gap:2px;padding:4px 8px 8px}.v3j{display:flex;align-items:center;gap:5px;text-align:left;font-size:12px;padding:4px 7px;border-radius:6px;border:1px solid transparent;background:#fff}.v3j i{width:8px;height:8px;border-radius:2px;flex:0 0 8px}.v3j span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.v3j b{font-variant-numeric:tabular-nums}.v3j.ok b{color:#15803d}.v3j.wa b{color:#b45309}.v3j.bad b{color:#dc2626}.v3j.bad{background:#fef2f2}.v3j.on{border-color:#3d93ea;background:#eaf3fd}
+#top .mseg{display:inline-flex;border:1px solid #3d4653;border-radius:7px;overflow:hidden;margin-left:8px;flex:0 0 auto}#top .mseg button{border:0;border-radius:0;padding:5px 10px;font-size:12px;color:#b9c3d0;background:transparent}#top .mseg button.on{background:#2b5f93!important;color:#fff!important}
+.modes{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:14px 0}.mcard{display:flex;flex-direction:column;gap:6px;text-align:left;width:282px;max-width:100%;padding:16px 18px;border-radius:12px;border:1px solid #cfd6df;background:#fff;cursor:pointer;font:inherit}.mcard b{font-size:16px}.mcard span{font-size:13px;color:#4a5563;line-height:1.4}.mcard small{color:#6b7684}.mcard:hover{border-color:#3d93ea;box-shadow:0 4px 14px rgba(15,23,36,.12)}.mcard.on{border-color:#1c82e8;box-shadow:0 0 0 1px #1c82e8 inset}
 #tip{position:fixed;z-index:99;max-width:320px;background:#1b1f26;color:#e6ebf2;border:1px solid #3a424e;border-radius:8px;padding:8px 10px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s}#tip.on{opacity:1}#tip b{display:block;color:#fff;font-size:13px;margin-bottom:2px}#tip kbd{display:inline-block;margin-top:5px;padding:0 6px;border:1px solid #4a5462;border-bottom-width:2px;border-radius:4px;font:11px/1.6 ui-monospace,monospace;color:#cfd8e3}
 @media (max-width:900px){#top .rg>button{min-width:50px;font-size:11px}#top .rg{padding:2px 5px 18px}}
 </style></head><body>
@@ -80,17 +85,23 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
  <div class="tb">
   <div class="logo" title="Скан — сшивка сканов FARO и план по сканам. © d1sco"><b>С</b><span>Скан</span></div>
   <button id="bProj" class="qat wide" data-ic="folder" title="Проект: все проекты, новый проект, добавить сканы, облако точек, файл меток и положений">📁 <span id="pjName">Проекты</span> ▾</button>
+  <div id="modeSeg" class="mseg"><button data-mode="stitch" title="Только сшивка|Сшить сканы как можно точнее, проверить в 3D и выгрузить E57 для камеральной обработки. Вкладка плана скрыта">Сшивка</button><button data-mode="full" title="Сшивка и план|Сшивка, 3D и план по сканам с выгрузкой DXF и для Рулетки">+ План</button></div>
   <span class="qsep"></span>
   <button id="fUndo" class="qat" data-ic="undo" title="Отменить шаг|Возвращает план, сшивку, метки и чистку на шаг назад|Ctrl+Z" disabled></button><button id="fRedo" class="qat" data-ic="redo" title="Вернуть|Повторяет отменённый шаг|Ctrl+Y" disabled></button>
-  <div class="grp steps"><button data-view="grid" title="Шаг 1 · Сканы|Загрузка E57, каждый скан в своей рамке: метки, чистка, полосы высот"><i>1</i>Сканы</button><button data-view="asm" title="Шаг 2 · Сборка|Все сканы вместе: автосшивка, уточнение, линии и углы для плана"><i>2</i>Сборка</button><button data-view="plan" title="Шаг 3 · План|План по сканам: помещения, двери, окна; правка стен; выгрузка DXF и для Рулетки"><i>3</i>План</button></div>
+  <div class="grp steps"><button data-view="grid" title="Шаг 1 · Сканы|Загрузка E57, каждый скан в своей рамке: метки, чистка, полосы высот"><i>1</i>Сканы</button><button data-view="asm" title="Шаг 2 · Сборка|Все сканы вместе: автосшивка, уточнение, линии и углы для плана"><i>2</i>Сборка</button><button data-view="v3d" title="Шаг 3 · 3D|Облако всех сканов в 3D: вращать и проверять стыки, точная сшивка, измерения, выгрузка E57"><i>3</i>3D</button><button data-view="plan" title="Шаг 4 · План|План по сканам: помещения, двери, окна; правка стен; выгрузка DXF и для Рулетки"><i>4</i>План</button></div>
   <span class="fill"></span>
   <button id="bFit" class="qat" data-ic="fit" title="Показать всё|Вписать все сканы или весь план в окно"></button><button id="bHelp" class="qat" data-ic="help" title="Справка|Как работать: по шагам, все кнопки и приёмы"></button>
  </div>
  <div class="rb">
   <div class="grp ctx rg" data-for="grid" data-cap="Файлы"><button id="bAdd" class="big pri" data-ic="addscan" title="Добавить сканы|Файлы E57 (можно сразу несколько или перетащить в окно). Сканы FARO .fls пересохраняются в E57 файлом fls_to_e57.bat"><span>Сканы</span></button></div>
   <div class="grp ctx rg" data-for="grid" data-cap="Метки"><button data-tool="line" data-ic="mline" title="Метка-линия|Проведите вдоль стены или края проёма — линия впишется по точкам. Одна и та же стена на соседних сканах — одной буквой"><span>Линия</span></button><button data-tool="point" data-ic="mpoint" title="Метка-точка|Угол, колонна, приметная точка — одной буквой на соседних сканах"><span>Точка</span></button><button data-tool="erase" data-ic="erase" title="Удалить метку|Коснитесь метки"><span>Удалить</span></button></div>
-  <div class="grp ctx rg" data-for="asm" data-cap="Сшивка"><button id="bAuto" class="big pri" data-ic="auto" title="Автосшивка|Программа сама найдёт общие места соседних сканов, сошьёт и сразу точно подгонит. Около 15 с на скан"><span>Автосшивка</span></button><button id="bRefine" data-ic="refine" title="Уточнить|Точная подгонка от нынешнего положения — после ручной правки или по меткам"><span>Уточнить</span></button><button id="bStitch" data-ic="stitch" title="По меткам|Сшить по вашим меткам (одинаковые буквы на соседних сканах)"><span>По меткам</span></button></div>
-  <div class="grp ctx rg" data-for="asm" data-cap="Линии плана"><button data-tool="gfit" data-ic="gfit" title="Линия стены|Коснитесь стены на сканах — прямая впишется по точкам среза. «План по сканам» проведёт сторону помещения точно по ней"><span>По точкам</span></button><button data-tool="gline" data-ic="gline" title="Линия|Тяните от точки до точки — линия для плана там, где стену не видно (за шкафом, шторой)"><span>Нарисовать</span></button><button data-tool="gpt" data-ic="gpt" title="Угол плана|Коснитесь угла — угол помещения пройдёт через эту точку. Липнет к пересечению линий"><span>Угол</span></button><button data-tool="gdel" data-ic="x" title="Удалить линию или угол плана|Коснитесь линии или угла"><span>Удалить</span></button></div>
+  <div class="grp ctx rg" data-for="asm" data-cap="Сшивка"><button id="bAuto" class="big pri" data-ic="auto" title="Автосшивка|Программа сама найдёт общие места соседних сканов, сошьёт и сразу точно подгонит. Около 15 с на скан"><span>Автосшивка</span></button><button id="bRefine" data-ic="refine" title="Уточнить|Точная подгонка от нынешнего положения — после ручной правки или по меткам"><span>Уточнить</span></button><button id="bStitch" data-ic="stitch" title="По меткам|Сшить по вашим меткам (одинаковые буквы на соседних сканах)"><span>По меткам</span></button><button id="bFine" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны — до миллиметров. После автосшивки"><span>Точно 3D</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Сшивка"><button id="bFine3" class="big pri" data-ic="fine" title="Точно 3D|Финальная подгонка всех сканов сразу по всем 6 степеням: сдвиги X, Y, Z, поворот и наклоны. Слева появится точность каждого стыка"><span>Точно 3D</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Вид"><button data-v3v="top" data-ic="vtop" title="Сверху|Смотреть сверху, как план"><span>Сверху</span></button><button data-v3v="front" data-ic="vfront" title="Спереди|Вид вдоль оси Y"><span>Спереди</span></button><button data-v3v="side" data-ic="vside" title="Сбоку|Вид вдоль оси X"><span>Сбоку</span></button><button data-v3v="iso" data-ic="cube3d" title="3D|Наклонный вид"><span>3D</span></button><button id="bOrtho" data-ic="persp" title="Плоско|Без перспективы: размеры не искажаются с расстоянием — удобно сверху и сбоку"><span>Плоско</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Цвет"><div class="seg"><button data-v3col="scan" title="По сканам|Каждый скан своим цветом — видно, где сканы расходятся">Сканы</button><button data-v3col="h" title="По высоте|Цвет от пола к потолку">Высота</button><button data-v3col="rgb" title="Цвет сканера|Фото-цвет сканера или яркость отражения (для сканов, загруженных в версии 4.0 и новее)">Цвет</button></div></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Срез"><button id="bNoCeil" data-ic="noceil" title="Без потолка|Убрать потолок, чтобы заглянуть в помещения сверху. Точнее — ползунками слева"><span>Без потолка</span></button></div>
+  <div class="grp ctx rg" data-for="v3d" data-cap="Измерить"><button data-tool="m3d" data-ic="ruler" title="Расстояние|Коснитесь двух точек облака — длина, в плане и по высоте|Esc — убрать"><span>Расстояние</span></button></div>
+  <div class="grp ctx rg" data-for="asm" data-plan="1" data-cap="Линии плана"><button data-tool="gfit" data-ic="gfit" title="Линия стены|Коснитесь стены на сканах — прямая впишется по точкам среза. «План по сканам» проведёт сторону помещения точно по ней"><span>По точкам</span></button><button data-tool="gline" data-ic="gline" title="Линия|Тяните от точки до точки — линия для плана там, где стену не видно (за шкафом, шторой)"><span>Нарисовать</span></button><button data-tool="gpt" data-ic="gpt" title="Угол плана|Коснитесь угла — угол помещения пройдёт через эту точку. Липнет к пересечению линий"><span>Угол</span></button><button data-tool="gdel" data-ic="x" title="Удалить линию или угол плана|Коснитесь линии или угла"><span>Удалить</span></button></div>
   <div class="grp ctx rg" data-for="asm" data-cap="Опорные"><button id="bSph" data-ic="sphere" title="Шары|Найти шары на сканах — держат длинные однотипные объекты (тоннель, коллектор)"><span>Шары</span></button><button data-tool="corner" data-ic="corner" title="Общий угол|Угол, видный на нескольких сканах — сшивка держится за него"><span>Общий угол</span></button></div>
   <div class="grp ctx rg" data-for="grid asm" data-cap="Чистка"><button data-tool="brush" data-ic="brush" title="Стереть|Закрасьте мебель, людей, двери — эти точки не участвуют ни в сшивке, ни в плане"><span>Стереть</span></button><button data-tool="keep" data-ic="keep" title="Нужное|Отметьте нужное (стены, колонны) — можно оставить только его"><span>Нужное</span></button></div>
   <div class="grp ctx rg" data-for="plan" data-cap="Построение"><button id="rbRooms" class="big pri" data-ic="plan" title="План по сканам|Стены во всю высоту, помещения по потолку, двери, окна и подоконники; косые стены и ваши линии из «Сборки»"><span>План по сканам</span></button><button id="rbWalls" data-ic="walls" title="Только стены|Найти линии стен по срезу, без помещений"><span>Только стены</span></button></div>
@@ -99,19 +110,19 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
   <div class="grp ctx rg" data-for="plan" data-cap="Фон"><div class="seg"><button data-pbg="slice" title="Срез|Тонкий срез всех сканов на одной высоте — по нему видно, сошлись ли стены">Срез</button><button data-pbg="scans" title="Сканы|Сканы целиком под планом">Сканы</button><button data-pbg="off" title="Без фона|Только план">Нет</button></div></div>
   <div class="grp ctx rg" data-for="plan" data-cap="Выгрузка"><button id="rbDxf" data-ic="dxf" title="DXF|Чертёж для AutoCAD: слои STENY, PROEMY, RAZMERY, SKANY; единицы — мм"><span>DXF</span></button><button id="rbRul" data-ic="tape" title="Для Рулетки|Файл проекта для Рулетки: помещения, проёмы, подоконники — домерить на месте"><span>Рулетка</span></button></div>
   <div class="grp ctx rg" data-for="grid" data-cap="Вид"><span id="colsBox" class="seg"><button data-cols="1" title="1 рамка в ряд">1</button><button data-cols="2" title="2 рамки в ряд">2</button><button data-cols="3" title="3 рамки в ряд">3</button><button data-cols="4" title="4 рамки в ряд">4</button><button id="bTW" title="Повернуть рамки как в сборке|Одна и та же стена на соседних сканах смотрит в одну сторону">↻</button></span></div>
-  <div class="grp ctx rg" data-for="asm" data-cap="Экспорт"><button id="rbE57" data-ic="cloud" title="Скачать сшитые сканы|E57 (каждый скан отдельно или одним облаком), XYZ или DXF — все сканы или выбранные"><span>E57</span></button></div>
+  <div class="grp ctx rg" data-for="asm v3d" data-cap="Выгрузка"><button id="rbE57" class="big" data-ic="cloud" title="Выгрузить E57|Сшитые сканы в полной плотности (с цветом и яркостью) или 2–10 см: одним файлом со сканами по отдельности, одним облаком или каждый скан своим файлом"><span>E57</span></button></div>
   <div class="grp ctx rg" data-for="grid asm plan" data-cap="Выбранное"><button id="fDel" data-ic="trash" title="Удалить выбранное|Скан, метку, стену или проём — что выбрано|Delete"><span>Удалить</span></button></div>
  </div>
 </div>
-<div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">⬇ Скачать сшитые сканы — E57, XYZ, DXF</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
+<div id="pmenu" hidden><div class="pm-h" id="pmName"></div><button id="bAllProj">📁 Все проекты…</button><button id="bNew">＋ Новый проект</button><hr><button id="bAdd2">＋ Добавить сканы E57</button><button id="bCloud">⬇ Выгрузить сшитые сканы — E57, XYZ, DXF</button><hr><button id="bSave">💾 Сохранить метки и положения в файл</button><button id="bOpen">📂 Открыть такой файл</button></div>
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 3.6 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.0 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
-<p class="hs">Работа идёт по трём шагам — вкладки <b>1 Сканы · 2 Сборка · 3 План</b> вверху. На ленте под ними — инструменты этого шага, по группам. Наведите мышь на кнопку — подсказка. Нажать инструмент ещё раз (или Esc) — выключить.</p>
+<p class="hs">Работа идёт по шагам — вкладки <b>1 Сканы · 2 Сборка · 3 3D · 4 План</b> вверху. Переключатель <b>Сшивка / + План</b> рядом с проектом: в режиме «Сшивка» (только сшить и отдать E57 в камеральную обработку) вкладка плана скрыта. На ленте под ними — инструменты этого шага, по группам. Наведите мышь на кнопку — подсказка. Нажать инструмент ещё раз (или Esc) — выключить.</p>
 <h4>📁 Проект ▾</h4>
 <ul><li>Все проекты (открыть, переименовать, удалить), новый проект, добавить сканы E57, облако точек, файл меток и положений.</li><li>Всё хранится на этом устройстве, обновление страницы ничего не стирает.</li></ul>
 <h4>1 Сканы — каждый скан в своей рамке</h4>
@@ -126,7 +137,13 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <li><b>Красная стрелка «скользит»</b> на стыке — у пары только параллельные стены (тоннель, коридор): поперёк стык точный, а вдоль ему не за что зацепиться. Нужен шар или поперечная плоскость (торец, ниша, колонна — линией-меткой на обоих сканах).</li><li><b>⚪ Шары</b> — программа находит шары заданного диаметра (FARO 139/145 мм), вписывает сферу (видно, по скольким точкам и с какой точностью) и даёт один и тот же шар на разных сканах одной буквой Ш1, Ш2… Потом «🎯 Уточнить»: стены держат поперёк, шары — вдоль. Шаров на стык нужно хотя бы 1–2, лучше 3 не на одной линии.</li><li><b>🧩 По меткам</b> — сшить по вашим буквам, невязка каждой в мм (больше 10 мм — красным). <b>⌖ Общий угол</b> — коснуться угла, видного на нескольких сканах.</li>
 <li><b>Несколько сканов:</b> мышью — как в AutoCAD: щелчок добавляет, Shift + щелчок убирает, рамка слева направо — целиком внутри, справа налево — всё задетое. На планшете — «⬚ Несколько» внизу справа. Esc — снять выбор.</li>
 <li><b>⚓</b> в списке — опорный скан, стоит на месте.</li></ul>
-<h4>3 План — стены и проёмы</h4>
+<h4>3 3D — точная сшивка, проверка, выгрузка</h4>
+<ul><li><b>🎯 Точно 3D</b> — финальная подгонка всех сканов сразу по всем шести степеням: сдвиги X, Y, Z, поворот и наклоны. Делается после автосшивки. Слева — точность каждого стыка (у 90% точек): зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше; щелчок по стыку — показать только эту пару.</li>
+<li>Мышь: левая — вращать, правая или Shift — сдвиг, колесо — ближе/дальше к курсору, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</li>
+<li>Вид: Сверху / Спереди / Сбоку / 3D, «Плоско» — без перспективы. Цвет: по сканам (видно расхождения), по высоте, цвет сканера. «Без потолка» и ползунки слева — срез по высоте.</li>
+<li><b>Расстояние</b> — две точки: длина, в плане и по высоте.</li>
+<li><b>E57</b> — выгрузка для камеральной обработки: полная плотность из исходных файлов (с цветом и яркостью) или 2–10 см; один файл со сканами по отдельности (с положением, как из SCENE), одним облаком или каждый скан своим файлом. В Chrome и Edge файл пишется прямо на диск — подходит для больших объёмов.</li></ul>
+<h4>4 План — стены и проёмы</h4>
 <ul><li><b>🏠 План по сканам</b> (справа) — готовый план сразу: стены — плоскости во всю высоту, помещения — по потолку (двери отделяют помещения перемычкой), двери и окна — дыры в стенах (окно — с низом выше пола и перемычкой), подоконник — горизонтальная полка у низа окна. Косые стены программа находит сама: стороны идут по направлениям стен, не только под 90°. Номера и площади помещений — на плане и в DXF. Шторы при съёмке откройте, иначе окна за ними не видны.</li><li><b>Линии и углы для плана</b> — на шаге «2 Сборка»: <b>⌇ Линия стены</b> (касание стены — прямая по точкам), <b>／ Линия</b> (нарисовать, где стену не видно — за шкафом, за шторой), <b>⌖ Угол плана</b>, <b>⌫</b> — удалить. «🏠 План по сканам» проводит стороны помещений точно по этим линиям и через эти углы; линия ещё и разделяет помещения.</li><li><b>⬇ Для Рулетки</b> — файл проекта: помещения со сторонами, двери, окна, подоконники. В Рулетке «Открыть файл» — и домерьте на месте окна и подоконники.</li><li><b>Фон — тонкий срез</b> точек всех сканов на одной высоте (по умолчанию 1,2 м от пола, 6 см) — высота и толщина в карточке справа. В срезе сразу видно, сошлись ли стены разных сканов в одну линию.</li><li><b>⌇ Стена по точкам</b> — коснитесь стены в срезе: программа впишет прямую по точкам (сколько точек и разброс в мм — внизу), продлит вдоль стены и замкнёт угол с соседней. Так план собирается стена за стеной: решаете вы, точность — от точек.</li><li>На ленте: «Построение» (план по сканам, только стены), «Стены» (по точкам, нарисовать, удалить), «Правка» (углы, к осям), «Фон», «Выгрузка» (DXF, Рулетка). Касание стены — выбрать и править.</li></ul>
 <h4>Всегда</h4>
 <ul><li>Внизу «↶ Отменить шаг / ↷ Вернуть». Колесо — масштаб, зажатое колесо — сдвиг вида, ⤢ — показать всё.</li></ul>
@@ -161,7 +178,7 @@ const E57 = (() => {
   const num = (n, d = 0) => { if (!n) return d; const t = n.text.trim(); return t === '' ? 0 : parseFloat(t); };
 
   function readE57(ab, opt = {}) {
-    const voxel = opt.voxel || 0.02;
+    const voxel = opt.voxel != null ? opt.voxel : 0.02;
     const maxRange = opt.maxRange || 40;
     const minRange = opt.minRange || 0.3;
     const prog = opt.onProgress || (() => {});
@@ -197,6 +214,7 @@ const E57 = (() => {
     const scans = [];
     const vc = d3 ? d3.children : [];
     vc.forEach((sc, si) => {
+      if (opt.only != null && si !== opt.only) return;
       const name = (child(sc, 'name') || { text: 'scan' + si }).text.trim();
       // pose
       const pose = child(sc, 'pose');
@@ -231,7 +249,13 @@ const E57 = (() => {
       const cart = idx('cartesianX') >= 0;
       const need = cart ? ['cartesianX', 'cartesianY', 'cartesianZ'] : ['sphericalRange', 'sphericalAzimuth', 'sphericalElevation'];
       const inv = idx(cart ? 'cartesianInvalidState' : 'sphericalInvalidState');
-      const want = need.map(idx).concat(inv >= 0 ? [inv] : []);
+      // цвет и яркость (если есть в файле): для показа в 3D и выгрузки
+      const AT = opt.attrs ? ['colorRed', 'colorGreen', 'colorBlue', 'intensity'].map(idx) : [-1, -1, -1, -1];
+      const hasRGB = AT[0] >= 0 && AT[1] >= 0 && AT[2] >= 0, hasI = AT[3] >= 0;
+      const lim = (tag, a, b, F) => { const L = child(sc, tag); const lo = L ? num(child(L, a), NaN) : NaN, hi = L ? num(child(L, b), NaN) : NaN; return isFinite(lo) && isFinite(hi) && hi > lo ? [lo, hi] : (F && F.type !== 'Float' && F.max > F.min ? [F.min, F.max] : [0, F && F.type === 'Float' ? 1 : 255]); };
+      const cL = hasRGB ? lim('colorLimits', 'colorRedMinimum', 'colorRedMaximum', fields[AT[0]]) : null, iL = hasI ? lim('intensityLimits', 'intensityMinimum', 'intensityMaximum', fields[AT[3]]) : null;
+      const kA = 3 + (inv >= 0 ? 1 : 0);
+      const want = need.map(idx).concat(inv >= 0 ? [inv] : []).concat(hasRGB ? [AT[0], AT[1], AT[2]] : []).concat(hasI ? [AT[3]] : []);
       if (need.map(idx).some(i => i < 0)) throw new Error('В скане нет координат XYZ');
       // per-field decoded queues
       const Q = fields.map(() => ({ arr: new Float64Array(1 << 16), n: 0, bitBuf: 0n, bitCnt: 0, carry: null }));
@@ -277,9 +301,9 @@ const E57 = (() => {
       const secLen = Number(hv.getBigUint64(8, true));
       const secEndLogical = Math.floor(fileOff / ps) * pd + fileOff % ps + secLen;
       // output with voxel subsampling
-      const inv_v = 1 / voxel;
-      const seen = new Set();
-      let out = new Float32Array(1 << 20), on = 0;
+      const inv_v = voxel > 0 ? 1 / voxel : 0;
+      const seen = voxel > 0 ? new Set() : null;
+      let out = new Float32Array(1 << 20), on = 0, col = (hasRGB || hasI) ? new Uint8Array(1 << 20) : null, ito = opt.full && hasI ? new Float32Array(1 << 19) : null;
       let emitted = 0, guard = 0;
       const Rm = R, tm = t;
       const isId = opt.applyPose ? (R[0] === 1 && R[4] === 1 && R[8] === 1 && !t[0] && !t[1] && !t[2]) : true;
@@ -299,10 +323,13 @@ const E57 = (() => {
           if (!(r > minRange && r < maxRange)) continue;
           if (!isId) { const X = Rm[0] * x + Rm[1] * y + Rm[2] * z + tm[0], Y = Rm[3] * x + Rm[4] * y + Rm[5] * z + tm[1], Z = Rm[6] * x + Rm[7] * y + Rm[8] * z + tm[2]; x = X; y = Y; z = Z; }
           if (opt.keep && !opt.keep(x, y, z)) continue;
-          const key = (Math.floor(x * inv_v) + 32768) * 4294967296 + (Math.floor(y * inv_v) + 32768) * 65536 + (Math.floor(z * inv_v) + 32768);
-          if (seen.has(key)) continue;
-          seen.add(key);
-          if (on + 3 > out.length) { const a = new Float32Array(out.length * 2); a.set(out); out = a; }
+          if (seen) { const key = (Math.floor(x * inv_v) + 32768) * 4294967296 + (Math.floor(y * inv_v) + 32768) * 65536 + (Math.floor(z * inv_v) + 32768);
+            if (seen.has(key)) continue;
+            seen.add(key); }
+          if (on + 3 > out.length) { const a = new Float32Array(out.length * 2); a.set(out); out = a; if (col) { const c2 = new Uint8Array(out.length); c2.set(col); col = c2; } }
+          if (col) { if (hasRGB) { const k = cL[1] - cL[0]; col[on] = (val(kA, j) - cL[0]) / k * 255; col[on + 1] = (val(kA + 1, j) - cL[0]) / k * 255; col[on + 2] = (val(kA + 2, j) - cL[0]) / k * 255; }
+            else { const g = Math.max(0, Math.min(255, (val(kA, j) - iL[0]) / (iL[1] - iL[0]) * 255)); col[on] = col[on + 1] = col[on + 2] = g; } }
+          if (ito) { const ii = on / 3; if (ii >= ito.length) { const a = new Float32Array(ito.length * 2); a.set(ito); ito = a; } ito[ii] = val(kA + (hasRGB ? 3 : 0), j); }
           out[on++] = x; out[on++] = y; out[on++] = z;
         }
         emitted += avail;
@@ -334,7 +361,7 @@ const E57 = (() => {
         }
         p = advPhys(p, plen);
       }
-      scans.push({ name, R, t, pts: out.slice(0, on), count: on / 3, total: N });
+      scans.push({ name, idx: si, R, t, pts: opt.full ? out.subarray(0, on) : out.slice(0, on), count: on / 3, total: N, col: col ? (opt.full ? col.subarray(0, on) : col.slice(0, on)) : null, rgb: hasRGB, inten: ito ? ito.subarray(0, on / 3) : null, iLim: iL });
     });
     return scans;
   }
@@ -980,22 +1007,24 @@ self.onmessage = e => {
   if (e.data.cmd === 'auto') return autoJob(e.data);
   if (e.data.cmd === 'scanplan') { const job = e.data.job; try { const r = scanPlan(e.data.scans, { userWalls: e.data.guides || [], userPts: e.data.gpts || [], log: t => self.postMessage({ job, prog: 0.5, stage: t }) }); self.postMessage({ job, done: true, res: r }); } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); } return; }
   if (e.data.cmd === 'refine') return refineJob(e.data);
+  if (e.data.cmd === 'fine6') { const d = e.data, job = d.job; try { const r = FINE6.run(d.scans, d.pairs, d.fixed, { log: (p, t) => self.postMessage({ job, prog: p, stage: t }) }); self.postMessage({ job, done: true, res: r }); } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); } return; }
+  if (e.data.cmd === 'full') return fullJob(e.data);
   if (e.data.cmd === 'spheres') return sphereJob(e.data);
   const { job, name, buf, voxel } = e.data;
   try {
-    const list = E57.readE57(buf, { voxel: voxel || 0.02, maxRange: 30, onProgress: p => self.postMessage({ job, prog: p }) });
+    const list = E57.readE57(buf, { voxel: voxel || 0.02, maxRange: 30, attrs: true, onProgress: p => self.postMessage({ job, prog: p }) });
     const out = [];
     for (let k = 0; k < list.length; k++) {
       const sc = list[k], P = sc.pts;
       const fc = floorCeil(P);
-      const lo = fc.floor - 0.15, hi = fc.ceil + 0.15, keep = new Float32Array(P.length); let n = 0;
+      const lo = fc.floor - 0.15, hi = fc.ceil + 0.15, keep = new Float32Array(P.length), CO = sc.col, kc = CO ? new Uint8Array(P.length) : null; let n = 0;
       const H = Math.max(1, Math.ceil((fc.ceil - fc.floor + 0.3) / 0.05)), hist = new Float64Array(H);
-      for (let i = 0; i < P.length; i += 3) { const z = P[i + 2]; if (z < lo || z > hi) continue; keep[n++] = P[i]; keep[n++] = P[i + 1]; keep[n++] = z;
+      for (let i = 0; i < P.length; i += 3) { const z = P[i + 2]; if (z < lo || z > hi) continue; if (kc) { kc[n] = CO[i]; kc[n + 1] = CO[i + 1]; kc[n + 2] = CO[i + 2]; } keep[n++] = P[i]; keep[n++] = P[i + 1]; keep[n++] = z;
         if (P[i] * P[i] + P[i + 1] * P[i + 1] < 64) { const b = Math.floor((z - fc.floor + 0.15) / 0.05); if (b >= 0 && b < H) hist[b]++; } }
       const pts = keep.slice(0, n);
-      out.push({ name: list.length > 1 ? (sc.name || name + '_' + (k + 1)) : name, floor: fc.floor, ceil: fc.ceil, pts, hist: Array.from(hist), total: sc.total });
+      out.push({ name: list.length > 1 ? (sc.name || name + '_' + (k + 1)) : name, idx: sc.idx, floor: fc.floor, ceil: fc.ceil, pts, col: kc ? kc.slice(0, n) : null, rgb: sc.rgb, hist: Array.from(hist), total: sc.total });
     }
-    self.postMessage({ job, done: true, scans: out }, out.map(o => o.pts.buffer));
+    self.postMessage({ job, done: true, scans: out }, out.flatMap(o => o.col ? [o.pts.buffer, o.col.buffer] : [o.pts.buffer]));
   } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); }
 };
 
@@ -1053,6 +1082,136 @@ function refineJob({ job, scans, poses, pairs, fixed, spheres }) {
     // невязки шаров после уравнивания
     const sres = SPH.map(g => { const W = g.obs.map(o => { const pp = out[o.k], c = Math.cos(pp.a), sn = Math.sin(pp.a); return [c * o.x - sn * o.y + pp.tx, sn * o.x + c * o.y + pp.ty, o.z + pp.tz]; }); const M = [0, 1, 2].map(a => W.reduce((sm, w) => sm + w[a], 0) / W.length); return { lab: g.lab, max: Math.max(...W.map(w => Math.hypot(w[0] - M[0], w[1] - M[1], w[2] - M[2]))) }; });
     self.postMessage({ job, done: true, res: { poses: out, edges: E.map(e => ({ i: e.i, j: e.j, rms: e.rms, ratio: e.ratio, weak: e.weak, slipAng: e.slipAng })), bad, sres } });
+  } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); }
+}
+// FINE6 — точная сшивка во всех 6 степенях (сдвиги X, Y, Z и наклоны/поворот), все сканы сразу (многосканный ICP «точка — плоскость»).
+// Сканы уже стоят примерно (автосшивка/уточнение) — подгонка уточняет их до миллиметров и выравнивает наклоны сканов друг к другу.
+// scans: [{pts: Float32Array local xyz, R: [9] (мир←скан), t: [3]}], pairs: [[i,j]...], fixed: индекс опорного
+const FINE6 = (() => {
+  const V = 0.03, RN = 0.1, KMAX = 24;
+  function prep(P, maxR) {
+    const vm = new Map(), m2 = maxR * maxR;
+    for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1], z = P[i + 2], r2 = x * x + y * y + z * z; if (r2 > m2 || r2 < 0.36) continue;
+      const k = (Math.floor(x / V) + 1024) * 4194304 + (Math.floor(y / V) + 1024) * 2048 + (Math.floor(z / V) + 1024);
+      let e = vm.get(k); if (!e) { e = [0, 0, 0, 0]; vm.set(k, e); } e[0] += x; e[1] += y; e[2] += z; e[3]++; }
+    const n = vm.size, C = new Float64Array(3 * n); let q = 0; for (const e of vm.values()) { C[q++] = e[0] / e[3]; C[q++] = e[1] / e[3]; C[q++] = e[2] / e[3]; }
+    const G = grid(C, RN), N = new Float32Array(3 * n), flat = new Uint8Array(n), cv = new Float64Array(6);
+    for (let i = 0; i < n; i++) { const x = C[3 * i], y = C[3 * i + 1], z = C[3 * i + 2]; let cnt = 0, mx = 0, my = 0, mz = 0; const J = [];
+      around(G, x, y, z, RN, j => { if (J.length < 40) J.push(j); });
+      if (J.length < 6) continue; for (const j of J) { mx += C[3 * j]; my += C[3 * j + 1]; mz += C[3 * j + 2]; cnt++; } mx /= cnt; my /= cnt; mz /= cnt; cv.fill(0);
+      for (const j of J) { const dx = C[3 * j] - mx, dy = C[3 * j + 1] - my, dz = C[3 * j + 2] - mz; cv[0] += dx * dx; cv[1] += dx * dy; cv[2] += dx * dz; cv[3] += dy * dy; cv[4] += dy * dz; cv[5] += dz * dz; }
+      const r = eig3(cv); let [a, b, c] = r.n; if (a * x + b * y + c * z > 0) { a = -a; b = -b; c = -c; }
+      N[3 * i] = a; N[3 * i + 1] = b; N[3 * i + 2] = c; if (r.curv < 0.01 && r.mid > 0.15) flat[i] = 1; }
+    return { C, N, flat, G: grid(C, 0.12), n };
+  }
+  function grid(C, h) { const n = C.length / 3, keys = new Float64Array(n), idx = new Uint32Array(n);
+    for (let i = 0; i < n; i++) { keys[i] = (Math.floor(C[3 * i] / h) + 4096) * 67108864 + (Math.floor(C[3 * i + 1] / h) + 4096) * 8192 + (Math.floor(C[3 * i + 2] / h) + 4096); idx[i] = i; }
+    idx.sort((a, b) => keys[a] - keys[b]); const map = new Map(); let s = 0;
+    for (let j = 1; j <= n; j++) if (j === n || keys[idx[j]] !== keys[idx[s]]) { map.set(keys[idx[s]], [s, j]); s = j; }
+    return { h, idx, map, C }; }
+  function around(G, x, y, z, r, f) { const h = G.h, ix = Math.floor(x / h), iy = Math.floor(y / h), iz = Math.floor(z / h), C = G.C, r2 = r * r;
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) for (let c = -1; c <= 1; c++) { const e = G.map.get((ix + a + 4096) * 67108864 + (iy + b + 4096) * 8192 + (iz + c + 4096)); if (!e) continue;
+      for (let k = e[0]; k < e[1]; k++) { const j = G.idx[k], dx = C[3 * j] - x, dy = C[3 * j + 1] - y, dz = C[3 * j + 2] - z, d2 = dx * dx + dy * dy + dz * dz; if (d2 <= r2) f(j, d2); } } }
+  function nearest(G, x, y, z, r) { let bj = -1, bd = r * r; around(G, x, y, z, r, (j, d2) => { if (d2 < bd) { bd = d2; bj = j; } }); return bj; }
+  function eig3(m) { const a = [[m[0], m[1], m[2]], [m[1], m[3], m[4]], [m[2], m[4], m[5]]], v = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    for (let sw = 0; sw < 10; sw++) for (const [p, q] of [[0, 1], [0, 2], [1, 2]]) { if (Math.abs(a[p][q]) < 1e-15) continue;
+      const th = (a[q][q] - a[p][p]) / (2 * a[p][q]), t = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1)), c = 1 / Math.sqrt(t * t + 1), s = t * c;
+      for (let k = 0; k < 3; k++) { const akp = a[k][p], akq = a[k][q]; a[k][p] = c * akp - s * akq; a[k][q] = s * akp + c * akq; }
+      for (let k = 0; k < 3; k++) { const apk = a[p][k], aqk = a[q][k]; a[p][k] = c * apk - s * aqk; a[q][k] = s * apk + c * aqk; }
+      for (let k = 0; k < 3; k++) { const vkp = v[k][p], vkq = v[k][q]; v[k][p] = c * vkp - s * vkq; v[k][q] = s * vkp + c * vkq; } }
+    const ev = [a[0][0], a[1][1], a[2][2]], o = [0, 1, 2].sort((i, j) => ev[i] - ev[j]), sum = Math.max(1e-12, ev[0] + ev[1] + ev[2]);
+    return { n: [v[0][o[0]], v[1][o[0]], v[2][o[0]]], curv: ev[o[0]] / sum, mid: ev[o[1]] / sum }; }
+  const mul = (A, B) => [0, 1, 2].flatMap(i => [0, 1, 2].map(j => A[i * 3] * B[j] + A[i * 3 + 1] * B[3 + j] + A[i * 3 + 2] * B[6 + j]));
+  function rotv(w) { const th = Math.hypot(w[0], w[1], w[2]); if (th < 1e-15) return [1, 0, 0, 0, 1, 0, 0, 0, 1]; const k = w.map(x => x / th), c = Math.cos(th), s = Math.sin(th), C1 = 1 - c;
+    return [c + k[0] * k[0] * C1, k[0] * k[1] * C1 - k[2] * s, k[0] * k[2] * C1 + k[1] * s, k[1] * k[0] * C1 + k[2] * s, c + k[1] * k[1] * C1, k[1] * k[2] * C1 - k[0] * s, k[2] * k[0] * C1 - k[1] * s, k[2] * k[1] * C1 + k[0] * s, c + k[2] * k[2] * C1]; }
+  function orthon(R) { // переортогонализация
+    const a = [R[0], R[3], R[6]], b = [R[1], R[4], R[7]]; const na = Math.hypot(...a); a.forEach((v, i) => a[i] = v / na);
+    const d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; b.forEach((v, i) => b[i] = v - d * a[i]); const nb = Math.hypot(...b); b.forEach((v, i) => b[i] = v / nb);
+    const c = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; return [a[0], b[0], c[0], a[1], b[1], c[1], a[2], b[2], c[2]]; }
+  function solve(A, b, n) { const M = A.slice(), x = b.slice();
+    for (let i = 0; i < n; i++) { let p = i; for (let k = i + 1; k < n; k++) if (Math.abs(M[k * n + i]) > Math.abs(M[p * n + i])) p = k;
+      if (p !== i) { for (let j = 0; j < n; j++) { const t = M[i * n + j]; M[i * n + j] = M[p * n + j]; M[p * n + j] = t; } const t = x[i]; x[i] = x[p]; x[p] = t; }
+      const d = M[i * n + i]; if (Math.abs(d) < 1e-18) return null;
+      for (let k = i + 1; k < n; k++) { const f = M[k * n + i] / d; if (!f) continue; for (let j = i; j < n; j++) M[k * n + j] -= f * M[i * n + j]; x[k] -= f * x[i]; } }
+    for (let i = n - 1; i >= 0; i--) { let s = x[i]; for (let j = i + 1; j < n; j++) s -= M[i * n + j] * x[j]; x[i] = s / M[i * n + i]; } return x; }
+
+  // главная функция
+  function run(scans, pairs, fixed, opt = {}) {
+    const log = opt.log || (() => {}), maxR = opt.maxR || 15, tiltSig = (opt.tiltSigDeg != null ? opt.tiltSigDeg : 0.3) * Math.PI / 180;
+    const D = scans.map((s, k) => { log(k / scans.length * 0.25, 'Готовлю ' + (s.name || k)); return prep(s.pts, maxR); });
+    const n = scans.length, R = scans.map(s => s.R.slice()), T = scans.map(s => s.t.slice()), R0 = R.map(r => r.slice());
+    const free = [...Array(n).keys()].filter(i => i !== fixed), ix = new Map(free.map((x, k) => [x, k])), m = free.length * 6;
+    const sched = opt.sched || [0.12, 0.08, 0.05, 0.04, 0.03, 0.025, 0.02, 0.02, 0.015, 0.015, 0.012, 0.012, 0.01, 0.01];
+    let stats = [];
+    const W = (i, k) => { const r = R[i], t = T[i], C = D[i].C; const x = C[3 * k], y = C[3 * k + 1], z = C[3 * k + 2]; return [r[0] * x + r[1] * y + r[2] * z + t[0], r[3] * x + r[4] * y + r[5] * z + t[1], r[6] * x + r[7] * y + r[8] * z + t[2]]; };
+    let lim = 0;
+    for (let it = 0; it < sched.length; it++) {
+      const md = sched[it]; log(0.25 + 0.75 * it / sched.length, 'Точная подгонка ' + (it + 1) + ' из ' + sched.length);
+      const A = new Float64Array(m * m), g = new Float64Array(m); stats = [];
+      const Jp = new Float64Array(12);
+      for (const [a0, b0] of pairs) for (const [i, j] of [[a0, b0], [b0, a0]]) {
+        const Ci = D[i], Dj = D[j], Rj = R[j], tj = T[j], Ri = R[i], ti = T[i]; let se = 0, cnt = 0; const res = [];
+        const step = Math.max(1, Math.floor(Ci.n / (md > 0.04 ? 15000 : 40000)));
+        const oi = ix.has(i) ? ix.get(i) * 6 : -1, oj = ix.has(j) ? ix.get(j) * 6 : -1;
+        for (let k = 0; k < Ci.n; k += step) { if (!Ci.flat[k]) continue;
+          const w = W(i, k), lx = w[0] - tj[0], ly = w[1] - tj[1], lz = w[2] - tj[2];
+          const qx = Rj[0] * lx + Rj[3] * ly + Rj[6] * lz, qy = Rj[1] * lx + Rj[4] * ly + Rj[7] * lz, qz = Rj[2] * lx + Rj[5] * ly + Rj[8] * lz;
+          if (qx * qx + qy * qy + qz * qz > maxR * maxR) continue;
+          const q = nearest(Dj.G, qx, qy, qz, md); if (q < 0 || !Dj.flat[q]) continue;
+          const nl = [Dj.N[3 * q], Dj.N[3 * q + 1], Dj.N[3 * q + 2]], nw = [Rj[0] * nl[0] + Rj[1] * nl[1] + Rj[2] * nl[2], Rj[3] * nl[0] + Rj[4] * nl[1] + Rj[5] * nl[2], Rj[6] * nl[0] + Rj[7] * nl[1] + Rj[8] * nl[2]];
+          const ni = [Ci.N[3 * k], Ci.N[3 * k + 1], Ci.N[3 * k + 2]], niw = [Ri[0] * ni[0] + Ri[1] * ni[1] + Ri[2] * ni[2], Ri[3] * ni[0] + Ri[4] * ni[1] + Ri[5] * ni[2], Ri[6] * ni[0] + Ri[7] * ni[1] + Ri[8] * ni[2]];
+          if (nw[0] * niw[0] + nw[1] * niw[1] + nw[2] * niw[2] < 0.8) continue; // та же грань
+          const C = Dj.C, qw = [Rj[0] * C[3 * q] + Rj[1] * C[3 * q + 1] + Rj[2] * C[3 * q + 2] + tj[0], Rj[3] * C[3 * q] + Rj[4] * C[3 * q + 1] + Rj[5] * C[3 * q + 2] + tj[1], Rj[6] * C[3 * q] + Rj[7] * C[3 * q + 1] + Rj[8] * C[3 * q + 2] + tj[2]];
+          const r = (w[0] - qw[0]) * nw[0] + (w[1] - qw[1]) * nw[1] + (w[2] - qw[2]) * nw[2];
+          if (lim && Math.abs(r) > lim) continue;
+          res.push(Math.abs(r)); se += r * r; cnt++;
+          // r = n·(w_i − q): Ji = [(w−t_i)×n, n], Jj = −[(q−t_j)×n, n]
+          const pi = [w[0] - ti[0], w[1] - ti[1], w[2] - ti[2]], pj = [qw[0] - tj[0], qw[1] - tj[1], qw[2] - tj[2]];
+          Jp[0] = pi[1] * nw[2] - pi[2] * nw[1]; Jp[1] = pi[2] * nw[0] - pi[0] * nw[2]; Jp[2] = pi[0] * nw[1] - pi[1] * nw[0]; Jp[3] = nw[0]; Jp[4] = nw[1]; Jp[5] = nw[2];
+          Jp[6] = -(pj[1] * nw[2] - pj[2] * nw[1]); Jp[7] = -(pj[2] * nw[0] - pj[0] * nw[2]); Jp[8] = -(pj[0] * nw[1] - pj[1] * nw[0]); Jp[9] = -nw[0]; Jp[10] = -nw[1]; Jp[11] = -nw[2];
+          const wt = step; // каждая точка представляет step соседних
+          for (let u = 0; u < 12; u++) { const ou = u < 6 ? (oi < 0 ? -1 : oi + u) : (oj < 0 ? -1 : oj + u - 6); if (ou < 0) continue; g[ou] -= wt * Jp[u] * r;
+            for (let v = 0; v < 12; v++) { const ov = v < 6 ? (oi < 0 ? -1 : oi + v) : (oj < 0 ? -1 : oj + v - 6); if (ov < 0) continue; A[ou * m + ov] += wt * Jp[u] * Jp[v]; } }
+        }
+        res.sort((p, q) => p - q);
+        stats.push({ i, j, cnt, rms: cnt ? Math.sqrt(se / cnt) : 0, med: res.length ? res[res.length >> 1] : 0, p90: res.length ? res[Math.floor(res.length * 0.9)] : 0 });
+      }
+      // априорно: наклон скана близок к начальному (компенсатор сканера), остальное — слабое демпфирование
+      const sr = 0.004, wP = 1 / (tiltSig * tiltSig) * sr * sr;
+      for (const x of free) { const o = ix.get(x) * 6;
+        // текущее отклонение наклона от начального: dR = R·R0ᵀ, его малые углы по X,Y
+        const dR = mul(R[x], [R0[x][0], R0[x][3], R0[x][6], R0[x][1], R0[x][4], R0[x][7], R0[x][2], R0[x][5], R0[x][8]]), ex = (dR[7] - dR[5]) / 2, ey = (dR[2] - dR[6]) / 2;
+        A[o * m + o] += wP; g[o] -= wP * ex; A[(o + 1) * m + o + 1] += wP; g[o + 1] -= wP * ey;
+        for (let u = 0; u < 6; u++) A[(o + u) * m + o + u] += 1e-3 + A[(o + u) * m + o + u] * 1e-6; }
+      const dx = solve(A, g, m); if (!dx) break;
+      let mxT = 0, mxA = 0;
+      for (const x of free) { const o = ix.get(x) * 6, w = [dx[o], dx[o + 1], dx[o + 2]], dt = [dx[o + 3], dx[o + 4], dx[o + 5]];
+        R[x] = orthon(mul(rotv(w), R[x])); T[x] = [T[x][0] + dt[0], T[x][1] + dt[1], T[x][2] + dt[2]]; mxT = Math.max(mxT, Math.hypot(...dt)); mxA = Math.max(mxA, Math.hypot(...w)); }
+      const all = stats.filter(s => s.cnt > 50), rmsAll = all.length ? Math.sqrt(all.reduce((s, q) => s + q.rms * q.rms * q.cnt, 0) / all.reduce((s, q) => s + q.cnt, 0)) : 0;
+      lim = md <= 0.04 ? Math.max(0.006, 2.5 * rmsAll) : 0;
+      if (opt.verbose) console.log(it, md, 'rms', rmsAll.toFixed(4), 'dT', mxT.toExponential(2), 'dA', (mxA * 180 / Math.PI).toExponential(2));
+    }
+    // итог по стыкам (пары, обе стороны)
+    const edges = pairs.map(([a, b]) => { const s1 = stats.find(s => s.i === a && s.j === b), s2 = stats.find(s => s.i === b && s.j === a), c = s1.cnt + s2.cnt;
+      return { i: a, j: b, cnt: c, rms: c ? Math.sqrt((s1.rms ** 2 * s1.cnt + s2.rms ** 2 * s2.cnt) / c) : 0, med: Math.max(s1.med, s2.med), p90: Math.max(s1.p90, s2.p90) }; });
+    return { R, T, edges };
+  }
+  return { run, prep };
+})();
+
+// полная плотность одного скана из исходного файла (для выгрузки E57): все точки, цвет, яркость; стёртое кистью — по сетке скана
+function fullJob({ job, buf, idx, name, cg }) {
+  try {
+    const all = E57.readE57(buf, { voxel: 0, full: true, attrs: true, minRange: 0.1, maxRange: 1e9, only: idx, onProgress: p => self.postMessage({ job, prog: p }) });
+    let sc = all[0]; if (!sc) throw new Error('в файле нет скана №' + (idx + 1));
+    let P = sc.pts, C = sc.col, I = sc.inten, n = sc.count;
+    if (cg && cg.er) { const er = cg.er; let m = 0;
+      for (let i = 0; i < n; i++) { const x = P[3 * i], y = P[3 * i + 1], u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res);
+        if (u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]) continue;
+        if (m !== i) { P[3 * m] = x; P[3 * m + 1] = y; P[3 * m + 2] = P[3 * i + 2]; if (C) { C[3 * m] = C[3 * i]; C[3 * m + 1] = C[3 * i + 1]; C[3 * m + 2] = C[3 * i + 2]; } if (I) I[m] = I[i]; } m++; }
+      n = m; }
+    const out = { n, pts: P.slice(0, 3 * n), col: C && sc.rgb ? C.slice(0, 3 * n) : null, inten: I ? I.slice(0, n) : null, total: sc.total };
+    sc = null; self.postMessage({ job, done: true, res: out }, [out.pts.buffer].concat(out.col ? [out.col.buffer] : [], out.inten ? [out.inten.buffer] : []));
   } catch (err) { self.postMessage({ job, error: String(err && err.message || err) }); }
 }
 function gaussW(A, b, n) { const M = A.slice(), x = b.slice();
@@ -1120,7 +1279,7 @@ const nf = (v, d = 3) => (Math.round(v * 10 ** d) / 10 ** d).toFixed(d).replace(
 const PAL = ['#2563eb', '#e11d48', '#059669', '#d97706', '#7c3aed', '#0891b2', '#be185d', '#65a30d', '#c2410c', '#4f46e5', '#0d9488', '#a21caf', '#b45309', '#1d4ed8', '#dc2626', '#15803d'];
 const LPAL = ['#e11d48', '#2563eb', '#16a34a', '#ea580c', '#9333ea', '#0891b2', '#db2777', '#ca8a04', '#4f46e5', '#0f766e'];
 const LETTERS = 'АБВГДЕЖИКЛМНПРСТУФХЦЧШЭЮЯ';
-const S = { scans: [], marks: [], view: 'grid', tool: 'hand', sel: null, asmV: { cx: 0, cy: 0, s: 40 }, cols: 3, undo: [], redo: [], nextMark: 1, nextScan: 1, labN: 0 };
+const S = { mode: 'full', srcFiles: new Map(), fineRep: null, scans: [], marks: [], view: 'grid', tool: 'hand', sel: null, asmV: { cx: 0, cy: 0, s: 40 }, cols: 3, undo: [], redo: [], nextMark: 1, nextScan: 1, labN: 0 };
 const dpr = () => window.devicePixelRatio || 1;
 function stat(t) { $('#status').textContent = t; }
 function busy(t) { const b = $('#busy'); if (!t) { b.hidden = true; return; } b.hidden = false; b.querySelector('span').textContent = t; }
@@ -1317,8 +1476,8 @@ function report() { // невязки по буквам
 }
 
 // ---------- отмена ----------
-const snapState = () => JSON.stringify({ hints: S.hints || [], scans: S.scans.map(s => ({ id: s.id, pose: s.pose, band: s.band, anchor: s.anchor, vis: s.vis, placed: s.placed, auto: s.auto, erase: s.erase || [], keepL: s.keepL || [], keepP: s.keepP || [] })), marks: S.marks, plan: S.plan, keepOnly: !!S.keepOnly });
-function applyState(t) { const j = JSON.parse(t); const ko = !!S.keepOnly !== !!j.keepOnly; S.keepOnly = !!j.keepOnly; for (const q of j.scans) { const s = scanById(q.id); if (!s) continue; const cl = JSON.stringify([s.erase || [], s.keepL || [], s.keepP || []]) !== JSON.stringify([q.erase || [], q.keepL || [], q.keepP || []]); const bandChanged = s.band[0] !== q.band[0] || s.band[1] !== q.band[1]; Object.assign(s, { pose: q.pose, band: q.band, anchor: q.anchor, vis: q.vis, placed: q.placed, auto: q.auto, erase: q.erase || [], keepL: q.keepL || [], keepP: q.keepP || [] }); if (bandChanged || cl || ko) prepScan(s); } S.marks = j.marks; S.hints = j.hints || []; if (j.plan) S.plan = j.plan; }
+const snapState = () => JSON.stringify({ hints: S.hints || [], fineRep: S.fineRep || null, scans: S.scans.map(s => ({ id: s.id, pose: s.pose, lev: s.lev || null, fine: s.fine || null, floor: s.floor, ceil: s.ceil, band: s.band, anchor: s.anchor, vis: s.vis, placed: s.placed, auto: s.auto, erase: s.erase || [], keepL: s.keepL || [], keepP: s.keepP || [] })), marks: S.marks, plan: S.plan, keepOnly: !!S.keepOnly });
+function applyState(t) { const j = JSON.parse(t); const ko = !!S.keepOnly !== !!j.keepOnly; S.keepOnly = !!j.keepOnly; for (const q of j.scans) { const s = scanById(q.id); if (!s) continue; const cl = JSON.stringify([s.erase || [], s.keepL || [], s.keepP || []]) !== JSON.stringify([q.erase || [], q.keepL || [], q.keepP || []]); const bandChanged = s.band[0] !== q.band[0] || s.band[1] !== q.band[1] || (q.floor != null && q.floor !== s.floor); Object.assign(s, { lev: q.lev || null, fine: q.fine || null, floor: q.floor != null ? q.floor : s.floor, ceil: q.ceil != null ? q.ceil : s.ceil, pose: q.pose, band: q.band, anchor: q.anchor, vis: q.vis, placed: q.placed, auto: q.auto, erase: q.erase || [], keepL: q.keepL || [], keepP: q.keepP || [] }); if (bandChanged || cl || ko) prepScan(s); } S.marks = j.marks; S.hints = j.hints || []; S.fineRep = j.fineRep || null; if (S.view === 'v3d') V3.dirty(true); if (j.plan) S.plan = j.plan; }
 function pushUndo() { S.undo.push(snapState()); if (S.undo.length > 200) S.undo.shift(); S.redo = []; for (const id of ['bUndo', 'fUndo']) { const b = document.getElementById(id); if (b) b.disabled = false; } for (const id of ['bRedo', 'fRedo']) { const b = document.getElementById(id); if (b) b.disabled = true; } }
 function undo() { if (!S.undo.length) { stat('Отменять нечего.'); return; } S.redo.push(snapState()); applyState(S.undo.pop()); S.lastSolve = null; if (S.markSel && !S.marks.some(m => m.id === S.markSel)) S.markSel = null; renderAll(); renderMarkCard(); saveSoon(); stat('Шаг отменён. ↷ — вернуть.'); }
 function redo() { if (!S.redo.length) return; S.undo.push(snapState()); applyState(S.redo.pop()); renderAll(); renderMarkCard(); saveSoon(); stat('Возвращено.'); }
@@ -1354,7 +1513,7 @@ async function pjRename(id) { const p = PJ.list.find(x => x.id === id); if (!p) 
 async function pjDelete(id) { const p = PJ.list.find(x => x.id === id); if (!p) return false;
   if (!(await uiDialog({ title: `Удалить проект «${p.name}»?`, text: 'Сканы и метки этого проекта будут стёрты из памяти устройства. Если нужно — сначала откройте его и «💾 Файл».', ok: 'Удалить', cancel: 'Отмена' }))) return false;
   busy('Удаляю…'); let keys = []; if (id === PJ.id) keys = S.scans.map(s => s.key); else { try { keys = (JSON.parse(await get('state:' + id) || '{}').scans || []).map(q => q.key); } catch (e) { } }
-  for (const k of keys) await del('pts:' + k); await del('state:' + id); PJ.list = PJ.list.filter(x => x !== p); busy('');
+  for (const k of keys) { await del('pts:' + k); await del('col:' + k); } await del('state:' + id); PJ.list = PJ.list.filter(x => x !== p); busy('');
   if (id === PJ.id) { if (!PJ.list.length) PJ.list.push({ id: 'j' + Date.now(), name: pjDef(), created: Date.now(), updated: Date.now(), n: 0 }); await put('projects', PJ.list); PJ.id = null; await put('cur', PJ.list[0].id); location.reload(); return true; }
   await put('projects', PJ.list); return true; }
 function pjMenu() {
@@ -1370,12 +1529,12 @@ function pjMenu() {
   ov.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => { close(); if (await pjDelete(b.dataset.del) !== null) pjMenu(); });
   document.body.appendChild(ov);
 }
-function stateObj() { return { v: 1, nextMark: S.nextMark, nextScan: S.nextScan, asmV: S.asmV, cols: S.cols, plan: S.plan, scans: S.scans.map(s => ({ id: s.id, key: s.key, name: s.name, floor: s.floor, ceil: s.ceil, hist: s.hist, color: s.color, pose: s.pose, band: s.band, anchor: s.anchor, vis: s.vis, tile: s.tile, placed: s.placed, auto: s.auto, erase: s.erase || [], keepL: s.keepL || [], keepP: s.keepP || [] })), marks: S.marks, hints: S.hints || [], keepOnly: !!S.keepOnly }; }
+function stateObj() { return { v: 1, nextMark: S.nextMark, nextScan: S.nextScan, asmV: S.asmV, cols: S.cols, plan: S.plan, mode: S.mode, scans: S.scans.map(s => ({ id: s.id, key: s.key, name: s.name, file: s.file, src: s.src, rgb: s.rgb, total: s.total, lev: s.lev || null, fine: s.fine || null, floor: s.floor, ceil: s.ceil, hist: s.hist, color: s.color, pose: s.pose, band: s.band, anchor: s.anchor, vis: s.vis, tile: s.tile, placed: s.placed, auto: s.auto, erase: s.erase || [], keepL: s.keepL || [], keepP: s.keepP || [] })), marks: S.marks, hints: S.hints || [], fineRep: S.fineRep || null, keepOnly: !!S.keepOnly }; }
 function saveSoon() { clearTimeout(saveT); saveT = setTimeout(async () => { if (!PJ.id) return; const ok = await put('state:' + PJ.id, JSON.stringify(stateObj())); { const p = pjCur(); if (p && (p.n !== S.scans.length || Date.now() - (p.updated || 0) > 60000)) { p.n = S.scans.length; p.updated = Date.now(); put('projects', PJ.list); } } $('#saved').textContent = ok ? '✓ сохранено ' + new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '⚠ не сохранилось'; }, 500); }
 async function restore() {
   const t = PJ.id ? await get('state:' + PJ.id) : null; if (!t) return false; let j; try { j = JSON.parse(t); } catch (e) { return false; }
-  busy('Открываю сохранённую работу…'); let miss = 0; S.keepOnly = !!j.keepOnly;
-  for (const q of j.scans || []) { const buf = await get('pts:' + q.key); if (!buf) { miss++; continue; } const s = Object.assign({}, q, { pts: new Float32Array(buf) }); prepScan(s); S.scans.push(s); }
+  busy('Открываю сохранённую работу…'); let miss = 0; S.keepOnly = !!j.keepOnly; S.mode = j.mode || 'full'; S.fineRep = j.fineRep || null;
+  for (const q of j.scans || []) { const buf = await get('pts:' + q.key); if (!buf) { miss++; continue; } const cb = await get('col:' + q.key); const s = Object.assign({}, q, { pts: new Float32Array(buf), col: cb ? new Uint8Array(cb) : null }); prepScan(s); S.scans.push(s); }
   S.marks = (j.marks || []).filter(m => scanById(m.sid)); S.nextMark = j.nextMark || 1; S.nextScan = j.nextScan || S.scans.length + 1; if (j.asmV) S.asmV = j.asmV; if (j.cols) S.cols = j.cols; if (j.plan) S.plan = j.plan; S.hints = j.hints || [];
   busy(''); renderAll(); stat(`Работа восстановлена: сканов ${S.scans.length}, меток ${S.marks.length}${miss ? ` (не прочитались из памяти: ${miss})` : ''}.`); return true;
 }
@@ -1389,14 +1548,14 @@ async function loadFiles(files) {
   pushUndo(); let n = 0, err = [];
   for (const f of files) {
     if (S.scans.some(s => s.file === f.name)) { err.push(f.name + ' — уже загружен'); continue; }
-    try { const list = await readOne(f, 0.02);
+    try { S.srcFiles.set(f.name, f); const list = await readOne(f, 0.02);
       for (const q of list) {
         const id = S.nextScan++, key = 'k' + Date.now() + '_' + id, col = PAL[(id - 1) % PAL.length];
-        const s = { id, key, name: q.name, file: f.name, floor: q.floor, ceil: q.ceil, hist: q.hist, pts: q.pts, color: col, band: [0.1, Math.max(0.6, +(q.ceil - q.floor - 0.08).toFixed(2))], anchor: S.scans.length === 0, vis: true, pose: { x: 0, y: 0, a: 0 } };
+        const s = { id, key, name: q.name, file: f.name, src: { file: f.name, idx: q.idx || 0, size: f.size }, total: q.total, col: q.col || null, rgb: !!q.rgb, floor: q.floor, ceil: q.ceil, hist: q.hist, pts: q.pts, color: col, band: [0.1, Math.max(0.6, +(q.ceil - q.floor - 0.08).toFixed(2))], anchor: S.scans.length === 0, vis: true, pose: { x: 0, y: 0, a: 0 } };
         // раскладываем рядом, чтобы новые сканы не лежали стопкой
         const k = S.scans.length, c = 4; s.pose = { x: (k % c) * 14, y: -Math.floor(k / c) * 14, a: 0 };
         prepScan(s); S.scans.push(s); n++;
-        await put('pts:' + key, s.pts.buffer.slice(0));
+        await put('pts:' + key, s.pts.buffer.slice(0)); if (s.col) await put('col:' + key, s.col.buffer.slice(0));
       }
     } catch (e) { err.push(f.name + ': ' + e.message); }
   }
@@ -1480,21 +1639,31 @@ function knob(sc) { const G = grpScans(), c = G.length > 1 && inGrp(sc.id) ? grp
 function renderAll() { renderList(); renderMain(); renderBar(); }
 function renderBar() { $$('[data-pbg]').forEach(b => b.classList.toggle('on', b.dataset.pbg === (S.planBg === false ? 'off' : S.planBg === 'scans' ? 'scans' : 'slice'))); $('#rotbar').hidden = S.view !== 'asm'; { const bm = $('#bMulti'); if (bm) bm.classList.toggle('on', !!S.multi); }
   $$('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === S.view)); $$('[data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === S.tool));
-  $$('#top .ctx').forEach(g => { g.hidden = !g.dataset.for.split(' ').includes(S.view); });
+  $$('#top .ctx').forEach(g => { g.hidden = !g.dataset.for.split(' ').includes(S.view) || (S.mode === 'stitch' && !!g.dataset.plan); });
+  { const pv = $('[data-view="plan"]'); if (pv) pv.hidden = S.mode === 'stitch'; $$('#modeSeg [data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === S.mode)); }
+  $$('[data-v3col]').forEach(b => b.classList.toggle('on', b.dataset.v3col === V3.opt.color)); { const bo = $('#bOrtho'); if (bo) bo.classList.toggle('on', !!V3.cam.ortho); const bn = $('#bNoCeil'); if (bn) bn.classList.toggle('on', V3.opt.top != null); }
   try { layoutTop(); } catch (e) { } $('#fUndo').disabled = !S.undo.length; $('#fRedo').disabled = !S.redo.length; $$('[data-cols]').forEach(b => b.classList.toggle('on', +b.dataset.cols === S.cols)); const tw = $('#bTW'); if (tw) tw.classList.toggle('on', !!S.tileWorld); 
 }
+function setMode(m) { S.mode = m; if (m === 'stitch' && S.view === 'plan') { setView('v3d'); } else renderAll(); saveSoon();
+  stat(m === 'stitch' ? 'Режим «Сшивка»: Сканы → Сборка (автосшивка) → 3D (Точно 3D, проверка) → E57 для камеральной обработки.' : 'Режим «Сшивка + план»: добавлена вкладка «4 План».'); }
 function renderMain() {
-  const main = $('#main');
-  if (!S.scans.length) { main.innerHTML = `<div class="empty"><h2>Скан: от сканов FARO до плана</h2>
+  const main = $('#main'); if (S.view !== 'v3d' && V3.mounted) V3.unmount();
+  if (!S.scans.length) { if (V3.mounted) V3.unmount(); main.innerHTML = `<div class="empty"><h2>Скан — сшивка сканов FARO</h2>
+<p class="h">Что нужно сделать?</p>
+<div class="modes"><button class="mcard ${S.mode === 'stitch' ? 'on' : ''}" data-start="stitch"><b>🧩 Только сшивка</b><span>Сшить сканы как можно точнее, проверить в 3D и выгрузить E57 для камеральной обработки (CloudCompare, ReCap, SCENE, Revit).</span><small>Сканы → Сборка → 3D → E57</small></button><button class="mcard ${S.mode !== 'stitch' ? 'on' : ''}" data-start="full"><b>📐 Сшивка и план</b><span>То же, плюс план по сканам: помещения, двери, окна; выгрузка DXF и для Рулетки.</span><small>Сканы → Сборка → 3D → План</small></button></div>
+<p class="h">Сканы FARO .fls пересохраняются в E57 файлом <a href="fls_to_e57.bat" download>fls_to_e57.bat</a> (нужен бесплатный CloudCompare). Файлы E57 можно просто перетащить сюда. Наведите мышь на любую кнопку — появится подсказка.</p>
+<div hidden>
 <ol class="steps3"><li><b>1 Сканы</b> — загрузите E57 (кнопка «Сканы» на ленте или перетащите файлы сюда). Сканы FARO .fls пересохраняются в E57 файлом <a href="fls_to_e57.bat" download>fls_to_e57.bat</a> (нужен бесплатный CloudCompare).</li>
 <li><b>2 Сборка</b> — «Автосшивка»: программа сама найдёт общие места соседних сканов, сошьёт и точно подгонит. Где стену не видно — проведите «Линии плана».</li>
 <li><b>3 План</b> — «План по сканам»: стены, помещения с площадями, двери, окна и подоконники. Выгрузка — DXF и файл для Рулетки (домерить на месте).</li></ol>
-<p class="h">Наведите мышь на любую кнопку — появится подсказка. Совет при съёмке: шторы открыть, двери в помещения открыть — так программа видит окна и проёмы.</p><button class="pri big" onclick="$('#fileIn').click()">＋ Загрузить сканы E57</button></div>`; return; }
+<p class="h">Наведите мышь на любую кнопку — появится подсказка. Совет при съёмке: шторы открыть, двери в помещения открыть — так программа видит окна и проёмы.</p><button class="pri big" onclick="$('#fileIn').click()">＋ Загрузить сканы E57</button></div></div>`; $$('[data-start]').forEach(b => b.onclick = () => { S.mode = b.dataset.start; saveSoon(); renderAll(); $('#fileIn').click(); }); return; }
   if (S.view === 'grid') {
     const vis = S.scans.filter(s => s.vis);
     main.innerHTML = `<div id="grid" style="grid-template-columns:repeat(${S.cols},minmax(0,1fr))">${vis.map(s => `<div class="tile ${S.sel === s.id ? 'sel' : ''}" id="tile-${s.id}"><div class="th"><i style="background:${s.color}"></i><b>${escH(s.name)}</b><span>${S.marks.filter(m => m.sid === s.id).map(m => `<em style="background:${labColor(m.lab)}">${escH(m.lab)}</em>`).join('')}</span><button data-solo="${s.id}" title="Сравнить: только этот и выбранный">⇄</button></div><canvas></canvas></div>`).join('')}</div>`;
     sizeTiles(); for (const s of vis) { bindCanvas($(`#tile-${s.id} canvas`), { kind: 'tile', sid: s.id }); drawTile(s); }
     $$('[data-solo]').forEach(b => b.onclick = () => soloWith(+b.dataset.solo));
+  } else if (S.view === 'v3d') {
+    if (!$('#v3w') || !V3.mounted) { main.innerHTML = '<div id="v3w"><canvas id="v3"></canvas><canvas id="v3o"></canvas></div>'; V3.mount($('#v3w')); } else V3.dirty(true);
   } else if (S.view === 'plan') {
     main.innerHTML = '<canvas id="plan"></canvas>'; const cv = $('#plan'); sizeCanvas(cv); bindPlan(cv); drawPlan();
   } else {
@@ -1507,13 +1676,13 @@ function fitTile(s) { const cv = $(`#tile-${s.id} canvas`); const c0 = s.core, t
 const tileRot = sc => S.tileWorld ? sc.pose.a : 0; // рамки можно показать повёрнутыми как в сборке — одинаковые стены смотрят в одну сторону
 function fitAsm() { const cv = $('#asm') || $('#plan'); const vis = S.scans.filter(s => s.vis); if (!vis.length) return; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const s of vis) for (const p of scanBBoxW(s)) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } const w = cv ? cv.width / dpr() : innerWidth - 340, h = cv ? cv.height / dpr() : innerHeight - 120; S.asmV = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, s: Math.min(w / (x1 - x0), h / (y1 - y0)) * 0.92 }; redraw(); }
 function soloWith(id) { const keep = new Set([id]); if (S.sel && S.sel !== id) keep.add(S.sel); else { const other = S.scans.find(s => s.id !== id && s.vis && S.marks.some(m => m.sid === s.id && S.marks.some(o => o.sid === id && o.lab === m.lab))); if (other) keep.add(other.id); } for (const s of S.scans) s.vis = keep.has(s.id); S.cols = Math.min(2, keep.size); renderAll(); saveSoon(); stat('Рядом два скана. Вернуть все — «👁 Все» в списке.'); }
-function redraw() { if (S.view === 'grid') S.scans.forEach(s => s.vis && drawTile(s)); else if (S.view === 'plan') drawPlan(); else drawAsm(); }
+function redraw() { if (S.view === 'grid') S.scans.forEach(s => s.vis && drawTile(s)); else if (S.view === 'plan') drawPlan(); else if (S.view === 'v3d') V3.dirty(); else drawAsm(); }
 
 // ---------- список сканов слева: видимость, опора, полоса высот ----------
 function renderList() {
   const el = $('#list'); const R = S.lastSolve;
   const H = S.hints || [];
-  el.innerHTML = (S.scans.length && (S.tool === 'brush' || S.tool === 'keep') ? cleanPanel() : '') + (S.scans.length > 1 && S.view !== 'plan' ? `<div class="hints"><div class="lh"><b>${H.length ? '💡 Где помочь (' + H.length + ')' : (S.scans.some(s => s.auto) || S.lastSolve ? '✓ Стыки сходятся' : '🔍 Проверка')}</b></div>${H.slice(0, 12).map((h, i) => `<button class="hint s${h.sev}" data-hint="${i}">${escH(h.t)}</button>`).join('')}<div class="row" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px"><button id="hCheck">🔍 Проверить стыки</button><button id="hPlan">📐 Пробный план</button></div></div>` : '') +
+  el.innerHTML = (S.view === 'v3d' && S.scans.length ? V3.panelHTML() : '') + (S.scans.length && (S.tool === 'brush' || S.tool === 'keep') ? cleanPanel() : '') + (S.scans.length > 1 && S.view !== 'plan' && S.view !== 'v3d' ? `<div class="hints"><div class="lh"><b>${H.length ? '💡 Где помочь (' + H.length + ')' : (S.scans.some(s => s.auto) || S.lastSolve ? '✓ Стыки сходятся' : '🔍 Проверка')}</b></div>${H.slice(0, 12).map((h, i) => `<button class="hint s${h.sev}" data-hint="${i}">${escH(h.t)}</button>`).join('')}<div class="row" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px"><button id="hCheck">🔍 Проверить стыки</button>${S.mode === 'stitch' ? '<button id="hFine">🎯 Точно 3D</button>' : '<button id="hPlan">📐 Пробный план</button>'}</div></div>` : '') +
     `<div class="lh"><b>Сканы (${S.scans.length})</b><button id="allVis">👁 Все</button></div>` + S.scans.map(s => { const d = dofOf(s.id), H = s.ceil - s.floor;
     return `<div class="si ${S.sel === s.id ? 'sel' : ''} ${inGrp(s.id) && S.sel !== s.id ? 'grp' : ''}" data-sid="${s.id}"><div class="sr"><i style="background:${s.color}"></i><b>${escH(s.name)}</b>
       <button data-g="${s.id}" class="gchk ${inGrp(s.id) && grpScans().length > 1 ? 'on' : ''}" title="Добавить в группу: несколько сканов двигаются вместе">${inGrp(s.id) && grpScans().length > 1 ? '☑' : '☐'}</button><button data-vis="${s.id}" class="${s.vis ? 'on' : ''}" title="Показывать">${s.vis ? '👁' : '◌'}</button><button data-anc="${s.id}" class="${s.anchor || s.placed ? 'on' : ''}" title="${s.placed ? 'Сшит автоматикой и стоит на месте. Нажать — освободить: встанет по меткам' : 'Опорный: стоит на месте при сшивке'}">${s.placed && !s.anchor ? '🔒' : '⚓'}</button></div>
@@ -1531,7 +1700,7 @@ function renderList() {
   $$('[data-anc]').forEach(b => b.onclick = () => { pushUndo(); const s = scanById(+b.dataset.anc); if (s.placed && !s.anchor) { s.placed = false; renderAll(); saveSoon(); stat(`«${s.name}» освобождён — при «🧩 Сшить» встанет по меткам.`); return; } s.anchor = !s.anchor; renderAll(); saveSoon(); stat(s.anchor ? `«${s.name}» опорный — при сшивке стоит на месте, остальные встают к нему.` : `«${s.name}» больше не опорный.`); });
   $$('[data-bp]').forEach(b => b.onclick = () => { const s = scanById(+b.dataset.s), H = s.ceil - s.floor; pushUndo(); s.band = b.dataset.bp === 'lo' ? [0.05, Math.min(1.2, H)] : b.dataset.bp === 'hi' ? [Math.max(0.05, H - 1.0), H - 0.03] : b.dataset.bp === 'mid' ? [Math.max(0.05, H * 0.3), Math.min(H - 0.05, H * 0.75)] : [0.05, H - 0.03]; s.band = s.band.map(v => +v.toFixed(2)); prepScan(s); renderAll(); saveSoon(); });
   $$('[data-hl]').forEach(b => b.onclick = () => { S.hlLab = S.hlLab === b.dataset.hl ? null : b.dataset.hl; redraw(); });
-  $$('canvas.band').forEach(bindBand); bindCleanPanel();
+  $$('canvas.band').forEach(bindBand); bindCleanPanel(); if (S.view === 'v3d') V3.bindPanel(); { const hf = $('#hFine'); if (hf) hf.onclick = fineStitch; }
 }
 function drawBand(s) { // гистограмма высот: где больше точек — там больше стен/предметов; выбранная полоса подсвечена
   const cv = document.querySelector(`canvas[data-band="${s.id}"]`); if (!cv) return; const ctx = cv.getContext('2d'), W = cv.width, H = cv.height, h = s.hist || [], mx = Math.max(1, ...h);
@@ -1714,11 +1883,11 @@ async function openProjectFile(f) { let j; try { j = JSON.parse(await f.text());
 
 // ---------- вид ----------
 function setView(v) { setTimeout(() => { try { renderGuCard(); } catch (e) { } }, 0); const reset = S.view !== v && S.tool !== 'hand'; if (reset) { S.tool = 'hand'; stat('Обзор: тянуть — сдвиг вида, колесо — масштаб.'); } S.view = v; if (v !== 'plan') S.planSel = null; renderAll(); if ((v === 'asm' || v === 'plan') && !S.asmFitted) { S.asmFitted = true; fitAsm(); if (v === 'plan') drawPlan(); } }
-function setTool(t) { const cl = x => x === 'brush' || x === 'keep', was = S.tool; S.tool = t; renderBar(); if (cl(t) !== cl(was)) renderList(); stat({ gfit: '⌇ Линия стены: коснитесь стены на сканах — прямая впишется по точкам среза. По этим линиям «🏠 План по сканам» проведёт стороны помещений (стены за мебелью, косые стены).', gline: '／ Линия: тяните от точки до точки — линия для плана там, где стену не видно.', gpt: '⌖ Угол плана: коснитесь угла — ближайший угол помещения пройдёт через эту точку. Рядом с пересечением линий липнет к нему.', gdel: '⌫ Коснитесь линии или угла плана — удалить.', hand: 'Обзор: тянуть — сдвиг вида, два пальца — масштаб. В «Сборке»: тянуть скан — сдвиг, ↻ или два пальца на скане — поворот, правая кнопка мыши — поворот.', line: 'Линия: проведите вдоль стены или края на скане — программа подгонит линию по точкам. Затем выберите букву: на соседнем скане та же стена — та же буква.', point: 'Точка: коснитесь угла, центра колонны, стояка — и выберите букву. Линии точнее точек.', erase: 'Удалить метку: коснитесь её.', corner: 'Общий угол: в «Сборке» коснитесь угла, видного на нескольких сканах, — общая точка встанет на каждом. На рамке — точка в угол этого скана.', wfit: 'Стена по точкам: коснитесь стены в срезе — программа впишет прямую по точкам (видно, по скольким и с каким разбросом), продлит вдоль стены и замкнёт угол с соседней. Высота и толщина среза — в карточке справа.', brush: 'Стереть: проведите кистью по мебели, дверям, людям. Размер кисти — слева в «Чистке».', keep: 'Нужное: набросок по стене (продлится сам) или касание — колонна, угол. «Только нужное» скрывает остальное.' }[t]); }
+function setTool(t) { const cl = x => x === 'brush' || x === 'keep', was = S.tool; S.tool = t; if (S.view === 'v3d') V3.dirty(); renderBar(); if (cl(t) !== cl(was)) renderList(); stat({ gfit: '⌇ Линия стены: коснитесь стены на сканах — прямая впишется по точкам среза. По этим линиям «🏠 План по сканам» проведёт стороны помещений (стены за мебелью, косые стены).', gline: '／ Линия: тяните от точки до точки — линия для плана там, где стену не видно.', gpt: '⌖ Угол плана: коснитесь угла — ближайший угол помещения пройдёт через эту точку. Рядом с пересечением линий липнет к нему.', gdel: '⌫ Коснитесь линии или угла плана — удалить.', m3d: 'Расстояние: коснитесь двух точек облака — длина, в плане и по высоте. Esc — убрать измерения.', hand: 'Обзор: тянуть — сдвиг вида, два пальца — масштаб. В «Сборке»: тянуть скан — сдвиг, ↻ или два пальца на скане — поворот, правая кнопка мыши — поворот.', line: 'Линия: проведите вдоль стены или края на скане — программа подгонит линию по точкам. Затем выберите букву: на соседнем скане та же стена — та же буква.', point: 'Точка: коснитесь угла, центра колонны, стояка — и выберите букву. Линии точнее точек.', erase: 'Удалить метку: коснитесь её.', corner: 'Общий угол: в «Сборке» коснитесь угла, видного на нескольких сканах, — общая точка встанет на каждом. На рамке — точка в угол этого скана.', wfit: 'Стена по точкам: коснитесь стены в срезе — программа впишет прямую по точкам (видно, по скольким и с каким разбросом), продлит вдоль стены и замкнёт угол с соседней. Высота и толщина среза — в карточке справа.', brush: 'Стереть: проведите кистью по мебели, дверям, людям. Размер кисти — слева в «Чистке».', keep: 'Нужное: набросок по стене (продлится сам) или касание — колонна, угол. «Только нужное» скрывает остальное.' }[t]); }
 
-window.addEventListener('resize', () => { if (S.view === 'grid') { sizeTiles(); redraw(); } else { const cv = $('#asm') || $('#plan'); if (cv) { sizeCanvas(cv); redraw(); } } });
+window.addEventListener('resize', () => { if (S.view === 'v3d') { V3.resize(); return; } if (S.view === 'grid') { sizeTiles(); redraw(); } else { const cv = $('#asm') || $('#plan'); if (cv) { sizeCanvas(cv); redraw(); } } });
 document.addEventListener('keydown', e => { if (e.target.closest('input')) return; if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
-  else if (S.view === 'asm' && S.sel && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'q', 'e', 'й', 'у'].includes(e.key)) { const G = grpScans(), st = e.shiftKey ? 0.1 : 0.01, c = G.length > 1 ? grpCenter(G) : bandCenter(G[0]); pushUndo(); for (const s of G) { if (e.key === 'ArrowLeft') s.pose.x -= st; if (e.key === 'ArrowRight') s.pose.x += st; if (e.key === 'ArrowUp') s.pose.y += st; if (e.key === 'ArrowDown') s.pose.y -= st; if (e.key === 'q' || e.key === 'й') setRot(s, { ...s.pose }, c, (e.shiftKey ? 1 : 0.1) * Math.PI / 180); if (e.key === 'e' || e.key === 'у') setRot(s, { ...s.pose }, c, -(e.shiftKey ? 1 : 0.1) * Math.PI / 180); } e.preventDefault(); drawAsm(); saveSoon(); } else if (e.key === 'Escape' && S.tool !== 'hand') { setTool('hand'); } else if (e.key === 'Escape' && S.view === 'asm') { grpClear(); S.sel = null; S.selRect = null; S.multi = false; stat('Выбор снят.'); renderBar(); renderList(); drawAsm(); } });
+  else if (S.view === 'asm' && S.sel && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'q', 'e', 'й', 'у'].includes(e.key)) { const G = grpScans(), st = e.shiftKey ? 0.1 : 0.01, c = G.length > 1 ? grpCenter(G) : bandCenter(G[0]); pushUndo(); for (const s of G) { if (e.key === 'ArrowLeft') s.pose.x -= st; if (e.key === 'ArrowRight') s.pose.x += st; if (e.key === 'ArrowUp') s.pose.y += st; if (e.key === 'ArrowDown') s.pose.y -= st; if (e.key === 'q' || e.key === 'й') setRot(s, { ...s.pose }, c, (e.shiftKey ? 1 : 0.1) * Math.PI / 180); if (e.key === 'e' || e.key === 'у') setRot(s, { ...s.pose }, c, -(e.shiftKey ? 1 : 0.1) * Math.PI / 180); } e.preventDefault(); drawAsm(); saveSoon(); } else if (e.key === 'Escape' && S.view === 'v3d') { V3.clearMeas(); if (S.tool !== 'hand') setTool('hand'); } else if (e.key === 'Escape' && S.tool !== 'hand') { setTool('hand'); } else if (e.key === 'Escape' && S.view === 'asm') { grpClear(); S.sel = null; S.selRect = null; S.multi = false; stat('Выбор снят.'); renderBar(); renderList(); drawAsm(); } });
 
 // ===== значки (линейные, как в инженерных программах) и всплывающие подсказки =====
 const ICONS = {
@@ -1739,6 +1908,11 @@ const ICONS = {
   close: '<path d="M6 20V8a2 2 0 0 1 2-2h12"/><circle cx="6" cy="6" r="2"/>', square: '<path d="M5 19V5M5 19h14"/><path d="M5 13h6v6"/>',
   dxf: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>', tape: '<rect x="3" y="7" width="13" height="10" rx="2"/><circle cx="9.5" cy="12" r="2.5"/><path d="M16 15h5"/>',
   cloud: '<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>',
+  fine: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><path d="m5 5 2.5 2.5M16.5 16.5 19 19"/>',
+  cube3d: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/>', vtop: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h9v10M13 4v6"/>',
+  vfront: '<path d="M3 20h18"/><rect x="6" y="6" width="12" height="14"/><path d="M10 20v-6h4v6"/>', vside: '<path d="M3 20h18"/><path d="M6 20V9l6-4 6 4v11"/>',
+  persp: '<path d="M4 7 20 4v16L4 17z"/><path d="M4 12h16"/>', ruler: '<path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2M10 10l2 2M13 7l2 2"/>',
+  noceil: '<path d="M3 5h3M9 5h3M15 5h3M21 5h0"/><path d="M5 21V10h14v11"/><path d="M9 21v-5h6v5"/>',
   trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'
 };
 function svgIc(k) { return ICONS[k] ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>` : ''; }
@@ -1763,12 +1937,12 @@ window.addEventListener('resize', layoutTop);
 document.addEventListener('DOMContentLoaded', async () => { applyIcons(); layoutTop();
   $('#rbRooms').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Построить план по сканам заново?', text: 'Текущие стены и правки заменятся. Вернуть — «↶».', ok: 'Построить', cancel: 'Отмена' }))) return; planFromScans(); };
   $('#rbWalls').onclick = async () => { if (PL().walls.length && !(await uiDialog({ title: 'Найти стены заново?', text: 'Текущие стены и правки заменятся найденными. Вернуть — «↶».', ok: 'Найти', cancel: 'Отмена' }))) return; buildWalls(); };
-  $('#rbE57').onclick = cloudDialog; $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
+  $('#rbE57').onclick = cloudDialog; $('#bFine').onclick = fineStitch; $('#bFine3').onclick = fineStitch; $$('[data-v3v]').forEach(b => b.onclick = () => V3.view(b.dataset.v3v)); $('#bOrtho').onclick = () => { V3.ortho = !V3.cam.ortho; renderBar(); }; $$('[data-v3col]').forEach(b => b.onclick = () => { V3.opt.color = b.dataset.v3col; renderBar(); V3.dirty(); }); $('#bNoCeil').onclick = V3.noCeil; $$('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode)); $('#rbClose').onclick = () => closeCorners(false); $('#rbSq').onclick = squareAll; $('#rbDxf').onclick = exportDXF; $('#rbRul').onclick = exportRuletka;
   $$('[data-pbg]').forEach(b => b.onclick = () => { S.planBg = b.dataset.pbg === 'off' ? false : b.dataset.pbg; renderBar(); drawPlan(); });
   $('#bAdd').onclick = () => $('#fileIn').click(); $('#fileIn').onchange = e => { const f = e.target.files; if (f && f.length) loadFiles(f); e.target.value = ''; };
   $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); $$('[data-tool]').forEach(b => b.onclick = () => setTool(S.tool === b.dataset.tool ? 'hand' : b.dataset.tool));
   $$('[data-cols]').forEach(b => b.onclick = () => { S.cols = +b.dataset.cols; S.scans.forEach(s => s.tile = null); renderAll(); saveSoon(); });
-  $('#bTW').onclick = () => { S.tileWorld = !S.tileWorld; S.scans.forEach(x => x.tile = null); renderAll(); stat(S.tileWorld ? 'Рамки повёрнуты как в сборке: одна и та же стена на соседних сканах смотрит в одну сторону.' : 'Рамки — каждый скан как снят.'); }; $('#bStitch').onclick = stitch; $('#bAuto').onclick = autoStitch; $('#bRefine').onclick = refineStitch; $('#bSph').onclick = spheresDialog; $('#fUndo').onclick = undo; $('#fRedo').onclick = redo; $('#fDel').onclick = delSelected; $('#bFit').onclick = () => { if (S.view === 'asm' || S.view === 'plan') fitAsm(); else { S.scans.forEach(fitTile); redraw(); } };
+  $('#bTW').onclick = () => { S.tileWorld = !S.tileWorld; S.scans.forEach(x => x.tile = null); renderAll(); stat(S.tileWorld ? 'Рамки повёрнуты как в сборке: одна и та же стена на соседних сканах смотрит в одну сторону.' : 'Рамки — каждый скан как снят.'); }; $('#bStitch').onclick = stitch; $('#bAuto').onclick = autoStitch; $('#bRefine').onclick = refineStitch; $('#bSph').onclick = spheresDialog; $('#fUndo').onclick = undo; $('#fRedo').onclick = redo; $('#fDel').onclick = delSelected; $('#bFit').onclick = () => { if (S.view === 'v3d') V3.fit(); else if (S.view === 'asm' || S.view === 'plan') fitAsm(); else { S.scans.forEach(fitTile); redraw(); } };
   $('#bMulti').onclick = () => { S.multi = !S.multi; renderBar(); stat(S.multi ? '⬚ Несколько: касание по скану — добавить или убрать; обведите рамкой по пустому месту — выбрать все внутри. Тяните любой выбранный — едут все. Выйти — ещё раз «⬚ Несколько».' : 'Обычный выбор: касание — один скан.'); }; $('#bR1').onclick = () => rotSel(1); $('#bR01').onclick = () => rotSel(0.1); $('#bRm01').onclick = () => rotSel(-0.1); $('#bRm1').onclick = () => rotSel(-1); $('#bR90').onclick = () => rotSel(90);
   $('#bSave').onclick = saveProjectFile; $('#bOpen').onclick = () => $('#projIn').click(); $('#projIn').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) openProjectFile(f); };
   $('#bNew').onclick = pjNew; $('#bCloud').onclick = cloudDialog; $('#bAllProj').onclick = pjMenu; $('#bAdd2').onclick = () => $('#fileIn').click();
@@ -2208,87 +2382,123 @@ function exportDXF() {
 }
 
 // --- облако точек: все видимые сканы в общих координатах, высота — от пола ---
-// ===== запись E57 (ASTM E2807): страницы 1024 байт с CRC32C, XML, сжатые векторы точек (float32 x,y,z) =====
-const E57W = (() => {
-  const T = new Uint32Array(256); for (let i = 0; i < 256; i++) { let c = i; for (let k = 0; k < 8; k++) c = c & 1 ? (c >>> 1) ^ 0x82F63B78 : c >>> 1; T[i] = c >>> 0; }
-  const crc32c = (u8, a, b) => { let c = 0xFFFFFFFF; for (let i = a; i < b; i++) c = T[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
-  const phys = L => Math.floor(L / 1020) * 1024 + (L % 1020);
-  const guid = () => '{' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }) + '}';
-  const esc = s => String(s).replace(/]]>/g, ']]]]><![CDATA[>');
-  const f = v => Number.isFinite(v) ? String(v) : '0';
-  // clouds: [{ name, P: Float32Array xyz, pose: { rz (рад), tx, ty, tz } }]
-  function write(clouds, meta = {}) {
-    const parts = []; let L = 48; // логическая длина; 48 — заголовок файла
-    const put = u8 => { parts.push(u8); L += u8.length; };
-    const pad4 = () => { const r = (4 - (L % 4)) % 4; if (r) put(new Uint8Array(r)); };
-    const recs = [];
-    for (const cl of clouds) {
-      pad4(); const secStart = L, n = cl.P.length / 3; put(new Uint8Array(32)); // заголовок раздела — заполним ниже
-      const dataStart = L, PER = 5000;
-      for (let r0 = 0; r0 < n; r0 += PER) { const m = Math.min(PER, n - r0), hdr = 6 + 6, body = m * 12, len = Math.ceil((hdr + body) / 4) * 4, pk = new Uint8Array(len), dv = new DataView(pk.buffer);
-        pk[0] = 1; pk[1] = 0; dv.setUint16(2, len - 1, true); dv.setUint16(4, 3, true); dv.setUint16(6, m * 4, true); dv.setUint16(8, m * 4, true); dv.setUint16(10, m * 4, true);
-        for (let k = 0; k < 3; k++) { let o = hdr + k * m * 4; for (let i = 0; i < m; i++, o += 4) dv.setFloat32(o, cl.P[(r0 + i) * 3 + k], true); }
-        put(pk); }
-      const sh = parts[parts.length - 1 - Math.ceil(n / PER)], sdv = new DataView(sh.buffer); sh[0] = 1;
-      sdv.setBigUint64(8, BigInt(L - secStart), true); sdv.setBigUint64(16, BigInt(phys(dataStart)), true); sdv.setBigUint64(24, 0n, true);
-      let mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity]; for (let i = 0; i < cl.P.length; i += 3) for (let k = 0; k < 3; k++) { const v = cl.P[i + k]; if (v < mn[k]) mn[k] = v; if (v > mx[k]) mx[k] = v; }
-      recs.push({ cl, n, off: phys(secStart), mn, mx }); }
-    pad4(); const xmlStart = L;
-    const q = cl => { const h = (cl.pose.rz || 0) / 2; return [Math.cos(h), 0, 0, Math.sin(h)]; };
-    const fl = (nm, v) => `<${nm} type="Float">${f(v)}</${nm}>`;
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<e57Root type="Structure" xmlns="http://www.astm.org/COMMIT/E57/2010-e57-v1.0">
-<formatName type="String"><![CDATA[ASTM E57 3D Imaging Data File]]></formatName>
-<guid type="String"><![CDATA[${guid()}]]></guid>
-<versionMajor type="Integer">1</versionMajor>
-<versionMinor type="Integer">0</versionMinor>
-<e57LibraryVersion type="String"><![CDATA[${esc(meta.lib || 'Skan (d1sco) E57 writer')}]]></e57LibraryVersion>
-<coordinateMetadata type="String"><![CDATA[]]></coordinateMetadata>
-<creationDateTime type="Structure">${fl('dateTimeValue', Date.now() / 1000 - 315964800 + 18)}<isAtomicClockReferenced type="Integer">0</isAtomicClockReferenced></creationDateTime>
-<data3D type="Vector" allowHeterogeneousChildren="1">
-${recs.map(r => { const [w, x, y, z] = q(r.cl), p = r.cl.pose; return `<vectorChild type="Structure">
-<guid type="String"><![CDATA[${guid()}]]></guid>
-<name type="String"><![CDATA[${esc(r.cl.name)}]]></name>
-<description type="String"><![CDATA[${esc(meta.desc || '')}]]></description>
-<pose type="Structure"><rotation type="Structure">${fl('w', w)}${fl('x', x)}${fl('y', y)}${fl('z', z)}</rotation><translation type="Structure">${fl('x', p.tx || 0)}${fl('y', p.ty || 0)}${fl('z', p.tz || 0)}</translation></pose>
-<cartesianBounds type="Structure">${fl('xMinimum', r.mn[0])}${fl('xMaximum', r.mx[0])}${fl('yMinimum', r.mn[1])}${fl('yMaximum', r.mx[1])}${fl('zMinimum', r.mn[2])}${fl('zMaximum', r.mx[2])}</cartesianBounds>
-<points type="CompressedVector" fileOffset="${r.off}" recordCount="${r.n}">
-<prototype type="Structure"><cartesianX type="Float" precision="single"/><cartesianY type="Float" precision="single"/><cartesianZ type="Float" precision="single"/></prototype>
-<codecs type="Vector" allowHeterogeneousChildren="1"></codecs>
-</points>
-</vectorChild>`; }).join('\n')}
-</data3D>
-<images2D type="Vector" allowHeterogeneousChildren="1"></images2D>
-</e57Root>`;
-    const xb = new TextEncoder().encode(xml); put(xb);
-    // логический поток → физический: по 1020 байт + CRC32C (big-endian)
-    const pages = Math.ceil(L / 1020), out = new Uint8Array(pages * 1024); let pos = 0, pi = 0, po = 0;
-    const hdr = new Uint8Array(48), hv = new DataView(hdr.buffer); 'ASTM-E57'.split('').forEach((ch, i) => hdr[i] = ch.charCodeAt(0));
-    hv.setUint32(8, 1, true); hv.setUint32(12, 0, true); hv.setBigUint64(16, BigInt(pages * 1024), true); hv.setBigUint64(24, BigInt(phys(xmlStart)), true); hv.setBigUint64(32, BigInt(xb.length), true); hv.setBigUint64(40, 1024n, true);
-    const all = [hdr, ...parts];
-    for (const u of all) { let i = 0; while (i < u.length) { const k = Math.min(1020 - po, u.length - i); out.set(u.subarray(i, i + k), pi * 1024 + po); po += k; i += k; if (po === 1020) { po = 0; pi++; } } }
-    for (let p = 0; p < pages; p++) new DataView(out.buffer).setUint32(p * 1024 + 1020, crc32c(out, p * 1024, p * 1024 + 1020), false);
-    void pos; return out; }
-  return { write };
+// ===== потоковая запись E57 (ASTM E2807) — для полной плотности: файл пишется кусками, без сборки целиком в памяти =====
+// sink: { write(u8) — дописать в конец (может быть async), patch(pos, u8) — заменить ранее записанные байты (страницы-заготовки) }
+// w = E57S.create(sink); await w.begin({name, pose:{q:[w,x,y,z], t:[x,y,z]}, rgb:bool, inten:bool}); await w.add(xyz, rgb, inten, n); await w.end(); ... await w.finish()
+const E57S = (() => {
+  const CT = new Uint32Array(256); for (let i = 0; i < 256; i++) { let c = i; for (let k = 0; k < 8; k++) c = c & 1 ? (c >>> 1) ^ 0x82F63B78 : c >>> 1; CT[i] = c >>> 0; }
+  const crc = (u8, a, b) => { let c = 0xFFFFFFFF; for (let i = a; i < b; i++) c = CT[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  const PS = 1024, PD = 1020, CH = 1024 * 1024 * 8; // страница, данных в странице, размер куска записи
+  const hex = n => { let s = ''; for (let i = 0; i < n; i++) s += Math.floor(Math.random() * 16).toString(16); return s; };
+  const guid = () => `{${hex(8)}-${hex(4)}-4${hex(3)}-${(8 + Math.floor(Math.random() * 4)).toString(16)}${hex(3)}-${hex(12)}}`.toUpperCase();
+  const xe = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const fl = v => (Number.isFinite(v) ? v : 0).toPrecision(17);
+  function create(sink) {
+    let buf = new Uint8Array(CH), bn = 0;       // текущий кусок физических байт (целые страницы)
+    let page = new Uint8Array(PS), pn = 0;      // текущая страница (pn — данных в ней)
+    let phys = 0;                               // физическая длина уже отданного + в buf
+    const scans = []; let cur = null;
+    const logical = () => Math.floor((phys + bn) / PS) * PD + pn; // логическое смещение текущей позиции
+    const physOf = L => Math.floor(L / PD) * PS + L % PD;
+    async function flushBuf() { if (bn) { await sink.write(buf.slice(0, bn)); phys += bn; bn = 0; } }
+    async function closePage() { new DataView(page.buffer).setUint32(PD, crc(page, 0, PD), false); buf.set(page, bn); bn += PS; page.fill(0); pn = 0; if (bn + PS > CH) await flushBuf(); }
+    async function put(u8) { let o = 0; while (o < u8.length) { const n = Math.min(PD - pn, u8.length - o); page.set(u8.subarray(o, o + n), pn); pn += n; o += n; if (pn === PD) await closePage(); } }
+    async function padPage() { if (pn) await closePage(); }
+    async function reservePage() { await padPage(); const at = phys + bn; await closePage(); return at; } // пустая страница, заполняется потом
+    async function patchPage(at, data) { const p = new Uint8Array(PS); p.set(data); new DataView(p.buffer).setUint32(PD, crc(p, 0, PD), false);
+      if (at >= phys) buf.set(p, at - phys); else await sink.patch(at, p); }
+    let hdrAt = -1;
+    async function start() { hdrAt = await reservePage(); }
+    async function begin(o) {
+      if (hdrAt < 0) await start();
+      const secAt = await reservePage(); // заголовок раздела — своя страница; пакеты — со следующей
+      cur = { ...o, guid: guid(), secAt, secL: Math.floor(secAt / PS) * PD, dataAt: phys + bn, n: 0, bb: [Infinity, -Infinity, Infinity, -Infinity, Infinity, -Infinity], iMin: Infinity, iMax: -Infinity };
+    }
+    // одна порция точек: n точек, xyz Float32/64 (n*3), rgb Uint8 (n*3) или null, inten Float32 (n) или null
+    async function add(xyz, rgb, inten, n) {
+      const M = 2400, useC = !!cur.rgb, useI = !!cur.inten, bc = 3 + (useC ? 3 : 0) + (useI ? 1 : 0);
+      for (let s0 = 0; s0 < n; s0 += M) {
+        const m = Math.min(M, n - s0); let len = 6 + 2 * bc + m * 12 + (useC ? m * 3 : 0) + (useI ? m * 4 : 0); const padL = (4 - len % 4) % 4; len += padL;
+        const pk = new Uint8Array(len), dv = new DataView(pk.buffer); pk[0] = 1; dv.setUint16(2, len - 1, true); dv.setUint16(4, bc, true);
+        let h = 6; for (let k = 0; k < 3; k++) { dv.setUint16(h, m * 4, true); h += 2; } if (useC) for (let k = 0; k < 3; k++) { dv.setUint16(h, m, true); h += 2; } if (useI) { dv.setUint16(h, m * 4, true); h += 2; }
+        const bb = cur.bb;
+        for (let k = 0; k < 3; k++) { for (let i = 0; i < m; i++) { const v = xyz[(s0 + i) * 3 + k]; dv.setFloat32(h, v, true); h += 4; if (v < bb[2 * k]) bb[2 * k] = v; if (v > bb[2 * k + 1]) bb[2 * k + 1] = v; } }
+        if (useC) for (let k = 0; k < 3; k++) for (let i = 0; i < m; i++) pk[h++] = rgb ? rgb[(s0 + i) * 3 + k] : 0;
+        if (useI) for (let i = 0; i < m; i++) { const v = inten ? inten[s0 + i] : 0; dv.setFloat32(h, v, true); h += 4; if (v < cur.iMin) cur.iMin = v; if (v > cur.iMax) cur.iMax = v; }
+        await put(pk); cur.n += m;
+      }
+    }
+    async function end() {
+      const endL = logical(), secLen = endL - cur.secL; // логическая длина: от заголовка до конца последнего пакета
+      const h = new Uint8Array(32), dv = new DataView(h.buffer); h[0] = 1; dv.setBigUint64(8, BigInt(secLen), true); dv.setBigUint64(16, BigInt(cur.dataAt), true); dv.setBigUint64(24, 0n, true);
+      await patchPage(cur.secAt, h); scans.push(cur); cur = null;
+    }
+    async function finish(meta = {}) {
+      await padPage();
+      const xmlAt = phys + bn;
+      const pr = sc => `<pose type="Structure"><rotation type="Structure"><w type="Float">${fl(sc.pose.q[0])}</w><x type="Float">${fl(sc.pose.q[1])}</x><y type="Float">${fl(sc.pose.q[2])}</y><z type="Float">${fl(sc.pose.q[3])}</z></rotation><translation type="Structure"><x type="Float">${fl(sc.pose.t[0])}</x><y type="Float">${fl(sc.pose.t[1])}</y><z type="Float">${fl(sc.pose.t[2])}</z></translation></pose>`;
+      const iLo = sc => Number.isFinite(sc.iMin) ? sc.iMin : 0, iHi = sc => Number.isFinite(sc.iMax) && sc.iMax > iLo(sc) ? sc.iMax : iLo(sc) + 1;
+      const kids = scans.map(sc => `<vectorChild type="Structure"><guid type="String"><![CDATA[${sc.guid}]]></guid><name type="String"><![CDATA[${xe(sc.name)}]]></name>${sc.desc ? `<description type="String"><![CDATA[${xe(sc.desc)}]]></description>` : ''}${sc.pose ? pr(sc) : ''}`
+        + (sc.n ? `<cartesianBounds type="Structure"><xMinimum type="Float">${fl(sc.bb[0])}</xMinimum><xMaximum type="Float">${fl(sc.bb[1])}</xMaximum><yMinimum type="Float">${fl(sc.bb[2])}</yMinimum><yMaximum type="Float">${fl(sc.bb[3])}</yMaximum><zMinimum type="Float">${fl(sc.bb[4])}</zMinimum><zMaximum type="Float">${fl(sc.bb[5])}</zMaximum></cartesianBounds>` : '')
+        + (sc.rgb ? `<colorLimits type="Structure"><colorRedMinimum type="Integer" minimum="0" maximum="255">0</colorRedMinimum><colorRedMaximum type="Integer" minimum="0" maximum="255">255</colorRedMaximum><colorGreenMinimum type="Integer" minimum="0" maximum="255">0</colorGreenMinimum><colorGreenMaximum type="Integer" minimum="0" maximum="255">255</colorGreenMaximum><colorBlueMinimum type="Integer" minimum="0" maximum="255">0</colorBlueMinimum><colorBlueMaximum type="Integer" minimum="0" maximum="255">255</colorBlueMaximum></colorLimits>` : '')
+        + (sc.inten ? `<intensityLimits type="Structure"><intensityMinimum type="Float">${fl(iLo(sc))}</intensityMinimum><intensityMaximum type="Float">${fl(iHi(sc))}</intensityMaximum></intensityLimits>` : '')
+        + `<points type="CompressedVector" fileOffset="${sc.secAt}" recordCount="${sc.n}"><prototype type="Structure"><cartesianX type="Float" precision="single"/><cartesianY type="Float" precision="single"/><cartesianZ type="Float" precision="single"/>`
+        + (sc.rgb ? `<colorRed type="Integer" minimum="0" maximum="255"/><colorGreen type="Integer" minimum="0" maximum="255"/><colorBlue type="Integer" minimum="0" maximum="255"/>` : '')
+        + (sc.inten ? `<intensity type="Float" precision="single" minimum="${fl(iLo(sc))}" maximum="${fl(iHi(sc))}"/>` : '')
+        + `</prototype><codecs type="Vector" allowHeterogeneousChildren="1"></codecs></points></vectorChild>`).join('');
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<e57Root type="Structure" xmlns="http://www.astm.org/COMMIT/E57/2010-e57-v1.0"><formatName type="String"><![CDATA[ASTM E57 3D Imaging Data File]]></formatName><guid type="String"><![CDATA[${guid()}]]></guid><versionMajor type="Integer">1</versionMajor><versionMinor type="Integer">0</versionMinor><coordinateMetadata type="String"><![CDATA[${xe(meta.coord || '')}]]></coordinateMetadata><creationDateTime type="Structure"><dateTimeValue type="Float">${fl(Date.now() / 1000 - 315964800 + 18)}</dateTimeValue><isAtomicClockReferenced type="Integer">0</isAtomicClockReferenced></creationDateTime><data3D type="Vector" allowHeterogeneousChildren="1">${kids}</data3D><images2D type="Vector" allowHeterogeneousChildren="1"></images2D></e57Root>`;
+      const xb = new TextEncoder().encode(xml); await put(xb); await padPage(); await flushBuf();
+      const total = phys, h = new Uint8Array(48), dv = new DataView(h.buffer); h.set(new TextEncoder().encode('ASTM-E57'));
+      dv.setUint32(8, 1, true); dv.setUint32(12, 0, true); dv.setBigUint64(16, BigInt(total), true); dv.setBigUint64(24, BigInt(xmlAt), true); dv.setBigUint64(32, BigInt(xb.length), true); dv.setBigUint64(40, BigInt(PS), true);
+      await patchPage(hdrAt, h); if (sink.done) await sink.done();
+      return { bytes: total, scans: scans.map(sc => ({ name: sc.name, n: sc.n })) };
+    }
+    return { begin, add, end, finish };
+  }
+  // приёмник в память (Blob из кусков: браузер сам держит большие Blob на диске)
+  function blobSink() { const parts = [], at = []; let pos = 0;
+    return { write(u8) { parts.push(u8); at.push(pos); pos += u8.length; },
+      patch(p, u8) { for (let k = parts.length - 1; k >= 0; k--) if (at[k] <= p && p + u8.length <= at[k] + parts[k].length) { parts[k].set(u8, p - at[k]); return; } throw new Error('patch'); },
+      blob(type = 'application/octet-stream') { return new Blob(parts, { type }); }, parts }; }
+  // приёмник в файл на диске (Chrome/Edge: окно «Сохранить как», пишет прямо в файл)
+  function fileSink(ws) { const later = [];
+    return { async write(u8) { await ws.write(u8); }, patch(p, u8) { later.push([p, u8]); }, async done() { for (const [p, u8] of later) await ws.write({ type: 'write', position: p, data: u8 }); await ws.close(); } }; }
+  // поворот 3×3 → кватернион [w,x,y,z]
+  function quat(R) { const t = R[0] + R[4] + R[8]; let w, x, y, z;
+    if (t > 0) { const s = Math.sqrt(t + 1) * 2; w = s / 4; x = (R[7] - R[5]) / s; y = (R[2] - R[6]) / s; z = (R[3] - R[1]) / s; }
+    else if (R[0] > R[4] && R[0] > R[8]) { const s = Math.sqrt(1 + R[0] - R[4] - R[8]) * 2; w = (R[7] - R[5]) / s; x = s / 4; y = (R[1] + R[3]) / s; z = (R[2] + R[6]) / s; }
+    else if (R[4] > R[8]) { const s = Math.sqrt(1 + R[4] - R[0] - R[8]) * 2; w = (R[2] - R[6]) / s; x = (R[1] + R[3]) / s; y = s / 4; z = (R[5] + R[7]) / s; }
+    else { const s = Math.sqrt(1 + R[8] - R[0] - R[4]) * 2; w = (R[3] - R[1]) / s; x = (R[2] + R[6]) / s; y = (R[5] + R[7]) / s; z = s / 4; }
+    const n = Math.hypot(w, x, y, z); return [w / n, x / n, y / n, z / n]; }
+  return { create, blobSink, fileSink, quat };
 })();
-
 async function cloudDialog() {
   if (!S.scans.length) { uiAlert('Сначала загрузите сканы.'); return; }
-  const chosen = new Set(S.scans.filter(s => s.vis).map(s => s.id)); let dens = 0.02, fmt = 'e57', mode = 'sep';
+  const chosen = new Set(S.scans.filter(s => s.vis).map(s => s.id)); let dens = 'full', fmt = 'e57', mode = 'sep', erase = true;
+  const pname = ((pjCur() && pjCur().name) || 'Сканы');
   const ov = document.createElement('div'); ov.className = 'dlg';
-  ov.innerHTML = `<div class="dlg-b" style="max-width:560px"><div class="lh"><div class="dlg-t">⬇ Скачать сшитые сканы</div><button data-x>✕</button></div>
-  <div class="dlg-x">Сканы в сшитом положении. Стёртое кистью не попадает. Точки — с той плотностью, с какой сканы загружены в программу (около 2 см).</div>
+  ov.innerHTML = `<div class="dlg-b" style="max-width:640px"><div class="lh"><div class="dlg-t">⬇ Выгрузить сшитые сканы</div><button data-x>✕</button></div>
+  <div class="dlg-x">Сканы — в сшитом положении, в общей системе «Сборки» (Z — от пола опорного скана, метры). ${S.fineRep ? '✓ Точная сшивка 3D сделана.' : '<b>Совет:</b> перед выгрузкой — «Точно 3D»: подгонка всех сканов до миллиметров.'}</div>
   <div class="pc-r"><label>Какие сканы:</label><button data-all>Все</button><button data-none>Ничего</button><button data-vis>Как на экране</button>${(grpScans() || []).length > 1 ? '<button data-grp>Выбранные</button>' : ''}</div>
-  <div class="cl-list">${S.scans.map(s => `<label class="cl-i"><input type="checkbox" data-sid="${s.id}" ${chosen.has(s.id) ? 'checked' : ''}><i style="background:${s.color}"></i>${escH(s.name)}<small>${(s.pts.length / 3 / 1000).toFixed(0)} тыс.</small></label>`).join('')}</div>
+  <div class="cl-list">${S.scans.map(s => `<label class="cl-i"><input type="checkbox" data-sid="${s.id}" ${chosen.has(s.id) ? 'checked' : ''}><i style="background:${s.color}"></i>${escH(s.name)}<small>${s.total ? (s.total / 1e6).toFixed(1).replace('.', ',') + ' млн' : ''}</small></label>`).join('')}</div>
   <div class="pc-r"><label>Формат:</label><button data-f="e57" class="on" title="E57|Международный формат облаков: CloudCompare, ReCap, Revit, FARO SCENE, Leica Cyclone">E57</button><button data-f="xyz" title="XYZ|Текст: x y z и цвет скана — ReCap, CloudCompare">XYZ</button><button data-f="dxf" title="DXF|Точки в AutoCAD — только для небольших облаков">DXF</button></div>
-  <div class="pc-r" id="cMode"><label>E57:</label><button data-m="sep" class="on" title="Каждый скан отдельно|Сканы — отдельными облаками в одном файле, с положением каждого (как из FARO SCENE)">Каждый скан отдельно</button><button data-m="one" title="Одним облаком|Все выбранные сканы слиты в одно облако в общих координатах">Одним облаком</button></div>
-  <div class="pc-r"><label>Шаг точек:</label><button data-d="0.10">10 см</button><button data-d="0.05">5 см</button><button data-d="0.02" class="on">2 см (все)</button></div>
-  <div class="dlg-x" id="cInfo"></div><div class="row r"><button class="pri" data-go>Скачать</button></div></div>`;
+  <div class="pc-r" id="cMode"><label>Как сложить:</label><button data-m="sep" class="on" title="Один файл, сканы отдельно|Сканы — отдельными облаками в одном файле, у каждого своё положение (как выгрузка из FARO SCENE). В CloudCompare и ReCap встают на места сами">Один файл, сканы отдельно</button><button data-m="one" title="Одним облаком|Все выбранные сканы слиты в одно облако в общих координатах">Одним облаком</button><button data-m="each" title="Каждый скан — свой файл|Отдельный файл на каждый скан, точки уже в общих координатах">Каждый скан — свой файл</button></div>
+  <div class="pc-r"><label>Плотность:</label><button data-d="full" class="on" title="Полная|Все точки из исходных файлов E57, с цветом и яркостью — для камеральной обработки">Полная</button><button data-d="0.02" title="2 см|Как загружено в программу — быстро и компактно">2 см</button><button data-d="0.05">5 см</button><button data-d="0.10">10 см</button></div>
+  <div class="pc-r"><label class="v3c"><input type="checkbox" id="cErase" checked> Без стёртого кистью (люди, мебель)</label></div>
+  <div class="pc-r"><label>Имя файла:</label><input id="cName" class="dlg-in" style="flex:1;min-width:180px;margin:0" value="${escH(pname)}"></div>
+  <div class="dlg-x" id="cInfo"></div><div class="row r"><button class="pri" data-go>Выгрузить</button></div></div>`;
   document.body.appendChild(ov);
-  const L = () => S.scans.filter(s => chosen.has(s.id));
-  const info = () => { const n = L().reduce((a, s) => a + s.pts.length / 3, 0), k = Math.min(1, (0.02 / dens) ** 2 * 1.5), est = Math.round(n * k), per = fmt === 'dxf' ? 62 : fmt === 'xyz' ? 26 : 12.3;
-    $('#cInfo').textContent = L().length ? `Сканов: ${L().length}, примерно ${est.toLocaleString('ru')} точек, файл ≈ ${Math.max(1, Math.round(est * per / 1048576))} МБ.` + (fmt === 'dxf' && est > 1500000 ? ' Для AutoCAD это много — возьмите шаг крупнее или E57.' : '') : 'Отметьте хотя бы один скан.';
-    $('#cMode').style.display = fmt === 'e57' ? '' : 'none'; ov.querySelector('[data-go]').disabled = !L().length; };
+  const L = () => S.scans.filter(s => chosen.has(s.id)).sort(scanOrder);
+  const info = () => { const fullOk = fmt === 'e57'; if (!fullOk && dens === 'full') { dens = '0.02'; ov.querySelectorAll('[data-d]').forEach(x => x.classList.toggle('on', x.dataset.d === '0.02')); }
+    ov.querySelector('[data-d="full"]').style.display = fullOk ? '' : 'none'; $('#cMode').style.display = fmt === 'e57' ? '' : 'none';
+    const list = L(), n = dens === 'full' ? list.reduce((a, s) => a + (s.total || (s.src && s.src.size ? s.src.size / 15 : s.pts.length / 3 * 40)), 0) : list.reduce((a, s) => a + s.pts.length / 3, 0) * Math.min(1, (0.02 / +dens) ** 2 * 1.5);
+    const per = fmt === 'dxf' ? 62 : fmt === 'xyz' ? 26 : 15.5, MB = n * per / 1048576, size = MB > 1024 ? (MB / 1024).toFixed(1).replace('.', ',') + ' ГБ' : Math.max(1, Math.round(MB)) + ' МБ';
+    const miss = dens === 'full' ? [...new Set(list.filter(s => !S.srcFiles.has((s.src && s.src.file) || s.file)).map(s => (s.src && s.src.file) || s.file))] : [];
+    $('#cInfo').innerHTML = list.length ? `Сканов: ${list.length}, около ${Math.round(n).toLocaleString('ru')} точек, ${fmt === 'e57' && mode === 'each' ? 'всего' : 'файл'} ≈ ${size}${dens === 'full' ? `, около ${Math.max(2, Math.round(n / list.length / 3e6))} с на скан` : ''}.`
+      + (miss.length ? ` <br>Исходные файлы E57 программа попросит выбрать (${miss.length}) — после загрузки страницу открывали заново.` : '')
+      + (MB > 1500 && fmt === 'e57' && !window.showSaveFilePicker ? ' <br><b>Большой объём:</b> этот браузер собирает файл в памяти — надёжнее Chrome или Edge (пишут прямо на диск), или выгружайте «каждый скан — свой файл».' : '')
+      + (fmt === 'dxf' && n > 1500000 ? ' <br>Для AutoCAD это много — возьмите шаг крупнее или E57.' : '') : 'Отметьте хотя бы один скан.';
+    ov.querySelector('[data-go]').disabled = !list.length; };
   const sync = () => ov.querySelectorAll('[data-sid]').forEach(c => c.checked = chosen.has(+c.dataset.sid));
   ov.querySelectorAll('[data-sid]').forEach(c => c.onchange = () => { c.checked ? chosen.add(+c.dataset.sid) : chosen.delete(+c.dataset.sid); info(); });
   ov.querySelector('[data-all]').onclick = () => { S.scans.forEach(s => chosen.add(s.id)); sync(); info(); };
@@ -2296,28 +2506,10 @@ async function cloudDialog() {
   ov.querySelector('[data-vis]').onclick = () => { chosen.clear(); S.scans.filter(s => s.vis).forEach(s => chosen.add(s.id)); sync(); info(); };
   const bg = ov.querySelector('[data-grp]'); if (bg) bg.onclick = () => { chosen.clear(); grpScans().forEach(s => chosen.add(s.id)); sync(); info(); };
   const seg = (attr, set) => ov.querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { ov.querySelectorAll(`[${attr}]`).forEach(x => x.classList.toggle('on', x === b)); set(b.getAttribute(attr)); info(); });
-  seg('data-d', v => dens = +v); seg('data-f', v => fmt = v); seg('data-m', v => mode = v); info();
+  seg('data-d', v => dens = v); seg('data-f', v => fmt = v); seg('data-m', v => mode = v); $('#cErase').onchange = e => erase = e.target.checked; info();
   ov.querySelector('[data-x]').onclick = () => ov.remove();
-  ov.querySelector('[data-go]').onclick = async () => { const list = L(); if (!list.length) return; ov.remove(); if (fmt === 'e57') await exportE57(list, dens, mode); else await exportCloud(list, dens, fmt); };
-}
-// E57: «каждый скан отдельно» — точки скана в его системе + положение (поворот вокруг вертикали, сдвиг; пол — на нуле); «одним облаком» — всё в общих координатах
-async function exportE57(L, dens, mode) {
-  busy('Готовлю E57…'); await new Promise(r => setTimeout(r, 30)); const clouds = []; let tot = 0; const seenAll = mode === 'one' && dens > 0.025 ? new Set() : null, mergedParts = [];
-  for (const s of L) { const P = s.pts, c = Math.cos(s.pose.a), sn = Math.sin(s.pose.a), cg = s.cg, er = cg && cg.er, seen = mode === 'one' ? seenAll : (dens > 0.025 ? new Set() : null), out = new Float32Array(P.length); let n = 0;
-    for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1], z = P[i + 2] - s.floor;
-      if (er) { const u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res); if (u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]) continue; }
-      const X = c * x - sn * y + s.pose.x, Y = sn * x + c * y + s.pose.y;
-      if (seen) { const key = Math.floor(X / dens) * 73856093 ^ Math.floor(Y / dens) * 19349663 ^ Math.floor(z / dens) * 83492791; if (seen.has(key)) continue; seen.add(key); }
-      if (mode === 'one') { out[n++] = X; out[n++] = Y; out[n++] = z; } else { out[n++] = x; out[n++] = y; out[n++] = z; } }
-    tot += n / 3; if (mode === 'one') mergedParts.push(out.subarray(0, n)); else clouds.push({ name: s.name, P: out.slice(0, n), pose: { rz: s.pose.a, tx: s.pose.x, ty: s.pose.y, tz: 0 } });
-    busy(`Готовлю E57… ${s.name}`); await new Promise(r => setTimeout(r, 0)); }
-  const pname = ((pjCur() && pjCur().name) || 'Сканы');
-  if (mode === 'one') { const all = new Float32Array(tot * 3); let o = 0; for (const q of mergedParts) { all.set(q, o); o += q.length; } clouds.push({ name: pname, P: all, pose: { rz: 0, tx: 0, ty: 0, tz: 0 } }); }
-  busy('Записываю E57…'); await new Promise(r => setTimeout(r, 0));
-  let u8; try { u8 = E57W.write(clouds, { desc: 'Скан (d1sco): сшитые сканы, высота от пола, метры' }); } catch (e) { busy(''); uiAlert('Не получилось записать E57: ' + e.message); return; }
-  const blob = new Blob([u8], { type: 'application/octet-stream' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = pname.replace(/[\\/:*?"<>|]/g, '_') + (mode === 'one' ? '_облако' : '_сканы') + '.e57'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); busy('');
-  stat(`E57 сохранён: ${mode === 'one' ? 'одно облако' : 'сканов ' + clouds.length + ' (каждый со своим положением)'}, ${Math.round(tot).toLocaleString('ru')} точек, ${(blob.size / 1048576).toFixed(1).replace('.', ',')} МБ. Открывается в CloudCompare, ReCap, Revit, FARO SCENE.`);
+  ov.querySelector('[data-go]').onclick = async () => { const list = L(); if (!list.length) return; const name = $('#cName').value; ov.remove();
+    if (fmt === 'e57') await exportE57(list, { full: dens === 'full', dens: dens === 'full' ? 0 : +dens, mode, erase, name }); else await exportCloud(list, +dens, fmt); };
 }
 async function exportCloud(L, dens, fmt) {
   busy('Собираю облако…'); await new Promise(r => setTimeout(r, 30));
@@ -2342,6 +2534,254 @@ async function exportCloud(L, dens, fmt) {
   const blob = new Blob(enc, { type: fmt === 'dxf' ? 'application/dxf' : 'text/plain' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = (((pjCur() && pjCur().name) || 'Облако').replace(/[\\/:*?"<>|]/g, '_')) + '_облако.' + fmt; document.body.appendChild(a); a.click(); a.remove(); busy('');
   stat(`Облако сохранено: ${n.toLocaleString('ru')} точек, ${(blob.size / 1048576).toFixed(1).replace('.', ',')} МБ. ${fmt === 'dxf' ? 'В AutoCAD: откройте файл, «Вид → 3D» (орбита Shift + колесо). Если точки не видно — команда PDMODE 0 и РЕГЕН.' : 'ReCap: «Импорт» этого файла → .rcp; в AutoCAD — POINTCLOUDATTACH.'}`);
+}
+
+// ===================== ТОЧНАЯ СШИВКА 3D: все сканы сразу, все 6 степеней (сдвиги X·Y·Z, поворот, наклоны) =====================
+const m3 = (A, B) => [0, 1, 2].flatMap(i => [0, 1, 2].map(j => A[i * 3] * B[j] + A[i * 3 + 1] * B[3 + j] + A[i * 3 + 2] * B[6 + j]));
+const levOf = s => s.lev || [1, 0, 0, 0, 1, 0, 0, 0, 1];
+function worldRT(s) { const c = Math.cos(s.pose.a), sn = Math.sin(s.pose.a); return { R: m3([c, -sn, 0, sn, c, 0, 0, 0, 1], levOf(s)), t: [s.pose.x, s.pose.y, -s.floor] }; }
+function erasedTest(s) { const cg = s.cg, er = cg && cg.er; if (!er) return null; return (x, y) => { const u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res); return u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]; }; }
+function keptIdx(s) { const P = s.pts, n = P.length / 3, E = erasedTest(s); if (!E) return null; const K = new Uint32Array(n); let m = 0; for (let i = 0; i < n; i++) if (!E(P[3 * i], P[3 * i + 1])) K[m++] = i; return K.subarray(0, m); }
+function keptPts(s) { const K = keptIdx(s), P = s.pts; if (!K) return P.slice(); const o = new Float32Array(K.length * 3); for (let k = 0; k < K.length; k++) { const i = K[k]; o[3 * k] = P[3 * i]; o[3 * k + 1] = P[3 * i + 1]; o[3 * k + 2] = P[3 * i + 2]; } return o; }
+function runWorker(msg, transfer, label) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || label}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on); w.postMessage(Object.assign({ job }, msg), transfer || []); }); }
+function fineGrade(e) { return e.p90 <= 0.003 ? 'ok' : e.p90 <= 0.006 ? 'wa' : 'bad'; }
+async function fineStitch() {
+  const list = S.scans.filter(s => s.vis).sort(scanOrder); if (list.length < 2) { uiAlert('Для точной сшивки нужно хотя бы два видимых скана.'); return; }
+  const box = s => { const B = scanBBoxW(s), xs = B.map(p => p[0]), ys = B.map(p => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
+  const bx = list.map(box), pairs = [];
+  for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const a = bx[i], b = bx[j], ox = Math.min(a[2], b[2]) - Math.max(a[0], b[0]), oy = Math.min(a[3], b[3]) - Math.max(a[1], b[1]); if (ox > 0.5 && oy > 0.5 && Math.hypot(list[i].pose.x - list[j].pose.x, list[i].pose.y - list[j].pose.y) < 15) pairs.push([i, j]); }
+  if (!pairs.length) { uiAlert('Сканы не перекрываются. Сначала сшейте их: «Автосшивка» на шаге «Сборка».'); return; }
+  if (!(await uiDialog({ title: 'Точная сшивка 3D', text: `Финальная подгонка всех ${list.length} сканов сразу — по всем шести степеням: сдвиги по X, Y и Z, поворот и наклоны. Сканы должны уже стоять на своих местах (после автосшивки) — подгонка уточняет их до миллиметров. Опорный скан ⚓ стоит на месте. Займёт около ${Math.max(10, Math.round(list.length * 3.5))} с.`, ok: 'Сшить точно', cancel: 'Отмена' }))) return;
+  const fixed = Math.max(0, list.findIndex(s => s.anchor)), tr = [];
+  const scans = list.map(s => { const P = keptPts(s), q = worldRT(s); tr.push(P.buffer); return { name: s.name, pts: P, R: q.R, t: q.t }; });
+  let r; try { r = await runWorker({ cmd: 'fine6', scans, pairs, fixed }, tr, 'Точная сшивка'); } catch (e) { busy(''); uiAlert('Точная сшивка не удалась: ' + e.message); return; }
+  busy(''); pushUndo();
+  // проверка: подгонка не должна уводить сканы далеко — иначе сшивка была грубой
+  let mxT = 0, mxN = '';
+  list.forEach((s, i) => { const R = r.R[i], T = r.T[i]; const yaw = Math.atan2(R[3] - R[1], R[0] + R[4]), c = Math.cos(yaw), sn = Math.sin(yaw);
+    const L = m3([c, sn, 0, -sn, c, 0, 0, 0, 1], R); // наклон скана без поворота в плане
+    const d = Math.hypot(T[0] - s.pose.x, T[1] - s.pose.y, T[2] + s.floor); if (d > mxT) { mxT = d; mxN = s.name; }
+    const fl = -T[2]; s.ceil += fl - s.floor; s.floor = fl; s.lev = L; s.pose = { x: T[0], y: T[1], a: normA(yaw) }; s.fine = { t: Date.now() }; prepScan(s); });
+  const ed = r.edges.filter(e => e.cnt >= 200).map(e => ({ a: list[e.i].id, b: list[e.j].id, cnt: e.cnt, rms: e.rms, med: e.med, p90: e.p90 })).sort((p, q) => q.p90 - p.p90);
+  const p90s = ed.map(e => e.p90).sort((a, b) => a - b), mm = v => (v * 1000).toFixed(1).replace('.', ',');
+  S.fineRep = { t: Date.now(), edges: ed, n: list.length, med: ed.length ? ed.map(e => e.med).sort((a, b) => a - b)[ed.length >> 1] : 0, p90: p90s.length ? p90s[Math.floor(p90s.length * 0.9)] : 0 };
+  analyze(); renderAll(); saveSoon(); if (S.view === 'v3d') V3.dirty(true);
+  const bad = ed.filter(e => fineGrade(e) === 'bad');
+  stat(`Точная сшивка 3D: ${list.length} сканов, ${ed.length} стыков. Расхождение поверхностей на стыках: обычно ${mm(S.fineRep.med)} мм, у 90% точек — до ${mm(S.fineRep.p90)} мм.${bad.length ? ` ⚠ Стыков хуже 6 мм: ${bad.length} — красные в списке слева (вкладка «3D»).` : ' Все стыки в норме.'}${mxT > 0.1 ? ` Скан «${mxN}» сдвинулся на ${mm(mxT)} мм — проверьте его в 3D.` : ''}`);
+}
+
+// ===================== 3D: облако сшитых сканов (WebGL2, подсветка рельефа EDL как в CloudCompare / Potree) =====================
+const V3 = (() => {
+  let wrap = null, cv = null, ov = null, gl = null, P1 = null, P2 = null, fbo = null, tC = null, tD = null, quad = null, fw = 0, fh = 0, raf = 0, lost = false;
+  const cache = new Map();
+  const cam = { tg: [0, 0, 1.2], dist: 20, yaw: -2.2, pitch: 0.75, ortho: false, fov: 50 * Math.PI / 180 };
+  const opt = { color: 'scan', size: 2, edl: true, top: null, bot: null };
+  let solo = null, meas = [], drag = null, pend = false, lastMVP = null, lastVP = null, fitted = false, tpts = new Map();
+  const vs = `#version 300 es
+in vec3 p; in vec3 c; uniform mat4 vp; uniform mat4 mdl; uniform vec3 sc; uniform int mode; uniform float ps; uniform vec2 zr; uniform float rgbOk;
+out vec3 vc; out float wz;
+vec3 ramp(float t){ t=clamp(t,0.,1.); return clamp(vec3(1.5-abs(4.*t-3.),1.5-abs(4.*t-2.),1.5-abs(4.*t-1.)),0.,1.)*.9+.05; }
+void main(){ vec4 w=mdl*vec4(p,1.); wz=w.z; gl_Position=vp*w; gl_PointSize=ps;
+ vc = mode==0 ? sc : mode==1 ? ramp((w.z-zr.x)/(zr.y-zr.x)) : (rgbOk>.5 ? c : vec3(.72)); }`;
+  const fs = `#version 300 es
+precision highp float; in vec3 vc; in float wz; uniform vec2 clip; uniform float ps; out vec4 o;
+void main(){ if(wz>clip.y||wz<clip.x) discard; if(ps>2.5){ vec2 d=gl_PointCoord-.5; if(dot(d,d)>.25) discard; } o=vec4(vc,1.); }`;
+  const vsQ = `#version 300 es
+in vec2 q; void main(){ gl_Position=vec4(q,0.,1.); }`;
+  const fsQ = `#version 300 es
+precision highp float; uniform sampler2D tc; uniform sampler2D td; uniform vec2 px; uniform float nr; uniform float fr; uniform int orth; uniform float k; uniform vec3 bg; out vec4 o;
+float lin(float d){ if(orth==1) return 1.+d*(fr-nr); float z=d*2.-1.; return 2.*nr*fr/(fr+nr-z*(fr-nr)); }
+void main(){ vec2 uv=gl_FragCoord.xy*px; float d=texture(td,uv).r; if(d>=1.){ o=vec4(bg,1.); return; }
+ float L=log2(lin(d)); float s=0.;
+ for(int i=0;i<8;i++){ float a=float(i)*.785398; vec2 off=vec2(cos(a),sin(a))*1.4*px; float dn=texture(td,uv+off).r; s+= dn>=1. ? 1.2 : max(0.,L-log2(lin(dn))); }
+ float sh=k>0. ? exp(-s/8.*300.*k) : 1.; o=vec4(texture(tc,uv).rgb*sh,1.); }`;
+  function sh(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+  function prog(a, b) { const p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, a)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, b)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); const U = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); for (let i = 0; i < n; i++) { const u = gl.getActiveUniform(p, i); U[u.name] = gl.getUniformLocation(p, u.name); } return { p, U, a: { p: gl.getAttribLocation(p, 'p'), c: gl.getAttribLocation(p, 'c'), q: gl.getAttribLocation(p, 'q') } }; }
+  function mount(el) {
+    unmount(); wrap = el; cv = el.querySelector('#v3'); ov = el.querySelector('#v3o');
+    gl = cv.getContext('webgl2', { antialias: false, preserveDrawingBuffer: true }); lost = false;
+    if (!gl) { el.innerHTML = '<div class="empty"><h2>3D не поддерживается этим браузером</h2><p class="h">Нужен браузер с WebGL 2: Chrome, Edge, Firefox или Safari 15+.</p></div>'; return; }
+    cv.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; cache.clear(); });
+    P1 = prog(vs, fs); P2 = prog(vsQ, fsQ); quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    bind(); resize(); if (!fitted) fit(); else dirty();
+  }
+  function unmount() { if (raf) cancelAnimationFrame(raf); raf = 0; if (gl) { for (const c of cache.values()) { gl.deleteBuffer(c.b); if (c.cb) gl.deleteBuffer(c.cb); } const ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext(); } cache.clear(); gl = null; cv = null; ov = null; wrap = null; fw = fh = 0; }
+  function resize() { if (!cv) return; const d = dpr(), r = cv.getBoundingClientRect(); cv.width = Math.max(10, Math.round(r.width * d)); cv.height = Math.max(10, Math.round(r.height * d)); ov.width = cv.width; ov.height = cv.height; dirty(); }
+  function target(w, h) {
+    if (fbo && fw === w && fh === h) return; if (fbo) { gl.deleteFramebuffer(fbo); gl.deleteTexture(tC); gl.deleteTexture(tD); } fw = w; fh = h;
+    tC = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tC); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null); [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER].forEach(p => gl.texParameteri(gl.TEXTURE_2D, p, gl.NEAREST)); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    tD = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tD); gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, w, h, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null); [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER].forEach(p => gl.texParameteri(gl.TEXTURE_2D, p, gl.NEAREST)); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    fbo = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fbo); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tC, 0); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, tD, 0); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  }
+  // точки скана в видеопамять (без стёртого кистью); пересобираются, если чистка поменялась
+  function buf(s) {
+    let c = cache.get(s.id); if (c && c.cg === s.cg && c.pts === s.pts) return c; if (c) { gl.deleteBuffer(c.b); if (c.cb) gl.deleteBuffer(c.cb); }
+    const K = keptIdx(s), P = s.pts, C = s.col; let A = P, B = C;
+    if (K) { A = new Float32Array(K.length * 3); B = C ? new Uint8Array(K.length * 3) : null; for (let k = 0; k < K.length; k++) { const i = K[k]; A[3 * k] = P[3 * i]; A[3 * k + 1] = P[3 * i + 1]; A[3 * k + 2] = P[3 * i + 2]; if (B) { B[3 * k] = C[3 * i]; B[3 * k + 1] = C[3 * i + 1]; B[3 * k + 2] = C[3 * i + 2]; } } }
+    const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, A, gl.STATIC_DRAW);
+    let cb = null; if (B) { cb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, cb); gl.bufferData(gl.ARRAY_BUFFER, B, gl.STATIC_DRAW); }
+    c = { b, cb, n: A.length / 3, cg: s.cg, pts: s.pts, A }; cache.set(s.id, c); return c;
+  }
+  const shown = () => S.scans.filter(s => s.vis && (!solo || solo.includes(s.id)));
+  function scene() { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, z1 = 2.7; for (const s of shown()) { for (const p of scanBBoxW(s)) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } z1 = Math.max(z1, s.ceil - s.floor); } if (x0 > x1) { x0 = y0 = -5; x1 = y1 = 5; } return { x0, y0, x1, y1, z0: -0.1, z1 }; }
+  function fit() { // по основной массе точек: редкие точки за окнами не отдаляют вид
+    const b = scene(), xs = [], ys = []; for (const s of shown()) { const A = gl ? buf(s).A : s.pts, { R, t } = worldRT(s), st = Math.max(1, Math.floor(A.length / 3 / 5000)) * 3;
+      for (let i = 0; i < A.length; i += st) { xs.push(R[0] * A[i] + R[1] * A[i + 1] + R[2] * A[i + 2] + t[0]); ys.push(R[3] * A[i] + R[4] * A[i + 1] + R[5] * A[i + 2] + t[1]); } }
+    if (xs.length > 100) { xs.sort((a, c) => a - c); ys.sort((a, c) => a - c); const q = (a, f) => a[Math.floor(f * (a.length - 1))]; b.x0 = q(xs, 0.01); b.x1 = q(xs, 0.99); b.y0 = q(ys, 0.01); b.y1 = q(ys, 0.99); }
+    cam.tg = [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, (b.z0 + b.z1) / 2]; const r = Math.hypot(b.x1 - b.x0, b.y1 - b.y0, b.z1 - b.z0) / 2; cam.dist = Math.max(3, r / Math.tan(cam.fov / 2) * 1.05); fitted = true; dirty(); }
+  function basis() { const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch), cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw); const d = [cp * cy, cp * sy, sp], f = [-d[0], -d[1], -d[2]], r = [-sy, cy, 0], u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]]; const e = [cam.tg[0] + d[0] * cam.dist, cam.tg[1] + d[1] * cam.dist, cam.tg[2] + d[2] * cam.dist]; return { e, f, r, u }; }
+  function mats(W, H) {
+    const { e, f, r, u } = basis(), b = scene(), R = Math.hypot(b.x1 - b.x0, b.y1 - b.y0, b.z1 - b.z0) + 40;
+    const nr = cam.ortho ? -R : Math.max(0.03, cam.dist / 400), fr = cam.dist + R;
+    const V = [r[0], u[0], -f[0], 0, r[1], u[1], -f[1], 0, r[2], u[2], -f[2], 0, -(r[0] * e[0] + r[1] * e[1] + r[2] * e[2]), -(u[0] * e[0] + u[1] * e[1] + u[2] * e[2]), f[0] * e[0] + f[1] * e[1] + f[2] * e[2], 1];
+    const asp = W / H; let Pm;
+    if (cam.ortho) { const hh = cam.dist * Math.tan(cam.fov / 2), hw = hh * asp; Pm = [1 / hw, 0, 0, 0, 0, 1 / hh, 0, 0, 0, 0, -2 / (fr - nr), 0, 0, 0, -(fr + nr) / (fr - nr), 1]; }
+    else { const t = 1 / Math.tan(cam.fov / 2); Pm = [t / asp, 0, 0, 0, 0, t, 0, 0, 0, 0, -(fr + nr) / (fr - nr), -1, 0, 0, -2 * fr * nr / (fr - nr), 0]; }
+    return { VP: mm4(Pm, V), nr, fr, e, f, r, u };
+  }
+  function mm4(A, B) { const o = new Array(16).fill(0); for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let s = 0; for (let k = 0; k < 4; k++) s += A[k * 4 + r] * B[c * 4 + k]; o[c * 4 + r] = s; } return o; }
+  function model(s) { const { R, t } = worldRT(s); return [R[0], R[3], R[6], 0, R[1], R[4], R[7], 0, R[2], R[5], R[8], 0, t[0], t[1], t[2], 1]; }
+  function dirty(full) { if (full) tpts.clear(); if (!gl || pend) return; pend = true; raf = requestAnimationFrame(draw); }
+  const BG = [0.11, 0.125, 0.15];
+  function draw() {
+    pend = false; if (!gl || lost) return; const W = cv.width, H = cv.height; target(W, H);
+    const M = mats(W, H); lastMVP = M; const b = scene();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, opt.edl ? fbo : null); gl.viewport(0, 0, W, H); gl.clearColor(BG[0], BG[1], BG[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST);
+    gl.useProgram(P1.p); const U = P1.U; gl.uniformMatrix4fv(U.vp, false, M.VP); gl.uniform1i(U.mode, opt.color === 'scan' ? 0 : opt.color === 'h' ? 1 : 2); gl.uniform1f(U.ps, opt.size * dpr()); gl.uniform2f(U.zr, -0.05, b.z1 + 0.05);
+    gl.uniform2f(U.clip, opt.bot == null ? -1e9 : opt.bot, opt.top == null ? 1e9 : opt.top);
+    for (const s of shown()) { const c = buf(s); gl.uniformMatrix4fv(U.mdl, false, model(s)); const col = parseInt(s.color.slice(1), 16); gl.uniform3f(U.sc, (col >> 16) / 255, ((col >> 8) & 255) / 255, (col & 255) / 255); gl.uniform1f(U.rgbOk, c.cb ? 1 : 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, c.b); gl.enableVertexAttribArray(P1.a.p); gl.vertexAttribPointer(P1.a.p, 3, gl.FLOAT, false, 0, 0);
+      if (P1.a.c >= 0) { if (c.cb) { gl.bindBuffer(gl.ARRAY_BUFFER, c.cb); gl.enableVertexAttribArray(P1.a.c); gl.vertexAttribPointer(P1.a.c, 3, gl.UNSIGNED_BYTE, true, 0, 0); } else { gl.disableVertexAttribArray(P1.a.c); gl.vertexAttrib3f(P1.a.c, 0.72, 0.72, 0.72); } }
+      gl.drawArrays(gl.POINTS, 0, c.n); }
+    if (opt.edl) { gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.disable(gl.DEPTH_TEST); gl.useProgram(P2.p); const Q = P2.U;
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tC); gl.uniform1i(Q.tc, 0); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tD); gl.uniform1i(Q.td, 1);
+      gl.uniform2f(Q.px, 1 / W, 1 / H); gl.uniform1f(Q.nr, M.nr); gl.uniform1f(Q.fr, M.fr); gl.uniform1i(Q.orth, cam.ortho ? 1 : 0); gl.uniform1f(Q.k, cam.ortho ? 0.12 : 0.35); gl.uniform3f(Q.bg, BG[0], BG[1], BG[2]);
+      gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.enableVertexAttribArray(P2.a.q); gl.vertexAttribPointer(P2.a.q, 2, gl.FLOAT, false, 0, 0); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); gl.disableVertexAttribArray(P2.a.q); }
+    overlay(M);
+  }
+  function toScr(M, x, y, z) { const m = M.VP, cx = m[0] * x + m[4] * y + m[8] * z + m[12], cy = m[1] * x + m[5] * y + m[9] * z + m[13], cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) return null; return [(cx / cw + 1) / 2 * cv.width, (1 - cy / cw) / 2 * cv.height]; }
+  function overlay(M) {
+    const c = ov.getContext('2d'), d = dpr(); c.clearRect(0, 0, ov.width, ov.height);
+    // оси (компас) в углу
+    const O = [ov.width - 52 * d, ov.height - 52 * d], ax = [[1, 0, 0, '#ef4444', 'X'], [0, 1, 0, '#22c55e', 'Y'], [0, 0, 1, '#3b82f6', 'Z']];
+    for (const [x, y, z, col, l] of ax) { const sx = M.r[0] * x + M.r[1] * y + M.r[2] * z, sy = M.u[0] * x + M.u[1] * y + M.u[2] * z; c.strokeStyle = col; c.lineWidth = 2.5 * d; c.beginPath(); c.moveTo(O[0], O[1]); c.lineTo(O[0] + sx * 30 * d, O[1] - sy * 30 * d); c.stroke(); c.fillStyle = col; c.font = `bold ${11 * d}px system-ui`; c.fillText(l, O[0] + sx * 38 * d - 4 * d, O[1] - sy * 38 * d + 4 * d); }
+    // измерения
+    c.font = `600 ${13 * d}px system-ui`;
+    for (const m of meas) { const A = toScr(M, ...m.a), B = m.b ? toScr(M, ...m.b) : null;
+      const dot = p => { c.fillStyle = '#facc15'; c.strokeStyle = '#111'; c.lineWidth = 1.5 * d; c.beginPath(); c.arc(p[0], p[1], 4.5 * d, 0, 7); c.fill(); c.stroke(); };
+      if (A && B) { c.strokeStyle = '#facc15'; c.lineWidth = 2 * d; c.setLineDash([6 * d, 4 * d]); c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(B[0], B[1]); c.stroke(); c.setLineDash([]);
+        const L = Math.hypot(m.b[0] - m.a[0], m.b[1] - m.a[1], m.b[2] - m.a[2]), Lh = Math.hypot(m.b[0] - m.a[0], m.b[1] - m.a[1]), dz = m.b[2] - m.a[2];
+        const t = `${nf(L, 3)} м   в плане ${nf(Lh, 3)}   ΔZ ${dz >= 0 ? '+' : ''}${nf(dz, 3)}`, mx = (A[0] + B[0]) / 2, my = Math.min(A[1], B[1]) - 8 * d, w = c.measureText(t).width + 14 * d;
+        c.fillStyle = 'rgba(17,20,26,.88)'; c.fillRect(mx - w / 2, my - 26 * d, w, 22 * d); c.fillStyle = '#fde68a'; c.fillText(t, mx - w / 2 + 7 * d, my - 10 * d); }
+      if (A) dot(A); if (B) dot(B); }
+    if (S.tool === 'm3d') { c.fillStyle = 'rgba(17,20,26,.82)'; const t = meas.length && !meas[meas.length - 1].b ? 'Измерение: коснитесь второй точки' : 'Измерение: коснитесь первой точки (Esc — убрать)'; c.font = `${12.5 * d}px system-ui`; const w = c.measureText(t).width + 16 * d; c.fillRect(10 * d, 10 * d, w, 24 * d); c.fillStyle = '#fff'; c.fillText(t, 18 * d, 26 * d); }
+  }
+  // точка под курсором: ближайшая к камере среди точек в радиусе 6 px
+  function pick(px, py) {
+    const M = lastMVP; if (!M) return null; const m = M.VP, rr = (6 * dpr()) ** 2; let best = null, bz = Infinity;
+    const top = opt.top == null ? 1e9 : opt.top, bot = opt.bot == null ? -1e9 : opt.bot, W = cv.width, H = cv.height;
+    for (const s of shown()) { const c = buf(s), A = c.A, { R, t } = worldRT(s);
+      for (let i = 0; i < A.length; i += 3) { const x0 = A[i], y0 = A[i + 1], z0 = A[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
+        if (z > top || z < bot) continue; const cw = m[3] * x + m[7] * y + m[11] * z + m[15]; if (cw <= 1e-6) continue;
+        const sx = ((m[0] * x + m[4] * y + m[8] * z + m[12]) / cw + 1) / 2 * W, sy = (1 - (m[1] * x + m[5] * y + m[9] * z + m[13]) / cw) / 2 * H, d2 = (sx - px) ** 2 + (sy - py) ** 2; if (d2 > rr) continue;
+        const dz = (m[2] * x + m[6] * y + m[10] * z + m[14]) / cw + d2 / rr * 0.002; if (dz < bz) { bz = dz; best = [x, y, z]; } } }
+    return best;
+  }
+  function bind() {
+    const pt = e => { const r = cv.getBoundingClientRect(), d = dpr(); return [(e.clientX - r.left) * d, (e.clientY - r.top) * d]; };
+    const touches = new Map();
+    cv.oncontextmenu = e => e.preventDefault();
+    cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); touches.set(e.pointerId, [e.clientX, e.clientY]);
+      if (touches.size === 2) { const [a, b] = [...touches.values()]; drag = { k: 'two', m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d: Math.hypot(a[0] - b[0], a[1] - b[1]) }; return; }
+      drag = { k: e.button === 2 || e.button === 1 || e.shiftKey ? 'pan' : 'orbit', x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t: Date.now() }; };
+    cv.onpointermove = e => { if (!drag) return; if (touches.has(e.pointerId)) touches.set(e.pointerId, [e.clientX, e.clientY]);
+      if (drag.k === 'two' && touches.size >= 2) { const [a, b] = [...touches.values()], m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d = Math.hypot(a[0] - b[0], a[1] - b[1]); pan(m[0] - drag.m[0], m[1] - drag.m[1]); if (drag.d > 10 && d > 10) cam.dist = Math.max(0.3, cam.dist * drag.d / d); drag.m = m; drag.d = d; dirty(); return; }
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+      if (drag.k === 'orbit') { cam.yaw -= dx * 0.008; cam.pitch = Math.max(-1.55, Math.min(1.5707, cam.pitch + dy * 0.008)); } else if (drag.k === 'pan') pan(dx, dy); dirty(); };
+    const up = e => { touches.delete(e.pointerId); if (!drag) return; const d = drag; if (touches.size === 0) drag = null; else if (d.k === 'two') drag = null;
+      if (d.k !== 'two' && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5 && Date.now() - d.t < 600 && S.tool === 'm3d') { const p = pick(...pt(e)); if (!p) { stat('Под курсором нет точек — коснитесь поверхности.'); return; } const last = meas[meas.length - 1]; if (last && !last.b) last.b = p; else meas.push({ a: p }); if (meas.length > 6) meas.shift(); dirty(); const L = meas[meas.length - 1]; if (L.b) stat(`Расстояние ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1], L.b[2] - L.a[2]), 3)} м · в плане ${nf(Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1]), 3)} м · по высоте ${nf(L.b[2] - L.a[2], 3)} м.`); } };
+    cv.onpointerup = up; cv.onpointercancel = up;
+    cv.ondblclick = e => { const p = pick(...pt(e)); if (p) { cam.tg = p; dirty(); stat('Центр вращения — в этой точке.'); } };
+    cv.onwheel = e => { e.preventDefault(); const k = Math.exp(Math.sign(e.deltaY) * Math.min(0.5, Math.abs(e.deltaY) * 0.0015)); const r = cv.getBoundingClientRect(), W = r.width, H = r.height;
+      // зум к курсору: точка на плоскости цели под курсором остаётся под курсором
+      const { r: R, u } = basis(), hh = cam.dist * Math.tan(cam.fov / 2), sx = ((e.clientX - r.left) / W * 2 - 1) * hh * W / H, sy = (1 - (e.clientY - r.top) / H * 2) * hh;
+      const P = [cam.tg[0] + R[0] * sx + u[0] * sy, cam.tg[1] + R[1] * sx + u[1] * sy, cam.tg[2] + R[2] * sx + u[2] * sy];
+      cam.tg = cam.tg.map((v, i) => P[i] + (v - P[i]) * k); cam.dist = Math.max(0.3, Math.min(5000, cam.dist * k)); dirty(); };
+  }
+  function pan(dx, dy) { const { r, u } = basis(), H = cv.getBoundingClientRect().height || 500, s = 2 * cam.dist * Math.tan(cam.fov / 2) / H; cam.tg = cam.tg.map((v, i) => v - r[i] * dx * s + u[i] * dy * s); }
+  function view(k) { const v = { top: [cam.yaw, 1.5707], front: [-Math.PI / 2, 0], side: [0, 0], iso: [-2.2, 0.75] }[k]; cam.yaw = v[0]; cam.pitch = v[1]; if (k === 'top' && !cam.ortho) { } dirty(); }
+  function maxH() { return Math.max(2.7, ...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); }
+  function noCeil() { if (opt.top != null) { opt.top = null; } else { const H = Math.min(...S.scans.filter(s => s.vis).map(s => s.ceil - s.floor)); opt.top = +(Math.max(1, H - 0.25)).toFixed(2); } renderList(); renderBar(); dirty(); }
+  function panelHTML() {
+    const H = maxH(), mm = v => (v * 1000).toFixed(1).replace('.', ','), R = S.fineRep, byId = id => scanById(id);
+    const sl = (k, lab, v, def) => `<label class="v3r"><span>${lab}</span><input type="range" data-v3c="${k}" min="-0.5" max="${(H + 0.6).toFixed(2)}" step="0.05" value="${v == null ? def : v}"><b>${v == null ? 'выкл' : nf(v, 2) + ' м'}</b></label>`;
+    return `<div class="v3p"><div class="lh"><b>3D: вид</b>${solo ? '<button id="v3all">Показать все</button>' : ''}</div>
+      ${sl('top', 'Срез сверху', opt.top, H + 0.6)}${sl('bot', 'Срез снизу', opt.bot, -0.5)}
+      <label class="v3r"><span>Точки</span><input type="range" data-v3c="size" min="1" max="6" step="1" value="${opt.size}"><b>${opt.size} px</b></label>
+      <label class="v3c"><input type="checkbox" id="v3edl" ${opt.edl ? 'checked' : ''}> Подсветка рельефа (тени по глубине)</label>
+      <div class="v3h">Мышь: левая — вращать, правая или Shift — сдвигать, колесо — ближе/дальше, двойной щелчок — центр вращения. Планшет: один палец — вращать, два — сдвиг и масштаб.</div></div>`
+      + (R && R.edges.length ? `<div class="lh"><b>Точность стыков (${R.edges.length})</b></div><div class="v3e">${R.edges.map((e, i) => { const a = byId(e.a), b = byId(e.b); if (!a || !b) return ''; const g = fineGrade(e);
+        return `<button class="v3j ${g} ${solo && solo[0] === e.a && solo[1] === e.b ? 'on' : ''}" data-v3j="${i}" title="${escH(a.name)} — ${escH(b.name)}|Расхождение поверхностей на стыке: обычно ${mm(e.med)} мм, у 90% точек до ${mm(e.p90)} мм, сравнено ${e.cnt} площадок. Щелчок — показать только эту пару"><i style="background:${a.color}"></i><i style="background:${b.color}"></i><span>${escH(a.name)} — ${escH(b.name)}</span><b>${mm(e.p90)} мм</b></button>`; }).join('')}</div>`
+      : `<div class="v3h" style="margin:6px 10px">После «Точно 3D» здесь будет точность каждого стыка: зелёный — до 3 мм, жёлтый — до 6 мм, красный — больше.</div>`);
+  }
+  function bindPanel() {
+    $$('[data-v3c]').forEach(inp => inp.oninput = () => { const k = inp.dataset.v3c, v = +inp.value; if (k === 'size') opt.size = v; else { const H = maxH(); opt[k] = k === 'top' ? (v >= H + 0.55 ? null : v) : (v <= -0.45 ? null : v); } const b = inp.parentNode.querySelector('b'); b.textContent = k === 'size' ? v + ' px' : opt[k] == null ? 'выкл' : nf(opt[k], 2) + ' м'; renderBar(); dirty(); });
+    const e = $('#v3edl'); if (e) e.onchange = () => { opt.edl = e.checked; dirty(); };
+    const a = $('#v3all'); if (a) a.onclick = () => { solo = null; renderList(); dirty(); };
+    $$('[data-v3j]').forEach(b => b.onclick = () => { const ed = S.fineRep.edges[+b.dataset.v3j]; if (solo && solo[0] === ed.a && solo[1] === ed.b) solo = null; else { solo = [ed.a, ed.b]; opt.color = 'scan'; const A = scanById(ed.a), B = scanById(ed.b); cam.tg = [(A.pose.x + B.pose.x) / 2, (A.pose.y + B.pose.y) / 2, 1.2]; cam.dist = Math.max(6, Math.hypot(A.pose.x - B.pose.x, A.pose.y - B.pose.y) * 2.2); } renderList(); renderBar(); dirty(); });
+  }
+  return { mount, unmount, resize, dirty, fit, view, noCeil, panelHTML, bindPanel, opt, cam, get gl() { return gl; }, set ortho(v) { cam.ortho = v; dirty(); }, clearMeas() { meas = []; dirty(); }, get mounted() { return !!gl; }, solo: v => { solo = v; dirty(); } };
+})();
+
+// ===================== ВЫГРУЗКА E57: полная плотность из исходных файлов или как в программе =====================
+function readFull(file, s) { return file.arrayBuffer().then(buf => runWorker({ cmd: 'full', buf, idx: (s.src && s.src.idx) || 0, name: s.name, cg: s.cg && s.cg.er ? { x0: s.cg.x0, y1: s.cg.y1, w: s.cg.w, h: s.cg.h, res: s.cg.res, er: s.cg.er } : null }, [buf], 'Читаю ' + s.name)); }
+function askSourceFiles(missing) { // исходные E57 не в памяти (после перезапуска) — попросить выбрать
+  return new Promise(res => { const ov = document.createElement('div'); ov.className = 'dlg';
+    ov.innerHTML = `<div class="dlg-b" style="max-width:520px"><div class="dlg-t">Нужны исходные файлы E57</div><div class="dlg-x">Для полной плотности программа читает точки из исходных файлов сканов, а их нет в памяти (страницу открывали заново). Выберите эти файлы — можно все сразу:<br><small>${missing.slice(0, 12).map(escH).join(', ')}${missing.length > 12 ? ' и ещё ' + (missing.length - 12) : ''}</small></div><div class="row r"><button class="c">Отмена</button><button class="pri" data-pick>Выбрать файлы…</button></div></div>`;
+    document.body.appendChild(ov); const inp = document.createElement('input'); inp.type = 'file'; inp.multiple = true; inp.accept = '.e57';
+    inp.onchange = () => { for (const f of inp.files) S.srcFiles.set(f.name, f); const left = missing.filter(n => !S.srcFiles.has(n));
+      // новое нажатие нужно браузеру, чтобы открыть окно «Сохранить как»
+      ov.querySelector('.dlg-x').innerHTML = left.length ? `Не хватает: ${left.map(escH).join(', ')}. Имена должны совпадать с загруженными — выберите ещё или продолжите без них.` : `Файлы найдены (${missing.length}). Можно выгружать.`;
+      const b = ov.querySelector('[data-pick]'); b.textContent = left.length ? 'Выбрать ещё…' : 'Выгрузить'; if (!left.length) b.onclick = () => { ov.remove(); res(true); }; };
+    ov.querySelector('.c').onclick = () => { ov.remove(); res(false); }; ov.querySelector('[data-pick]').onclick = () => inp.click(); });
+}
+async function exportE57(L, opts) {
+  const { full, dens = 0.02, mode = 'sep', erase = true, name } = opts;
+  if (full) { const miss = [...new Set(L.filter(s => !S.srcFiles.has((s.src && s.src.file) || s.file)).map(s => (s.src && s.src.file) || s.file))];
+    if (miss.length) { if (!(await askSourceFiles(miss))) return; const still = L.filter(s => !S.srcFiles.has((s.src && s.src.file) || s.file)); if (still.length) { uiAlert('Не хватает файлов: ' + [...new Set(still.map(s => (s.src && s.src.file) || s.file))].join(', ') + '. Имена файлов должны совпадать с загруженными.'); return; } } }
+  const base = (name || ((pjCur() && pjCur().name) || 'Сканы')).replace(/[\\/:*?"<>|]/g, '_').trim() || 'Сканы', useFS = !!window.showSaveFilePicker && !window.__noFS;
+  // куда писать: Chrome/Edge — прямо в файл на диске (большие файлы не держатся в памяти), иначе — скачивание
+  const outs = []; let dir = null;
+  const open = async fname => { if (useFS) { try { let fh; if (mode === 'each') { if (!dir) throw new Error('нет папки'); fh = await dir.getFileHandle(fname, { create: true }); } else fh = await window.showSaveFilePicker({ suggestedName: fname, types: [{ description: 'Облако точек E57', accept: { 'application/octet-stream': ['.e57'] } }] }); return { fname, sink: E57S.fileSink(await fh.createWritable()), fs: true }; } catch (e) { if (e && e.name === 'AbortError') return null; } } return { fname, sink: E57S.blobSink(), fs: false }; };
+  const save = o => { if (o.fs) return; const a = document.createElement('a'); a.href = URL.createObjectURL(o.sink.blob()); a.download = o.fname; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 120000); };
+  let W = null, tot = 0, bytes = 0, k = 0, hasC = false, hasI = false; const t0 = Date.now();
+  if (mode === 'each' && useFS) { try { dir = await window.showDirectoryPicker({ mode: 'readwrite' }); } catch (e) { if (e && e.name === 'AbortError') return; } }
+  if (mode !== 'each') { const o = await open(base + (mode === 'one' ? '_облако' : '_сканы') + '.e57'); if (!o) return; outs.push(o); W = E57S.create(o.sink); }
+  // одна общая система: Z — от пола опорного скана, X/Y — как в «Сборке»
+  try {
+    for (const s of L) { k++; const lab = `${s.name} (${k} из ${L.length})`; busy(`Выгрузка E57: ${lab}…`); await new Promise(r => setTimeout(r, 0));
+      let P, C = null, I = null, n;
+      if (full) { const f = S.srcFiles.get((s.src && s.src.file) || s.file); const r = await readFull(f, erase ? s : Object.assign({}, s, { cg: null })); P = r.pts; C = r.col; I = r.inten; n = r.n; }
+      else { const K = erase ? keptIdx(s) : null, src = s.pts, sc = s.col, seen = dens > 0.025 ? new Set() : null; P = new Float32Array(src.length); C = sc ? new Uint8Array(src.length) : null; n = 0;
+        const N = src.length / 3; for (let q = 0; q < (K ? K.length : N); q++) { const i = K ? K[q] : q, x = src[3 * i], y = src[3 * i + 1], z = src[3 * i + 2];
+          if (seen) { const key = Math.floor(x / dens) * 73856093 ^ Math.floor(y / dens) * 19349663 ^ Math.floor(z / dens) * 83492791; if (seen.has(key)) continue; seen.add(key); }
+          P[3 * n] = x; P[3 * n + 1] = y; P[3 * n + 2] = z; if (C) { C[3 * n] = sc[3 * i]; C[3 * n + 1] = sc[3 * i + 1]; C[3 * n + 2] = sc[3 * i + 2]; } n++; } }
+      hasC = hasC || !!C; hasI = hasI || !!I;
+      const { R, t } = worldRT(s);
+      busy(`Выгрузка E57: ${lab} — записываю ${n.toLocaleString('ru')} точек…`); await new Promise(r => setTimeout(r, 0));
+      let o = null; if (mode === 'each') { o = await open(base + '_' + String(s.name).replace(/[\\/:*?"<>|]/g, '_') + '.e57'); if (!o) return; outs.push(o); W = E57S.create(o.sink); }
+      if (mode === 'sep') { await W.begin({ name: s.name, desc: 'Скан: положение после сшивки', pose: { q: E57S.quat(R), t }, rgb: !!C, inten: !!I }); await W.add(P, C, I, n); await W.end(); }
+      else { // общие координаты: точки переводятся в систему сборки
+        if (mode === 'each' || k === 1) await W.begin({ name: mode === 'one' ? base : s.name, desc: 'Сшитые сканы в общей системе', pose: { q: [1, 0, 0, 0], t: [0, 0, 0] }, rgb: !!C, inten: !!I });
+        const CH = 500000, T = new Float32Array(CH * 3);
+        for (let s0 = 0; s0 < n; s0 += CH) { const m = Math.min(CH, n - s0); for (let i = 0; i < m; i++) { const j = 3 * (s0 + i), x = P[j], y = P[j + 1], z = P[j + 2]; T[3 * i] = R[0] * x + R[1] * y + R[2] * z + t[0]; T[3 * i + 1] = R[3] * x + R[4] * y + R[5] * z + t[1]; T[3 * i + 2] = R[6] * x + R[7] * y + R[8] * z + t[2]; }
+          await W.add(T.subarray(0, m * 3), C ? C.subarray(s0 * 3, (s0 + m) * 3) : null, I ? I.subarray(s0, s0 + m) : null, m); }
+        if (mode === 'each') { await W.end(); const r = await W.finish({ coord: 'Скан: локальная система сборки, метры' }); bytes += r.bytes; save(o); } else if (k === L.length) await W.end(); }
+      tot += n; P = C = I = null; }
+    if (mode !== 'each') { const r = await W.finish({ coord: 'Скан: локальная система сборки, метры' }); bytes += r.bytes; save(outs[0]); }
+  } catch (e) { busy(''); uiAlert('Выгрузка E57 не удалась: ' + (e && e.message || e) + (full ? '. Если не хватило памяти — выгружайте частями (по несколько сканов) или «каждый скан — свой файл».' : '')); return; }
+  busy('');
+  stat(`E57 готов: ${mode === 'each' ? 'файлов ' + outs.length : mode === 'one' ? 'одно облако' : 'сканов в файле ' + L.length + ' (каждый со своим положением)'}, ${Math.round(tot).toLocaleString('ru')} точек${full ? ' — полная плотность' : ''}${hasC ? ', с цветом' : ''}${hasI ? ', с яркостью' : ''}, ${(bytes / 1048576).toFixed(0)} МБ, ${Math.round((Date.now() - t0) / 1000)} с. Открывается в CloudCompare, ReCap, Revit, FARO SCENE, Cyclone.`);
 }
 
 // ===================== АВТОСШИВКА, разбор стыков и подсказки =====================
@@ -2369,7 +2809,7 @@ async function autoStitch() {
   S.autoEdges = R.edges.map(e => ({ a: list[e.i].id, b: list[e.j].id, ratio: e.ratio, rms: e.rms }));
   S.asmFitted = false; analyze(); setView('asm'); fitAsm(); saveSoon();
   const H = S.hints; stat(`Автосшивка: в общей группе ${main.length} из ${list.length} сканов${groups.length > 1 ? `, отдельно — ${list.length - main.length}` : ''}. ${H.length ? 'Подсказки, где помочь, — слева в списке.' : 'Все стыки сходятся.'}`);
-  if (main.length >= 2) { const st0 = $('#status').textContent; await refineStitch(); stat(st0.replace(/\.$/, '') + ' · сразу уточнено: ' + $('#status').textContent.replace(/^Уточнено:\s*/, '')); } // точная подгонка — сразу, одной кнопкой
+  if (main.length >= 2) { const st0 = $('#status').textContent; await refineStitch(); stat(st0.replace(/\.$/, '') + ' · сразу уточнено: ' + $('#status').textContent.replace(/^Уточнено:\s*/, ''));  if (S.mode === 'stitch') stat($('#status').textContent.replace(/\s*$/, '') + ' Дальше — «🎯 Точно 3D» (вкладка «3D»): подгонка всех сканов до миллиметров.'); } // точная подгонка — сразу, одной кнопкой
 }
 // --- шары: найти на всех сканах, одинаковые шары — одной буквой (по нынешнему положению сканов) ---
 function runSpheres(list, R) { return new Promise((res, rej) => { const w = getWorker(), job = Math.random(); const on = e => { const d = e.data; if (d.job !== job) return; if (d.prog != null && !d.done) { busy(`${d.stage || 'Ищу шары'}… ${Math.round(d.prog * 100)}%`); return; } w.removeEventListener('message', on); if (d.error) rej(new Error(d.error)); else res(d.res); }; w.addEventListener('message', on);
