@@ -10,12 +10,38 @@ rem      и запустите двойным щелчком,
 rem      ИЛИ перетащите папку со сканами прямо на этот файл.
 rem   2) готовые .e57 появятся в подпапке _E57 рядом со сканами.
 rem  Уже сконвертированные сканы пропускаются - можно запускать повторно.
-rem  Точки прореживаются до 1 см (Скану этого с запасом хватает).
+rem  При запуске выбирается плотность:
+rem   1 - прореживание до 1 см (по умолчанию; Скану для сшивки и плана хватает),
+rem       результат в подпапке _E57;
+rem   2 - полная плотность FARO, без прореживания (для выгрузки единого
+rem       сшитого облака во всех точках; файлы в разы больше),
+rem       результат в подпапке _E57_full.
+rem  Режим можно задать и вторым параметром: fls_to_e57.bat "папка" full
 rem ================================================================
 
 set "SRC=%~dp0"
 if not "%~1"=="" set "SRC=%~f1\"
-set "DST=%SRC%_E57"
+rem --- плотность: 1 - до 1 см, 2 - полная ---
+set "MODE="
+if /i "%~2"=="full" set "MODE=2"
+if /i "%~2"=="1cm" set "MODE=1"
+if not defined MODE (
+  echo.
+  echo  Плотность точек:
+  echo    1 - прореживать до 1 см  ^(быстро, для сшивки и плана^)
+  echo    2 - полная плотность FARO ^(все точки, файлы в разы больше^)
+  choice /c 12 /n /t 15 /d 1 /m " Выберите 1 или 2 [через 15 с - 1]: "
+  if errorlevel 2 ( set "MODE=2" ) else ( set "MODE=1" )
+)
+if "%MODE%"=="2" (
+  set "DST=%SRC%_E57_full"
+  set "SUBS="
+  set "DENS=полная, без прореживания"
+) else (
+  set "DST=%SRC%_E57"
+  set "SUBS=-SS SPATIAL 0.01"
+  set "DENS=до 1 см"
+)
 set "TMP1=%SystemDrive%\E57tmp"
 set "LOG=%DST%\_log.txt"
 
@@ -36,6 +62,7 @@ if not exist "%CC%" ( echo  Файл не найден: %CC% & pause & exit /b 1
 echo  CloudCompare: %CC%
 echo  Сканы:        %SRC%
 echo  Результат:    %DST%
+echo  Плотность:    %DENS%
 echo.
 
 if not exist "%DST%" mkdir "%DST%"
@@ -68,13 +95,13 @@ echo  [%time:~0,8%] %NAME% ...
 >>"%LOG%" echo ===== %NAME% =====
 if exist "%TMP1%\%NAME%.e57" del /q "%TMP1%\%NAME%.e57"
 rem пути с пробелами CloudCompare сохраняет криво - пишем во временную папку без пробелов
-"%CC%" -SILENT -AUTO_SAVE OFF -O "%IN%" -SS SPATIAL 0.01 -C_EXPORT_FMT E57 -NO_TIMESTAMP -SAVE_CLOUDS FILE "%TMP1%\%NAME%.e57" >>"%LOG%" 2>&1
+"%CC%" -SILENT -AUTO_SAVE OFF -O "%IN%" %SUBS% -C_EXPORT_FMT E57 -NO_TIMESTAMP -SAVE_CLOUDS FILE "%TMP1%\%NAME%.e57" >>"%LOG%" 2>&1
 if exist "%TMP1%\%NAME%.e57" (
   move /y "%TMP1%\%NAME%.e57" "%DST%\%NAME%.e57" >nul
   echo              готово
   set /a OK+=1
 ) else (
-  echo              ОШИБКА - см. _E57\_log.txt
+  echo              ОШИБКА - см. _log.txt в папке результата
   set /a ERR+=1
 )
 goto :eof

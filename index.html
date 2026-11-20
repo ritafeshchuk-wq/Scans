@@ -128,7 +128,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.11 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.12 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -2556,10 +2556,11 @@ async function exportCloud(L, dens, fmt) {
   if (fmt === 'dxf') { push('0\r\nSECTION\r\n2\r\nHEADER\r\n9\r\n$ACADVER\r\n1\r\nAC1009\r\n9\r\n$DWGCODEPAGE\r\n3\r\nANSI_1251\r\n9\r\n$INSUNITS\r\n70\r\n4\r\n9\r\n$PDMODE\r\n70\r\n0\r\n0\r\nENDSEC\r\n0\r\nSECTION\r\n2\r\nTABLES\r\n0\r\nTABLE\r\n2\r\nLAYER\r\n70\r\n' + L.length + '\r\n');
     for (const s of L) push(`0\r\nLAYER\r\n2\r\n${lay(s)}\r\n70\r\n0\r\n62\r\n${aci(s.color)}\r\n6\r\nCONTINUOUS\r\n`); push('0\r\nENDTAB\r\n0\r\nENDSEC\r\n0\r\nSECTION\r\n2\r\nENTITIES\r\n'); }
   for (const s of L) {
-    const P = s.pts, c = Math.cos(s.pose.a), sn = Math.sin(s.pose.a), cg = s.cg, er = cg && cg.er, seen = dens > 0.025 ? new Set() : null, ly = lay(s), [cr, cgc, cb] = hex(s.color);
-    for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1], z = P[i + 2] - s.floor;
+    // положение скана целиком, как в E57 и «3D»: поворот в плане + наклоны после «Точно 3D» (s.lev) + сдвиг
+    const P = s.pts, { R, t } = worldRT(s), cg = s.cg, er = cg && cg.er, seen = dens > 0.025 ? new Set() : null, ly = lay(s), [cr, cgc, cb] = hex(s.color);
+    for (let i = 0; i < P.length; i += 3) { const x = P[i], y = P[i + 1], z0 = P[i + 2];
       if (er) { const u = Math.floor((x - cg.x0) / cg.res), v = Math.floor((cg.y1 - y) / cg.res); if (u >= 0 && v >= 0 && u < cg.w && v < cg.h && er[v * cg.w + u]) continue; }
-      const X = c * x - sn * y + s.pose.x, Y = sn * x + c * y + s.pose.y;
+      const X = R[0] * x + R[1] * y + R[2] * z0 + t[0], Y = R[3] * x + R[4] * y + R[5] * z0 + t[1], z = R[6] * x + R[7] * y + R[8] * z0 + t[2];
       if (seen) { const key = Math.floor(X / dens) * 73856093 ^ Math.floor(Y / dens) * 19349663 ^ Math.floor(z / dens) * 83492791; if (seen.has(key)) continue; seen.add(key); }
       n++;
       if (fmt === 'dxf') push(`0\r\nPOINT\r\n8\r\n${ly}\r\n10\r\n${(X * k).toFixed(0)}\r\n20\r\n${(Y * k).toFixed(0)}\r\n30\r\n${(z * k).toFixed(0)}\r\n`);
