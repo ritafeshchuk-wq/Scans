@@ -128,7 +128,7 @@ canvas.band{width:100%;height:32px;display:block;border-radius:6px;touch-action:
 <div id="side"><div id="list"></div></div>
 <div id="main"></div>
 <div id="rotbar" title="Повернуть выбранный скан"><button id="bMulti" title="Выбрать несколько сканов: касание — добавить/убрать, рамка по пустому месту — выбрать все внутри">⬚ Несколько</button><button id="bR1">⟲ 1°</button><button id="bR01">⟲ 0,1°</button><button id="bRm01">⟳ 0,1°</button><button id="bRm1">⟳ 1°</button><button id="bR90">⟲ 90°</button></div>
-<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.12 · © d1sco, 2026</span></div>
+<div id="foot"><span id="status"></span><span id="saved"></span><span id="ver">Скан 4.13 · © d1sco, 2026</span></div>
 <div id="busy" hidden><span>…</span></div>
 <input type="file" id="fileIn" multiple accept=".e57" hidden><input type="file" id="projIn" hidden>
 <div id="help" hidden><div class="lh"><h3>Как работать</h3><button id="helpX">✕</button></div>
@@ -1058,7 +1058,7 @@ function refineJob({ job, scans, poses, pairs, fixed, fixedSet, spheres }) {
       self.postMessage({ job, prog: 0.3 + 0.6 * (k++) / pairs.length, stage: 'Подгоняю стыки' });
       const P = poses[i], Q = poses[j], q = REG3D.rel(P, Q), init = { a: q[0], tx: q[1], ty: q[2], tz: q[3] };
       const r = REG3D.icp(D[i], D[j], init); if (!r) { bad.push([i, j, 'мало общего']); continue; }
-      const da = Math.abs(Math.atan2(Math.sin(r.a - init.a), Math.cos(r.a - init.a))), dt = Math.hypot(r.tx - init.tx, r.ty - init.ty);
+      const da = Math.abs(Math.atan2(Math.sin(r.a - init.a), Math.cos(r.a - init.a))), dt = Math.hypot(r.tx - init.tx, r.ty - init.ty, r.tz - init.tz);
       if (dt > 0.5 || da > 5 * Math.PI / 180) { bad.push([i, j, 'далеко']); continue; }
       const e = REG3D.evidence(D[i], D[j], r); if (!REG3D.good(e) && !(e.ratio >= 0.6 && e.ag >= 1200 && dt < 0.06 && da < 0.6 * Math.PI / 180)) { bad.push([i, j, 'не сходится']); continue; }
       // информация стыка: J'J / σ² (точки соседние — не независимы, поэтому с запасом ×0.05)
@@ -3150,8 +3150,10 @@ async function autoStitch() {
     const ref = inMain ? (g.find(x => list[x.k] === anchor) || g[0]) : g[0], refS = list[ref.k];
     const base = inMain ? refS.pose : { x: ox, y: -18, a: 0 }; if (!inMain) ox += 16;
     const dA = base.a - ref.pose.a, c = Math.cos(dA), sn = Math.sin(dA);
+    const baseTz = -refS.floor; // высота группы — от пола её опорного скана, высоты остальных — из сшивки (по точкам), а не по найденному у каждого полу
     for (const x of g) { const s = list[x.k], dx = x.pose.tx - ref.pose.tx, dy = x.pose.ty - ref.pose.ty;
       s.pose = { x: base.x + c * dx - sn * dy, y: base.y + sn * dx + c * dy, a: normA(x.pose.a + dA) };
+      if (isFinite(x.pose.tz) && isFinite(ref.pose.tz)) { const fl = -(baseTz + x.pose.tz - ref.pose.tz); if (Math.abs(fl - s.floor) > 0.0005) { s.ceil += fl - s.floor; s.floor = fl; prepScan(s); } }
       s.auto = { group: gi, links: x.q ? x.q.links : null, fit: x.q ? x.q.fit : null, rms: x.q ? x.q.rms : null, root: x === ref };
       s.placed = inMain; } });
   S.autoEdges = R.edges.map(e => ({ a: list[e.i].id, b: list[e.j].id, ratio: e.ratio, rms: e.rms }));
@@ -3203,14 +3205,15 @@ async function refineStitch() {
   if (!(await uiDialog({ title: 'Уточнить сшивку?', text: `Программа возьмёт сканы там, где они стоят сейчас (после автосшивки и вашей подгонки), точно подгонит каждый стык по точкам и уравняет всю сеть. Далеко сканы не переставляет: если скан стоит не на месте больше чем на ~30 см, сначала подвиньте его ближе. Опорный скан стоит на месте. Пар соседей: ${pairs.length}. Вернуть как было — «↶ Отменить шаг».`, ok: 'Уточнить', cancel: 'Отмена' }))) return;
   const fixed = Math.max(0, list.findIndex(s => s.anchor)), poses = list.map(s => ({ a: s.pose.a, tx: s.pose.x, ty: s.pose.y, tz: -s.floor }));
   pushUndo(); let R; try { R = await runRefine(list, poses, pairs, fixed); } catch (e) { busy(''); uiAlert('Уточнение не удалось: ' + e.message); return; } busy('');
-  let mx = 0, mxName = '', moved = 0;
-  R.poses.forEach((p, i) => { const s = list[i], d = Math.hypot(p.tx - s.pose.x, p.ty - s.pose.y); if (d > 0.001 || Math.abs(p.a - s.pose.a) > 1e-5) moved++; if (d > mx) { mx = d; mxName = s.name; } s.pose = { x: p.tx, y: p.ty, a: normA(p.a) }; });
+  let mx = 0, mxName = '', moved = 0, mz = 0, mzName = '';
+  R.poses.forEach((p, i) => { const s = list[i], d = Math.hypot(p.tx - s.pose.x, p.ty - s.pose.y), fl = isFinite(p.tz) ? -p.tz : s.floor, dz = Math.abs(fl - s.floor); if (d > 0.001 || dz > 0.001 || Math.abs(p.a - s.pose.a) > 1e-5) moved++; if (d > mx) { mx = d; mxName = s.name; } if (dz > mz) { mz = dz; mzName = s.name; }
+    s.pose = { x: p.tx, y: p.ty, a: normA(p.a) }; if (dz > 0.0005) { s.ceil += fl - s.floor; s.floor = fl; prepScan(s); } }); // высота — из уравнивания стыков (пол, потолок, стены), а не по найденному у скана полу
   S.autoEdges = R.edges.map(e => { const a = list[e.i], b = list[e.j], sh = S.marks.filter(m => m.sphere && m.sid === a.id && S.marks.some(q => q.sphere && q.sid === b.id && q.lab === m.lab)).length; return { a: a.id, b: b.id, ratio: e.ratio, rms: e.rms, weak: e.weak && sh < 1, slipAng: e.slipAng, sph: sh }; }); S.lastSolve = null;
   const rms = R.edges.length ? R.edges.map(e => e.rms).sort((a, b) => a - b)[Math.floor(R.edges.length / 2)] : 0;
   analyze(); renderAll(); drawAsm(); saveSoon();
   const far = R.bad.filter(b => b[1] === 'далеко' || b[2] === 'далеко');
   const slip = S.autoEdges.filter(e => e.weak).length, sb = (R.sres || []).filter(q => q.max > 0.01);
-  stat(`${slip ? `⚠ Стыков, которые держатся только поперёк (вдоль могут «проскальзывать»): ${slip} — красные стрелки на сборке; нужен шар или поперечная стена. ` : ''}${(R.sres || []).length ? `Шаров в расчёте: ${R.sres.length}${sb.length ? `, расходятся больше 1 см: ${sb.map(q => q.lab).join(', ')}` : ', все сошлись до 1 см'}. ` : ''}Уточнено: стыков подогнано ${R.edges.length} из ${pairs.length}, сдвинуто сканов ${moved}, самый большой сдвиг ${Math.round(mx * 1000)} мм (${mxName}). Типичное расхождение по стыку ${Math.round(rms * 1000)} мм.${R.bad.length ? ` Не подогнаны: ${R.bad.map(b => list[b[0]].name + '–' + list[b[1]].name + ' (' + b[2] + ')').slice(0, 6).join(', ')}${R.bad.length > 6 ? '…' : ''}.` : ''}`);
+  stat(`${slip ? `⚠ Стыков, которые держатся только поперёк (вдоль могут «проскальзывать»): ${slip} — красные стрелки на сборке; нужен шар или поперечная стена. ` : ''}${(R.sres || []).length ? `Шаров в расчёте: ${R.sres.length}${sb.length ? `, расходятся больше 1 см: ${sb.map(q => q.lab).join(', ')}` : ', все сошлись до 1 см'}. ` : ''}Уточнено: стыков подогнано ${R.edges.length} из ${pairs.length}, сдвинуто сканов ${moved}, самый большой сдвиг ${Math.round(mx * 1000)} мм (${mxName})${mz > 0.0015 ? `, по высоте — ${Math.round(mz * 1000)} мм (${mzName})` : ''}. Типичное расхождение по стыку ${Math.round(rms * 1000)} мм.${R.bad.length ? ` Не подогнаны: ${R.bad.map(b => list[b[0]].name + '–' + list[b[1]].name + ' (' + b[2] + ')').slice(0, 6).join(', ')}${R.bad.length > 6 ? '…' : ''}.` : ''}`);
 }
 // --- проверка стыков: стены соседних сканов должны лечь друг на друга ---
 function wallSample(s, maxN = 6000) { const r = s.rast, P = s.pts, z0 = s.floor + s.band[0], z1 = s.floor + s.band[1], out = []; if (!r || !r.F) return out; const step = Math.max(1, Math.floor((s.nBand || 1) / maxN)); let k = 0;
