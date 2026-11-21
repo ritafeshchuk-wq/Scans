@@ -3278,13 +3278,16 @@ async function zDialog() {
   const G = grpScans(); if (!G.length) { uiAlert('Выделите в «Сборке» сканы, которые нужно поднять или опустить: щелчок, Shift / Ctrl + щелчок или рамкой.'); return; }
   const v = await uiDialog({ title: `Высота: ${zNames(G)}`, text: 'На сколько метров сдвинуть по высоте? Плюс — вверх, минус — вниз (например −2,325). В плане сканы не двигаются. Вернуть — «↶ Отменить шаг».', input: '0', ok: 'Сдвинуть', cancel: 'Отмена' });
   if (v == null) return; const dz = parseFloat(String(v).replace(',', '.').replace('−', '-').replace(/\s/g, '')); if (!isFinite(dz) || !dz) return; if (Math.abs(dz) > 50) { uiAlert('Больше 50 м — похоже на опечатку.'); return; } zShift(G, dz); }
-// облако скана в общих координатах, разложенное по клеткам 20 см в плане (до 16 высот в клетке) + уровень пола под сканером
-function zCells(s) { const { R, t } = worldRT(s), P = s.pts, n = P.length / 3, st = Math.max(1, Math.floor(n / 150000)) * 3, C = 0.2, m = new Map(), lv = new Map();
+// горизонтали скана (пол, потолок, ступени, столы) в общих координатах: клетки 20 см в плане, в каждой — высоты плотных слоёв (стены — нет) + уровень пола под сканером
+function zCells(s) { const { R, t } = worldRT(s), P = s.pts, n = P.length / 3, st = Math.max(1, Math.floor(n / 300000)) * 3, C = 0.2, m = new Map(), lv = new Map();
   for (let i = 0; i < P.length; i += st) { const x0 = P[i], y0 = P[i + 1], z0 = P[i + 2], x = R[0] * x0 + R[1] * y0 + R[2] * z0 + t[0], y = R[3] * x0 + R[4] * y0 + R[5] * z0 + t[1], z = R[6] * x0 + R[7] * y0 + R[8] * z0 + t[2];
-    const k = (Math.floor(x / C) + 50000) * 100000 + (Math.floor(y / C) + 50000); let e = m.get(k); if (!e) { e = []; m.set(k, e); } if (e.length < 16) e.push(z);
+    const k = (Math.floor(x / C) + 50000) * 100000 + (Math.floor(y / C) + 50000); let e = m.get(k); if (!e) { e = []; m.set(k, e); } if (e.length < 300) e.push(z);
     if (z0 < -0.3 && x0 * x0 + y0 * y0 < 9) { const b = Math.round(z / 0.05); lv.set(b, (lv.get(b) || 0) + 1); } }
-  let lb = 0, lc = 0; for (const [b, c] of lv) if (c > lc) { lc = c; lb = b; } return { m, level: lb * 0.05 }; }
-// на сколько сдвинуть b по высоте, чтобы его горизонтали (пол, потолок, полки) легли на горизонтали a; стены дают ровный фон
+  const H = new Map(); for (const [k, zs] of m) { if (zs.length < 8) continue; zs.sort((a, b) => a - b); const pk = []; let j = 0;
+    for (let i = 0; i < zs.length; i++) { while (zs[i] - zs[j] > 0.03) j++; const c = i - j + 1; if (c >= Math.max(6, 0.25 * zs.length)) { const z = (zs[i] + zs[j]) / 2; if (!pk.length || z - pk[pk.length - 1][0] > 0.1) pk.push([z, c]); else if (c > pk[pk.length - 1][1]) pk[pk.length - 1] = [z, c]; } }
+    if (pk.length) H.set(k, pk.map(q => q[0])); }
+  let lb = 0, lc = 0; for (const [b, c] of lv) if (c > lc) { lc = c; lb = b; } return { m: H, level: lb * 0.05 }; }
+// на сколько сдвинуть b по высоте, чтобы его горизонтали легли на горизонтали a (в общих клетках)
 function zPair(A, B) { const NB = 1601, h = new Float32Array(NB); let cells = 0;
   for (const [k, zb] of B.m) { const za = A.m.get(k); if (!za) continue; cells++; for (const q of zb) for (const w of za) { const d = w - q; if (d > -4 && d < 4) h[Math.round((d + 4) * 200)]++; } }
   if (cells < 25) return null; const sm = i => (h[i - 2] || 0) + (h[i - 1] || 0) + h[i] + (h[i + 1] || 0) + (h[i + 2] || 0); let bi = 800, bv = 0; for (let i = 2; i < NB - 2; i++) { const v = sm(i); if (v > bv) { bv = v; bi = i; } }
@@ -3297,12 +3300,13 @@ async function zCheck() {
     const pairs = []; for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) if (scansOver(L[i], L[j], 15)) pairs.push([i, j]);
     const Z = new Map(), zc = i => { if (!Z.has(i)) Z.set(i, zCells(L[i])); return Z.get(i); }, bad = [];
     for (let q = 0; q < pairs.length; q++) { const [i, j] = pairs[q]; if (q % 8 === 0) { busy(`Проверяю высоты… ${Math.round(q / pairs.length * 100)}%`); await new Promise(r => setTimeout(r, 0)); }
-      const r = zPair(zc(i), zc(j)); if (r && Math.abs(r.dz) >= 0.05 && r.hit >= 150 && r.hit > 2.5 * r.zero) bad.push({ i, j, ...r }); }
+      const r = zPair(zc(i), zc(j)); if (r && Math.abs(r.dz) >= 0.05 && r.hit >= 20 && r.hit > 3 * r.zero) bad.push({ i, j, ...r }); }
     busy('');
-    const open = bad.filter(b => !skip.has(b.i + '-' + b.j)).sort((a, b) => Math.abs(b.dz) * b.hit - Math.abs(a.dz) * a.hit);
-    if (!open.length) { stat(bad.length ? `Проверка высот: подозрительных стыков ${bad.length}, пропущены вами: ${bad.map(b => L[b.i].name + '–' + L[b.j].name).slice(0, 6).join(', ')}.${fixed ? ` Исправлено: ${fixed}.` : ''}` : `Проверка высот: ${fixed ? `исправлено ${fixed}, ` : ''}все стыки (${pairs.length}) сходятся по высоте.`); return; }
+    const small = bad.filter(b => Math.abs(b.dz) < 0.3), smallTxt = small.length ? ` Мелкие расхождения по высоте (до 30 см) — их подгонит «Досшить выбранные» или «Уточнить»: ${small.slice().sort((p, q) => Math.abs(q.dz) - Math.abs(p.dz)).slice(0, 8).map(b => `${L[b.i].name}–${L[b.j].name} ${Math.round(b.dz * 100)} см`).join(', ')}${small.length > 8 ? '…' : ''}.` : '';
+    const open = bad.filter(b => Math.abs(b.dz) >= 0.3 && !skip.has(b.i + '-' + b.j)).sort((a, b) => Math.abs(b.dz) * b.hit - Math.abs(a.dz) * a.hit);
+    if (!open.length) { const big = bad.filter(b => Math.abs(b.dz) >= 0.3); stat(`Проверка высот (стыков: ${pairs.length}): ${fixed ? `исправлено групп — ${fixed}. ` : ''}${big.length ? `пропущены вами: ${big.map(b => L[b.i].name + '–' + L[b.j].name).slice(0, 6).join(', ')}.` : 'больших расхождений нет.'}${smallTxt}`); return; }
     // группы: соседи, связанные стыками, которые по высоте в порядке
-    const badK = new Set(bad.map(b => b.i + '-' + b.j)), par = L.map((_, k) => k), fd = x => par[x] === x ? x : (par[x] = fd(par[x]));
+    const badK = new Set(bad.filter(b => Math.abs(b.dz) >= 0.3).map(b => b.i + '-' + b.j)), par = L.map((_, k) => k), fd = x => par[x] === x ? x : (par[x] = fd(par[x]));
     for (const [i, j] of pairs) if (!badK.has(i + '-' + j)) par[fd(i)] = fd(j);
     const b = open[0], gA = L.filter((_, k) => fd(k) === fd(b.i)), gB = L.filter((_, k) => fd(k) === fd(b.j)), mm = v => nf(v, 3);
     if (fd(b.i) === fd(b.j)) { skip.add(b.i + '-' + b.j); continue; } // связаны и другим путём — группой не сдвинуть
