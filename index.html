@@ -3295,28 +3295,28 @@ function zPair(A, B) { const NB = 1601, h = new Float32Array(NB); let cells = 0;
   return { dz: sw ? sd / sw : bi / 200 - 4, hit: bv, zero: z0, cells }; }
 async function zCheck() {
   const L = S.scans.filter(s => s.vis).sort(scanOrder); if (L.length < 2) { uiAlert('Нужно хотя бы два видимых скана.'); return; }
-  const skip = new Set(); let fixed = 0;
+  const skip = new Set(), loop = new Set(); let fixed = 0;
   for (let round = 0; round < 50; round++) {
     const pairs = []; for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) if (scansOver(L[i], L[j], 15)) pairs.push([i, j]);
-    const Z = new Map(), zc = i => { if (!Z.has(i)) Z.set(i, zCells(L[i])); return Z.get(i); }, bad = [];
+    const Z = new Map(), zc = i => { if (!Z.has(i)) Z.set(i, zCells(L[i])); return Z.get(i); }, bad = [], good = [];
     for (let q = 0; q < pairs.length; q++) { const [i, j] = pairs[q]; if (q % 8 === 0) { busy(`Проверяю высоты… ${Math.round(q / pairs.length * 100)}%`); await new Promise(r => setTimeout(r, 0)); }
-      const r = zPair(zc(i), zc(j)); if (r && Math.abs(r.dz) >= 0.05 && r.hit >= 20 && r.hit > 3 * r.zero) bad.push({ i, j, ...r }); }
+      const r = zPair(zc(i), zc(j)); if (r && Math.abs(r.dz) >= 0.05 && r.hit >= 20 && r.hit > 3 * r.zero) bad.push({ i, j, ...r }); if (r && r.hit >= 10 && (Math.abs(r.dz) < 0.3 || r.zero * 3 >= r.hit)) good.push([i, j]); }
     busy('');
     const small = bad.filter(b => Math.abs(b.dz) < 0.3), smallTxt = small.length ? ` Мелкие расхождения по высоте (до 30 см) — их подгонит «Досшить выбранные» или «Уточнить»: ${small.slice().sort((p, q) => Math.abs(q.dz) - Math.abs(p.dz)).slice(0, 8).map(b => `${L[b.i].name}–${L[b.j].name} ${Math.round(b.dz * 100)} см`).join(', ')}${small.length > 8 ? '…' : ''}.` : '';
     const open = bad.filter(b => Math.abs(b.dz) >= 0.3 && !skip.has(b.i + '-' + b.j)).sort((a, b) => Math.abs(b.dz) * b.hit - Math.abs(a.dz) * a.hit);
-    if (!open.length) { const big = bad.filter(b => Math.abs(b.dz) >= 0.3); stat(`Проверка высот (стыков: ${pairs.length}): ${fixed ? `исправлено групп — ${fixed}. ` : ''}${big.length ? `пропущены вами: ${big.map(b => L[b.i].name + '–' + L[b.j].name).slice(0, 6).join(', ')}.` : 'больших расхождений нет.'}${smallTxt}`); return; }
+    if (!open.length) { const big = bad.filter(b => Math.abs(b.dz) >= 0.3); stat(`Проверка высот (стыков: ${pairs.length}): ${fixed ? `исправлено групп — ${fixed}. ` : ''}${big.length ? `${big.some(b => !loop.has(b.i + '-' + b.j)) ? `пропущены вами: ${big.filter(b => !loop.has(b.i + '-' + b.j)).map(b => L[b.i].name + '–' + L[b.j].name).slice(0, 6).join(', ')}. ` : ''}${big.some(b => loop.has(b.i + '-' + b.j)) ? `⚠ Не сдвинуть группой (сканы связаны по высоте и другим путём — выделите нужные и «Высота»): ${big.filter(b => loop.has(b.i + '-' + b.j)).map(b => `${L[b.i].name}–${L[b.j].name} ${nf(b.dz, 2)} м`).slice(0, 6).join(', ')}.` : ''}` : 'больших расхождений нет.'}${smallTxt}`); return; }
     // группы: соседи, связанные стыками, которые по высоте в порядке
     const badK = new Set(bad.filter(b => Math.abs(b.dz) >= 0.3).map(b => b.i + '-' + b.j)), par = L.map((_, k) => k), fd = x => par[x] === x ? x : (par[x] = fd(par[x]));
-    for (const [i, j] of pairs) if (!badK.has(i + '-' + j)) par[fd(i)] = fd(j);
+    for (const [i, j] of good) if (!badK.has(i + '-' + j)) par[fd(i)] = fd(j); // группы — только по стыкам, где пол/потолок подтверждают высоту (стыки «только по стенам» не связывают)
     const b = open[0], gA = L.filter((_, k) => fd(k) === fd(b.i)), gB = L.filter((_, k) => fd(k) === fd(b.j)), mm = v => nf(v, 3);
-    if (fd(b.i) === fd(b.j)) { skip.add(b.i + '-' + b.j); continue; } // связаны и другим путём — группой не сдвинуть
+    if (fd(b.i) === fd(b.j)) { skip.add(b.i + '-' + b.j); loop.add(b.i + '-' + b.j); continue; } // связаны и другим путём — группой не сдвинуть
     const lvl = G => { const v = G.map(s => zc(L.indexOf(s)).level).sort((x, y) => x - y); return v[v.length >> 1]; }, anc = L.find(s => s.anchor) || L[0], la = zc(L.indexOf(anc)).level;
     const moveB = gA.includes(anc) ? true : gB.includes(anc) ? false : Math.abs(lvl(gB) + b.dz - la) <= Math.abs(lvl(gA) - b.dz - la);
     const optB = `${b.dz > 0 ? 'Поднять' : 'Опустить'} ${zNames(gB)} на ${mm(Math.abs(b.dz))} м`, optA = `${b.dz > 0 ? 'Опустить' : 'Поднять'} ${zNames(gA)} на ${mm(Math.abs(b.dz))} м`;
     const c = await uiDialog({ title: `По высоте: ${L[b.i].name} и ${L[b.j].name} разошлись на ${mm(Math.abs(b.dz))} м`,
       text: `Полы и потолки этих сканов совпадают, если сдвинуть один из них на ${mm(Math.abs(b.dz))} м (совпадений ${b.hit} против ${b.zero} сейчас) — стык держался только на стенах. Сдвигается вся группа, связанная с этим сканом, — в плане ничего не меняется. Опорный скан: ${anc.name}. Потом — «Досшить выбранные» на этом стыке.`,
       ok: moveB ? optB : optA, alt: moveB ? optA : optB, cancel: 'Пропустить' });
-    if (!c) { skip.add(b.i + '-' + b.j); continue; }
+    if (!c) { const ga = fd(b.i), gb = fd(b.j); for (const q of open) if ((fd(q.i) === ga && fd(q.j) === gb) || (fd(q.i) === gb && fd(q.j) === ga)) skip.add(q.i + '-' + q.j); continue; } // пропустили — не спрашивать про другие стыки тех же двух групп
     const doB = (c === true) === moveB; zShift(doB ? gB : gA, doB ? b.dz : -b.dz); fixed++;
   }
 }
